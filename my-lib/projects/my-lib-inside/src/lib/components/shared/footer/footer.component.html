@@ -1,0 +1,106 @@
+<!--<div class="footer-container">
+    <div class="footer__redes">
+        <ul class="footer__redes-wrapper">
+            <li>
+                <a href="#" class="footer__link">
+                    <i class="fab fa-cc-visa"></i> Visa
+                </a>
+            </li>
+            <li>
+                <a href="#" class="footer__link">
+                    <i class="fab fa-cc-mastercard"></i> MasterCard
+                </a>
+            </li>
+            <li>
+                <a href="#" class="footer__link">
+                    <i class="fab fa-cc-paypal"></i> PayPal
+                </a>
+            </li>
+        </ul>
+    </div>-->
+
+<!--<div class="carousel-container">
+        <div class="carousel">
+            <div 
+                class="carousel__face" 
+                *ngFor="let item of carouselItems; let i = index"
+                [ngStyle]="{
+                    'background-image': 'url(' + item.backgroundImage + ')', 
+                    'transform': 'rotateY(' + (i * 40) + 'deg) translateZ(100px)'
+                }"
+            >
+                <span *ngIf="item.label">{{ item.label }}</span>
+            </div>
+        </div>
+    </div>-->
+
+<!--<div class="footer-logo-container" *ngIf="logo"> 
+        <img class="footer-logo" [src]="logo" alt="Logo" width="150px" height="80px">
+    </div>-->
+<!--</div>-->
+
+
+
+
+
+
+
+
+<!--
+<div class="footer-container">
+    <div class="footer__redes">
+      <div class="row links">
+        <ul class="footer__redes-wrapper">
+          <li *ngFor="let link of footerLinkItems">
+            <a [routerLink]="link.path" class="footer__link">{{ link.label }}</a>
+          </li>
+        </ul>
+      </div>
+  
+      <div class="row payment-methods">
+        <ul>
+          <li *ngFor="let method of footerPaymentMethodItems">
+            <a [href]="method.url" class="footer__link">
+              <i [ngClass]="method.icon"></i> {{ method.name }}
+            </a>
+          </li>
+        </ul>
+      </div>
+  
+      <div class="row copyright">
+        INFERNO Copyright © {{ currentYear }}
+        Inferno - All rights reserved || Designed By: Mahesh
+      </div>
+    </div>
+    </div>-->
+
+<footer>
+  <div class="footer">
+    <!-- Sezione Link -->
+    <div class="row links">
+      <ul>
+        <li *ngFor="let link of footerLinkItems">
+          <!-- Se è un link esterno, usa href -->
+          <a *ngIf="link.external" [href]="link.path" target="_blank" rel="noopener noreferrer" class="footer__link">
+            {{ link.label }}
+          </a>
+          <!-- Se è un link interno, usa routerLink -->
+          <a *ngIf="!link.external" [routerLink]="link.path" class="footer__link">
+            {{ link.label }}
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Sezione Metodi di Pagamento (già a posto) -->
+    <div class="row payment-methods">
+      <ul>
+        <li *ngFor="let method of footerPaymentMethodItems">
+          <a [href]="method.url" target="_blank" rel="noopener noreferrer" class="footer__link">
+            <i class="fab" [ngClass]="method.icon"></i> {{ method.name }}
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,194 @@
+@use 'tokens' as *;
+
+.success-snackbar {
+  background-color: $confirmed;
+  color: $white;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.error-snackbar {
+  background-color: $cancelled;
+  color: $white;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.success-snackbar::before {
+  content: "✔️";
+  margin-right: 8px;
+}
+
+.error-snackbar::before {
+  content: "❌";
+  margin-right: 8px;
+}
+
+.file-upload-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.file-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.file-upload-label {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  background-color: $bg;
+  color: $text;
+  border: 1.5px solid $border;
+  border-radius: 6px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all 0.2s ease;
+}
+
+.file-input:hover+.file-upload-label,
+.file-upload-label:hover {
+  border-color: $blue;
+  background-color: $white;
+}
+
+// Contenitore immagine profilo — il wrapper non ha più ::ng-deep .image-preview
+// quindi questi stili non vengono sovrascritti
+.image-preview-container {
+  position: relative;
+  display: block !important;
+  margin-top: 0.75rem;
+  border: 1.5px solid $border;
+  border-radius: 6px;
+  overflow: hidden;
+  width: 100%;
+  // resetta il grid del wrapper
+  grid-template-columns: unset !important;
+  gap: unset !important;
+}
+
+img.image-preview {
+  display: block !important;
+  width: 100% !important;
+  height: 160px !important;
+  object-fit: cover !important;
+  border-radius: 6px !important;
+  // resetta stili flex del wrapper
+  position: static !important;
+  flex-direction: unset !important;
+  align-items: unset !important;
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    margin-right: 8px;
+    cursor: pointer;
+  }
+
+  .checkbox-label {
+    font-weight: normal;
+    font-size: 0.82rem;
+    user-select: none;
+  }
+}
+
+.radio-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  input[type="radio"] {
+    margin-right: 8px;
+  }
+
+  .radio-label {
+    user-select: none;
+    font-size: 0.82rem;
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: $bg;
+  border: 1.5px solid $border;
+  border-radius: 6px;
+
+  label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: $midnight;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+    margin: 0;
+  }
+
+  span {
+    font-size: 0.82rem;
+    color: $blue;
+    font-weight: 600;
+  }
+}
+
+.red {
+  color: $cancelled;
+}
+
+.c {
+  color: $blue;
+  font-size: 13px;
+}
+
+.title {
+  color: $midnight;
+}
+
+input#country,
+.mat-autocomplete-panel {
+  font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji",
+    "Twitter Color Emoji", "JoyPixels", "EmojiOne Color",
+    "Twemoji Mozilla", "Segoe UI Symbol", sans-serif;
+  font-variant-emoji: emoji;
+  -webkit-font-feature-settings: "liga" on, "calt" on, "ccmp" on;
+  font-feature-settings: "liga" on, "calt" on, "ccmp" on;
+  text-rendering: optimizeLegibility;
+}
+
+@media (max-width: 576px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build and cache
+dist/
+.angular/
+.angular/cache
+.tmp/
+
+# Local configuration files (replaced by Dockerfile)
+.env.local
+src/app/environments/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Git
+.git/
+.gitignore
+
+# Logs
+*.log
+logs/
+
+# Test and coverage
+coverage/
+*.spec.ts
+e2e/
+
+# Documentation (not needed in the image)
+docs/
+*.md
+LICENSE
+README.md
+typedoc.json
+generate-mermaid-graph.mjs
+graphs/
+FastBuyWave_TechnicalReport.pdf
+
+# System files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Backup
+*.bak
+*.backup
+
+# Compiler temporary files
+tsconfig.json
+tsconfig.app.json
+tsconfig.spec.json
+tsconfig.prod.json

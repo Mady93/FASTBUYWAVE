@@ -1,0 +1,77 @@
+graph TD
+
+%% -- Podman Containers --
+subgraph CONTAINER_FE["🐳 Podman · fastbuy-frontend · :4200"]
+  angular["Angular 18
+SSR Express
+Node 20"]:::frontend
+  mylib["my-lib-inside
+UI Library"]:::library
+end
+
+subgraph CONTAINER_BE["🐳 Podman · fastbuy-backend · :8080"]
+  springboot["Spring Boot 3.4
+Java 21
+19 REST Controllers"]:::backend
+end
+
+subgraph CONTAINER_PY["🐳 Podman · fastbuy-email-server · :1234"]
+  smtp_server["SMTP Intermediary
+server.py
+aiosmtpd"]:::python
+  gmail_bot["Gmail Auto-Reply Bot
+gmail_auto_reply.py"]:::python
+end
+
+%% -- Database --
+mysql[("MySQL 8
+Database
+Liquibase migrations")]:::database
+
+%% -- External Services --
+gmail_api["Gmail API v1
+OAuth2"]:::external
+google_oauth["Google OAuth2
+Authentication"]:::external
+stripe["Stripe SDK
+Payment Gateway"]:::external
+paypal["PayPal SDK
+Payment Gateway"]:::external
+
+%% -- Local Scripts --
+api_client["api_client.py
+REST API client
+(testing)"]:::script
+test_api["test_api.py
+Endpoint tests"]:::script
+auth_http["authController.http
+HTTP scenarios"]:::script
+
+%% -- Internal relations --
+angular --> mylib
+angular -->|HTTP REST :8080| springboot
+angular -->|WebSocket STOMP| springboot
+springboot --> mysql
+springboot -->|SMTP :1234| smtp_server
+
+%% -- Python container internal --
+smtp_server -->|Gmail SMTP :587| gmail_api
+gmail_bot -->|Gmail API polling| gmail_api
+
+%% -- Spring Boot external --
+springboot --> google_oauth
+springboot --> stripe
+springboot --> paypal
+
+%% -- Local scripts --
+api_client -->|HTTP REST| springboot
+test_api -->|HTTP REST| springboot
+auth_http -->|HTTP REST| springboot
+
+classDef frontend  fill:#dc2626,stroke:#991b1b,stroke-width:2px,color:#fff
+classDef library   fill:#ea580c,stroke:#9a3412,stroke-width:2px,color:#fff
+classDef backend   fill:#16a34a,stroke:#166534,stroke-width:2px,color:#fff
+classDef python    fill:#2563eb,stroke:#1e40af,stroke-width:2px,color:#fff
+classDef database  fill:#7c3aed,stroke:#5b21b6,stroke-width:2px,color:#fff
+classDef external  fill:#0891b2,stroke:#164e63,stroke-width:2px,color:#fff
+classDef script    fill:#78716c,stroke:#44403c,stroke-width:1px,color:#fff

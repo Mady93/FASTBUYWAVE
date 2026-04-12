@@ -1,0 +1,47 @@
+<div class="dialog-wrapper">
+
+  <div class="dialog-header">
+    <div class="header-accent"></div>
+    <div class="header-content">
+      <div class="heart-badge">
+        <mat-icon>favorite</mat-icon>
+        <span class="like-count">{{ likers.length }}</span>
+      </div>
+      <div class="header-text">
+        <h2>Who liked this</h2>
+        <p class="ad-title">"{{ data.title }}"</p>
+      </div>
+    </div>
+    <button class="close-btn" mat-dialog-close>
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <mat-dialog-content class="dialog-body">
+
+    <div *ngIf="isLoading" class="loading-state">
+      <mat-spinner diameter="28"></mat-spinner>
+      <span>Loading...</span>
+    </div>
+
+    <div *ngIf="!isLoading && likers.length === 0" class="empty-state">
+      <mat-icon>favorite_border</mat-icon>
+      <p>No likes yet</p>
+    </div>
+
+    <ul *ngIf="!isLoading && likers.length > 0" class="likers-list">
+      <li *ngFor="let liker of likers; let i = index" class="liker-item">
+        <div class="avatar">
+          <span>{{ liker.email[0].toUpperCase() }}</span>
+        </div>
+        <div class="liker-info">
+          <span class="email">{{ liker.email }}</span>
+          <span class="date">{{ liker.likedAt | date:'dd MMM yyyy' }}</span>
+        </div>
+        <mat-icon class="liked-icon">favorite</mat-icon>
+      </li>
+    </ul>
+
+  </mat-dialog-content>
+
+</div>

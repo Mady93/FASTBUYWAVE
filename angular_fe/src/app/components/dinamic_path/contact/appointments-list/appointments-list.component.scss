@@ -1,0 +1,357 @@
+@use 'tokens' as *;
+
+// ── Shell ─────────────────────────────────────────────────────────────────────
+.apt-shell {
+  width: 100%;
+  padding: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+.apt-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+
+  &__left {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  &__title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: $midnight;
+    margin: 0;
+  }
+
+  &__count {
+    font-size: 0.68rem;
+    color: $muted;
+    font-weight: 600;
+  }
+
+  &__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+}
+
+.stat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  &--pending   { background: rgba($pending,   0.12); color: darken($pending,   12%); .stat-dot { background: $pending;   } }
+  &--confirmed { background: rgba($confirmed, 0.12); color: darken($confirmed, 12%); .stat-dot { background: $confirmed; } }
+  &--completed { background: rgba($violet, 0.12); color: darken($violet, 12%); .stat-dot { background: $violet; } }
+  &--cancelled { background: rgba($cancelled, 0.12); color: darken($cancelled, 12%); .stat-dot { background: $cancelled; } }
+}
+
+.stat-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+// ── Loading / Error ───────────────────────────────────────────────────────────
+.apt-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2.5rem;
+  justify-content: center;
+  color: $muted;
+  font-size: 0.83rem;
+}
+
+.apt-error {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  background: rgba($cancelled, 0.06);
+  border: 1px solid rgba($cancelled, 0.22);
+  border-radius: 8px;
+  color: darken($cancelled, 10%);
+  font-size: 0.82rem;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; }
+  span { flex: 1; }
+}
+
+// ── Calendar wrapper ──────────────────────────────────────────────────────────
+.calendar-wrapper {
+  background: $white;
+  border-radius: 12px;
+  border: 1px solid $border;
+  box-shadow: 5px 8px 12px $shadow-c, -5px 8px 12px $shadow-c, 0 -4px 10px $shadow-c;
+  overflow: hidden;
+  padding: 0.75rem;
+}
+
+// ── FullCalendar overrides ────────────────────────────────────────────────────
+:host ::ng-deep {
+
+  // Toolbar (navigazione + titolo)
+  .fc .fc-toolbar {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+    padding: 0 0.25rem;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $midnight;
+  }
+
+  // Bottoni toolbar
+  .fc .fc-button {
+    background: transparent;
+    border: 1.5px solid $border;
+    color: $text;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 5px 11px;
+    border-radius: 6px;
+    box-shadow: none;
+    transition: all 0.14s;
+    text-transform: capitalize;
+
+    &:hover {
+      background: rgba($blue, 0.06);
+      border-color: rgba($blue, 0.4);
+      color: $blue;
+      box-shadow: none;
+    }
+
+    &:focus { box-shadow: none !important; outline: none; }
+
+    &.fc-button-active,
+    &:not(:disabled):active {
+      background: $blue !important;
+      border-color: $blue !important;
+      color: $white !important;
+      box-shadow: none !important;
+    }
+  }
+
+  .fc .fc-button-primary:not(:disabled).fc-button-active {
+    background: $blue !important;
+    border-color: $blue !important;
+  }
+
+  // Icone prev/next
+  .fc .fc-icon { font-size: 0.85rem; }
+
+  // Header giorni
+  .fc .fc-col-header-cell {
+    background: $bg;
+    border-color: $border;
+    padding: 6px 0;
+  }
+
+  .fc .fc-col-header-cell-cushion {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: $muted;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+  }
+
+  // Celle giorni
+  .fc .fc-daygrid-day {
+    border-color: $border;
+    transition: background 0.12s;
+
+    &:hover { background: rgba($blue, 0.02); }
+  }
+
+  .fc .fc-daygrid-day-number {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: $text;
+    text-decoration: none;
+    padding: 4px 6px;
+
+    &:hover { color: $blue; }
+  }
+
+  // Giorno oggi
+  .fc .fc-day-today {
+    background: rgba($blue, 0.04) !important;
+
+    .fc-daygrid-day-number {
+      background: $blue;
+      color: $white;
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      margin: 3px;
+      font-size: 0.68rem;
+    }
+  }
+
+  // Giorno fuori mese
+  .fc .fc-day-other .fc-daygrid-day-number { color: $muted; opacity: 0.5; }
+
+  // ── Eventi ────────────────────────────────────────────────────────────────
+  .fc .fc-event {
+    border: none;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: filter 0.12s, transform 0.1s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+
+    &:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.16);
+    }
+  }
+
+  .fc .fc-event-title { font-weight: 600; }
+  .fc .fc-event-time  { font-size: 0.6rem; opacity: 0.85; }
+
+  // More link
+  .fc .fc-daygrid-more-link {
+    font-size: 0.62rem;
+    color: $blue;
+    font-weight: 600;
+  }
+
+  // ── Vista timeGrid (settimana / giorno) ───────────────────────────────────
+  .fc .fc-timegrid-slot {
+    height: 36px;
+    border-color: $border;
+  }
+
+  .fc .fc-timegrid-slot-label-cushion {
+    font-size: 0.62rem;
+    color: $muted;
+    font-weight: 600;
+  }
+
+  .fc .fc-timegrid-axis { border-color: $border; }
+
+  // ── Vista lista ───────────────────────────────────────────────────────────
+  .fc .fc-list {
+    border-color: $border;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .fc .fc-list-day-cushion {
+    background: $bg;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: $midnight;
+    text-transform: capitalize;
+    padding: 6px 12px;
+  }
+
+  .fc .fc-list-event {
+    cursor: pointer;
+    transition: background 0.12s;
+
+    &:hover td { background: rgba($blue, 0.04); }
+  }
+
+  .fc .fc-list-event-time {
+    font-size: 0.67rem;
+    color: $muted;
+    font-weight: 600;
+  }
+
+  .fc .fc-list-event-title a {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $text;
+    text-decoration: none;
+  }
+
+  .fc .fc-list-empty {
+    background: $bg;
+    font-size: 0.82rem;
+    color: $muted;
+  }
+
+  // Bordi generali
+  .fc td, .fc th { border-color: $border; }
+  .fc .fc-scrollgrid { border-color: $border; }
+  .fc .fc-scrollgrid-section > td { border-color: $border; }
+}
+
+// ── Empty state ───────────────────────────────────────────────────────────────
+lib-empty-state {
+  h3 {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid $blue;
+    max-width: fit-content;
+    width: 0;
+    font-family: 'Almendra', serif;
+    animation: typewriter 2.5s steps(40) 0.3s forwards, blink 0.8s step-end infinite;
+  }
+
+  p {
+    opacity: 0;
+    font-family: 'Almendra', serif;
+    font-weight: 400;
+    font-style: italic;
+    animation: fadeInUp 0.6s ease 3s forwards;
+  }
+}
+
+@keyframes typewriter { to { width: 100%; } }
+@keyframes blink      { 50% { border-color: transparent; } }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .apt-shell { padding: 0.5rem; }
+  .apt-header { flex-direction: column; align-items: flex-start; }
+  .calendar-wrapper { padding: 0.4rem; border-radius: 8px; }
+
+  :host ::ng-deep {
+    .fc .fc-toolbar { flex-direction: column; align-items: flex-start; gap: 0.4rem; }
+    .fc .fc-toolbar-title { font-size: 0.88rem; }
+    .fc .fc-button { font-size: 0.64rem; padding: 4px 8px; }
+  }
+}
+
+@media (max-width: 480px) {
+  :host ::ng-deep {
+    .fc .fc-daygrid-day-number { font-size: 0.65rem; }
+    .fc .fc-event { font-size: 0.6rem; padding: 1px 3px; }
+    .fc .fc-col-header-cell-cushion { font-size: 0.6rem; }
+  }
+}

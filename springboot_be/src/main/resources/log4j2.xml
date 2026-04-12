@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  ============================================================================
+  LOG4J2 CONFIGURATION - Fast Buy Wave
+  ============================================================================
+  
+  File: log4j2.xml
+  Location: src/main/resources/
+  
+  Description:
+    Configuration file for Log4j2 logging framework.
+    Provides structured logging with file rotation and segregated log channels.
+  
+  Log Levels:
+    - DEBUG: Detailed debugging information (development)
+    - INFO: General application flow information (default)
+    - WARN: Potentially harmful situations
+    - ERROR: Error events that might still allow continued execution
+  
+  Log Files:
+    - application.log: All logs (INFO and above)
+    - warnings.log: Only WARN and ERROR level logs (filtered)
+  
+  Log Rotation:
+    - Time-based: Daily rollover
+    - Size-based: 10 MB per file
+    - Pattern: application-YYYY-MM-DD-N.log
+  
+  Output Format:
+    %d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n
+    
+    Example:
+    2025-04-10 14:30:25 [http-nio-8080-exec-1] INFO  com.mady... - User logged in
+  
+  Package-Specific Logging:
+    - org.springframework: INFO
+    - org.hibernate: WARN (reduces noise)
+    - org.springframework.web: DEBUG
+    - org.springframework.web.servlet: DEBUG
+    - com.mady.springboot_be.controller: DEBUG
+  
+  ============================================================================
+  Author: Popa Madalina Mariana
+  Since: Spring Boot 3.4.4 / Java 21
+  ============================================================================
+-->
+
+<Configuration status="WARN">
+    <!-- ========== PROPERTIES ========== -->
+    <Properties>
+        <!-- Log directory path (relative to project root) -->
+        <Property name="log-path">springboot_be/logs</Property>
+    </Properties>
+
+ <!-- ========== APPENDERS ========== -->
+    <Appenders>
+        <!-- Console Appender - Output to terminal -->
+        <Console name="ConsoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+
+         <!-- File Appender - All logs (INFO and above) -->
+        <RollingFile name="AppFileAppender" fileName="${log-path}/application.log"
+                     filePattern="${log-path}/application-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+             <!-- Rotate daily -->
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <!-- Rotate when file reaches 10 MB -->
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+        </RollingFile>
+
+        <!-- File Appender - WARN and ERROR only (filtered) -->
+        <RollingFile name="WarnFileAppender" fileName="${log-path}/warnings.log"
+                     filePattern="${log-path}/warnings-%d{yyyy-MM-dd}-%i.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+            </Policies>
+             <!-- ThresholdFilter: Accept only WARN and ERROR, deny everything else -->
+            <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+        </RollingFile>
+    </Appenders>
+
+<!-- ========== LOGGERS ========== -->
+
+    <Loggers>
+        <!-- Root Logger - Captures all logs -->
+        <Root level="INFO">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="AppFileAppender"/>
+            <AppenderRef ref="WarnFileAppender"/>
+        </Root>
+
+        <!-- Spring Framework - General -->
+        <Logger name="org.springframework" level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="AppFileAppender"/>
+            <AppenderRef ref="WarnFileAppender"/>
+        </Logger>
+
+        <!-- Hibernate ORM - Set to WARN to reduce noise -->
+        <Logger name="org.hibernate" level="WARN" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="AppFileAppender"/>
+            <AppenderRef ref="WarnFileAppender"/>
+        </Logger>
+
+        <!-- Spring Boot Core -->
+        <Logger name="org.springframework.boot" level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="AppFileAppender"/>
+            <AppenderRef ref="WarnFileAppender"/>
+        </Logger>
+
+        <!-- Spring Boot Actuator (health, metrics, etc.) -->
+        <Logger name="org.springframework.boot.actuate" level="INFO" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="AppFileAppender"/>
+            <AppenderRef ref="WarnFileAppender"/>
+        </Logger>
+
+        <!-- Spring Web (HTTP requests, responses) -->
+        <Logger name="org.springframework.web" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="AppFileAppender"/>
+            <AppenderRef ref="WarnFileAppender"/>
+        </Logger>
+
+        <!-- Spring Web MVC (controller mappings, view resolution) -->
+        <Logger name="org.springframework.web.servlet" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="AppFileAppender"/>
+            <AppenderRef ref="WarnFileAppender"/>
+        </Logger>
+
+         <!-- Custom Application - Controllers (DEBUG for development) -->
+        <Logger name="com.mady.springboot_be.controller" level="DEBUG" additivity="false">
+            <AppenderRef ref="ConsoleAppender"/>
+            <AppenderRef ref="AppFileAppender"/>
+            <AppenderRef ref="WarnFileAppender"/>
+        </Logger>
+
+        <!-- 
+          ========== ADDITIONAL CUSTOM LOGGERS ==========
+          Uncomment and customize as needed:
+          
+          <Logger name="com.mady.springboot_be.service" level="DEBUG" additivity="false">
+              <AppenderRef ref="ConsoleAppender"/>
+              <AppenderRef ref="AppFileAppender"/>
+              <AppenderRef ref="WarnFileAppender"/>
+          </Logger>
+          
+          <Logger name="com.mady.springboot_be.repository" level="DEBUG" additivity="false">
+              <AppenderRef ref="ConsoleAppender"/>
+              <AppenderRef ref="AppFileAppender"/>
+              <AppenderRef ref="WarnFileAppender"/>
+          </Logger>
+        -->
+
+    </Loggers>
+</Configuration>

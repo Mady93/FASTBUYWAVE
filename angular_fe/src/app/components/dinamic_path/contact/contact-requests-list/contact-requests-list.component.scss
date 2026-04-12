@@ -1,0 +1,468 @@
+@use 'tokens' as *;
+
+// ── Container ─────────────────────────────────────────────────────────────────
+.contact-requests-table {
+  width: 100%;
+  background: $bg;
+  border-radius: 12px;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+// ── Titolo con badge ──────────────────────────────────────────────────────────
+.requests-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+
+  .font {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $midnight;
+    font-family: 'Almendra', serif;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.6rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: $sh-xs;
+
+    &.badge-pending  { background: linear-gradient(135deg, #ff9800, #fb8c00); color: $white; }
+    &.badge-accepted { background: linear-gradient(135deg, #4caf50, #43a047); color: $white; }
+    &.badge-rejected { background: linear-gradient(135deg, #f44336, $red-badge); color: $white; }
+
+    .badge-number { font-size: 0.7rem; font-weight: 800; }
+    .badge-status { font-size: 0.55rem; opacity: 0.9; }
+  }
+}
+
+// ── Filtri chip ───────────────────────────────────────────────────────────────
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: $white;
+  border-radius: 10px;
+  border: 1.5px solid $border;
+  margin-bottom: 12px;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: wrap;
+}
+
+.filter-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $muted;
+  white-space: nowrap;
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  border: 1.5px solid $border;
+  background: $white;
+  color: $text;
+  font-size: 0.66rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  line-height: 1.5;
+
+  &:hover { border-color: rgba($midnight, 0.3); background: rgba($midnight, 0.04); }
+  &.chip--active { background: $midnight; border-color: $midnight; color: $white; }
+
+  &.chip--pending {
+    &:hover { border-color: $pending; color: darken($pending, 5%); }
+    &.chip--active { background: $pending; border-color: $pending; color: $white; }
+  }
+  &.chip--accepted {
+    &:hover { border-color: $confirmed; color: darken($confirmed, 5%); }
+    &.chip--active { background: $confirmed; border-color: $confirmed; color: $white; }
+  }
+  &.chip--rejected {
+    &:hover { border-color: $cancelled; color: darken($cancelled, 5%); }
+    &.chip--active { background: $cancelled; border-color: $cancelled; color: $white; }
+  }
+
+  &.chip--email {
+    &:hover { border-color: $rescheduled; color: $rescheduled; background: rgba($rescheduled, 0.05); }
+    &.chip--active { background: $rescheduled; border-color: $rescheduled; color: $white; }
+  }
+  &.chip--phone {
+    &:hover { border-color: $violet-light; color: $violet-light; background: rgba($violet-light, 0.05); }
+    &.chip--active { background: $violet-light; border-color: $violet-light; color: $white; }
+  }
+  &.chip--whatsapp {
+    &:hover { border-color: $chip-cyan; color: $chip-cyan; background: rgba($chip-cyan, 0.05); }
+    &.chip--active { background: $chip-cyan; border-color: $chip-cyan; color: $white; }
+  }
+  &.chip--meeting {
+    &:hover { border-color: $chip-pink; color: $chip-pink; background: rgba($chip-pink, 0.05); }
+    &.chip--active { background: $chip-pink; border-color: $chip-pink; color: $white; }
+  }
+}
+
+.chip-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: 999px;
+  font-size: 0.55rem;
+  font-weight: 800;
+  background: rgba($white, 0.3);
+
+  .chip:not(.chip--active) & {
+    background: rgba($midnight, 0.1);
+    color: $midnight;
+  }
+}
+
+.filter-group + .filter-group {
+  padding-left: 8px;
+  border-left: 1.5px solid $border;
+}
+
+.results-count {
+  margin-left: auto;
+  font-size: 0.62rem;
+  font-weight: 600;
+  color: $muted;
+  background: $bg;
+  border: 1px solid $border;
+  border-radius: 999px;
+  padding: 2px 9px;
+  white-space: nowrap;
+}
+
+// ── Celle custom proiettate ───────────────────────────────────────────────────
+.user-cell {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+
+  .user-avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  .user-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+
+    .user-name {
+      font-weight: 600;
+      font-size: 0.68rem;
+    }
+
+    .direction-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+
+      mat-icon {
+        font-size: 11px;
+        width: 11px;
+        height: 11px;
+        &.sent-icon     { color: $cancelled; }
+        &.received-icon { color: $confirmed; }
+      }
+
+      .direction-text {
+        font-size: 0.55rem;
+        font-weight: 500;
+        &.sent     { color: $cancelled; }
+        &.received { color: $confirmed; }
+      }
+    }
+  }
+}
+
+.subject-label {
+  font-size: 0.6rem;
+  color: $muted;
+  margin-right: 2px;
+}
+
+.subject-value {
+  font-size: 0.66rem;
+  font-weight: 500;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  &--pending  { background: rgba($pending,   0.15); color: darken($pending,   15%); }
+  &--accepted { background: rgba($confirmed, 0.15); color: darken($confirmed, 10%); }
+  &--rejected { background: rgba($cancelled, 0.15); color: darken($cancelled, 10%); }
+}
+
+.actions-wrapper {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+
+  .btn {
+    width: 26px !important;
+    height: 26px !important;
+
+    mat-icon {
+      font-size: 14px !important;
+      width: 14px !important;
+      height: 14px !important;
+    }
+  }
+}
+
+// ── Notes scroll ──────────────────────────────────────────────────────────────
+.notes-scroll {
+  max-height: 90px;
+  overflow-y: auto;
+  line-height: 1.5;
+  word-break: break-word;
+  white-space: normal;
+  padding-right: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: $blue transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: $blue;
+    border-radius: 999px;
+    &:hover { background: $midnight; }
+  }
+}
+
+// ── Override lib-table-layout — SOLO desktop (> 1052px) ──────────────────────
+@media (min-width: 1053px) {
+  ::ng-deep lib-table-layout {
+    .tl-table-wrapper {
+      overflow-x: auto !important;
+      border-radius: 10px !important;
+      border: 1.5px solid $border !important;
+    }
+
+    .tl-table {
+      min-width: 700px !important;
+      border-collapse: collapse !important;
+
+      thead th,
+      tbody td {
+        border: 1px solid $border !important;
+        vertical-align: top !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        padding: 0.5rem 0.6rem !important;
+      }
+
+      tbody tr:nth-child(even) {
+        background: $table-stripe !important;
+      }
+
+      tbody td:nth-child(6) {
+        width: 20% !important;
+      }
+    }
+  }
+}
+
+// ── Empty state animations ────────────────────────────────────────────────────
+lib-empty-state {
+  h3 {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid $violet;
+    max-width: fit-content;
+    width: 0;
+    font-family: 'Almendra', serif;
+    animation: typewriter 2.5s steps(40) 0.3s forwards, blink 0.8s step-end infinite;
+  }
+
+  p {
+    opacity: 0;
+    font-family: 'Almendra', serif;
+    font-weight: 400;
+    font-style: italic;
+    animation: fadeInUp 0.6s ease 3s forwards;
+  }
+}
+
+@keyframes typewriter { to { width: 100%; } }
+@keyframes blink { 50% { border-color: transparent; } }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Tablet / mobile (≤ 1052px) ────────────────────────────────────────────────
+@media (max-width: 1052px) {
+  .contact-requests-table { padding: 0.4rem; }
+
+  .filters-bar { gap: 6px; padding: 7px 10px; }
+
+  .filter-group + .filter-group {
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid $border;
+    padding-top: 6px;
+    width: 100%;
+  }
+
+  .chip        { font-size: 0.6rem; padding: 2px 7px; }
+  .chip-count  { font-size: 0.5rem; min-width: 12px; height: 12px; }
+  .results-count { margin-left: 0; font-size: 0.58rem; }
+
+  lib-empty-state h3 { font-size: 1rem; }
+
+  ::ng-deep lib-table-layout {
+    .tl-table-wrapper {
+      border: none !important;
+      box-shadow: none !important;
+      overflow: visible !important;
+    }
+
+    .tl-table {
+      min-width: unset !important;
+      width: 100% !important;
+
+      thead { display: none !important; }
+
+      tbody tr {
+        display: block !important;
+        border: 1.5px solid $border !important;
+        border-radius: 10px !important;
+        margin-bottom: 10px !important;
+        padding: 10px !important;
+        box-shadow: $sh-xs !important;
+        background: $white !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+      }
+
+      tbody td {
+        display: flex !important;
+        align-items: flex-start !important;
+        gap: 6px !important;
+        padding: 4px 0 !important;
+        border-bottom: 1px solid rgba($border, 0.6) !important;
+        font-size: 0.68rem !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        overflow: visible !important;
+        vertical-align: top !important;
+
+        &:last-child { border-bottom: none !important; }
+
+        &::before {
+          content: attr(data-label) !important;
+          font-weight: 700 !important;
+          font-size: 0.6rem !important;
+          color: $midnight !important;
+          text-transform: uppercase !important;
+          min-width: 80px !important;
+          max-width: 80px !important;
+          flex-shrink: 0 !important;
+          padding-top: 2px !important;
+        }
+
+        &.tl-col-actions {
+          &::before {
+            display: block !important;
+            content: attr(data-label) !important;
+            min-width: 0px !important;
+          }
+
+          .actions-wrapper {
+            margin-left: 25px;
+            align-items: flex-start;
+            gap: 6px;
+          }
+        }
+      }
+    }
+  }
+
+  .user-cell { flex-wrap: wrap; }
+  .subject-value { white-space: normal; word-break: break-word; }
+}
+
+// ── Mobile 480px ──────────────────────────────────────────────────────────────
+@media (max-width: 480px) {
+  .chip { font-size: 0.76rem; padding: 1px 6px; }
+
+  ::ng-deep lib-table-layout .tl-table tbody td {
+    font-size: 0.62rem !important;
+
+    &::before {
+      min-width: 70px !important;
+      max-width: 70px !important;
+      font-size: 0.55rem !important;
+    }
+  }
+}
+
+.actions-wrapper {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.info-icon {
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 10px;
+}
+
+.actions-info {
+  width: 100%;
+  margin-top: 4px;
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 0.65rem;
+  line-height: 1.3;
+}

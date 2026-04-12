@@ -1,0 +1,232 @@
+@use 'tokens' as *;
+
+// ── Scrollbar unificata ──────────────────────────────────────────────────────
+.dynamic-form-container {
+  overflow-y: auto;
+  height: 100vh;
+
+  // Firefox
+  scrollbar-width: thin;
+  scrollbar-color: $midnight $scrollbar-track;
+
+  // Chrome, Edge, Safari
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $midnight;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, $blue-bs, $midnight);
+    border-radius: 10px;
+  }
+}
+
+.dynamic-form-container.gradient-form {
+  background-color: $grey-150;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dynamic-form-container .row.d-flex {
+  height: auto;
+}
+
+.card {
+  padding: 20px;
+}
+
+.dynamic-form-container .card-body {
+  padding: 2.5rem;
+  margin-top: -50px;
+}
+
+.dynamic-form-container .text-center {
+  text-align: center;
+}
+
+.dynamic-form-container .text-center img {
+  width: 287px;
+}
+
+.baroque-title {
+  color: $navy;
+  font-family: 'Garamond', 'Times New Roman', serif;
+  font-weight: bold;
+  font-size: 2rem;
+  text-shadow: 1px 1px 2px $dark-blue-overlay;
+}
+
+.dynamic-form-container .text-center h4 {
+  margin-top: 0.25rem;
+  margin-bottom: 3rem;
+  padding-bottom: 1rem;
+}
+
+.dynamic-form-container .gradient-custom-2 {
+  background-color: $midnight;
+  color: $white;
+  border: none;
+}
+
+.dynamic-form-container .text-white {
+  color: $white;
+}
+
+.dynamic-form-container .px-3 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.dynamic-form-container .py-4 {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+.dynamic-form-container .p-md-5 {
+  padding: 3rem;
+}
+
+.dynamic-form-container .mx-md-4 {
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
+.dynamic-form-container .mb-4 {
+  margin-bottom: 1.5rem;
+}
+
+.dynamic-form-container .mb-3 {
+  margin-bottom: 1rem;
+}
+
+.dynamic-form-container .mb-0 {
+  margin-bottom: 0;
+}
+
+.dynamic-form-container .small {
+  font-size: 0.875rem;
+}
+
+/* Large Desktop (2K, 1440p) */
+@media (max-width: 1600px) {
+  .dynamic-form-container .card {
+    max-width: 900px;
+  }
+}
+
+/* Desktop Standard */
+@media (max-width: 1200px) {
+  .dynamic-form-container .card {
+    max-width: 800px;
+  }
+}
+
+/* Tablet orizzontale / laptop piccolo */
+@media (max-width: 992px) {
+  .dynamic-form-container .row.d-flex {
+    flex-direction: row !important;
+    align-items: stretch !important;
+  }
+
+  .dynamic-form-container .gradient-custom-2 {
+    border-radius: 1rem 1rem 0 0;
+    padding: 0rem 0rem !important;
+    text-align: left !important;
+  }
+
+  .dynamic-form-container .card-body {
+    padding: 2rem 1rem;
+  }
+}
+
+/* Tablet orizzontale / piccolo laptop / schermi fino a 991px */
+@media (max-width: 991px) {
+  .dynamic-form-container {
+    font-size: 0.875rem;
+  }
+
+  .dynamic-form-container .card {
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .dynamic-form-container .card-body {
+    padding: 1rem 1.5rem;
+  }
+
+  .dynamic-form-container h4 {
+    font-size: 1.25rem;
+  }
+
+  .dynamic-form-container .fa-lg {
+    font-size: 1rem;
+  }
+
+  .dynamic-form-container .text-center img {
+    width: 10rem;
+  }
+
+  .dynamic-form-container .mb-3 {
+    margin-bottom: 0.75rem;
+  }
+
+  .dynamic-form-container .py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+/* Tablet verticale */
+@media (max-width: 768px) {
+  .dynamic-form-container h4 {
+    font-size: 1.25rem;
+  }
+
+  .dynamic-form-container .card-body {
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* Telefono medio */
+@media (max-width: 576px) {
+  .dynamic-form-container .text-center img {
+    width: 90px;
+  }
+
+  .dynamic-form-container h4 {
+    font-size: 1.1rem;
+  }
+
+  .dynamic-form-container .small {
+    font-size: 0.75rem;
+  }
+
+  .dynamic-form-container .card {
+    border-radius: 0.75rem;
+  }
+}
+
+/* Telefono piccolo */
+@media (max-width: 480px) {
+  .dynamic-form-container .card-body {
+    padding: 1rem;
+  }
+}
+
+/* Telefono extra small (tipo iPhone SE) */
+@media (max-width: 360px) {
+  .dynamic-form-container h4 {
+    font-size: 1rem;
+  }
+
+  .dynamic-form-container .btn {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+  }
+}

@@ -1,0 +1,366 @@
+<!-- advertisements-create.component.html — usa lib-form-layout -->
+
+<lib-form-layout
+  [title]="'Give visibility to your product by creating a tailored advertisement'"
+  [subtitle]="'Enter all necessary details to build a thorough advertisement'"
+  [columns]="4"
+  [loading]="!!(isLoading$ | async)"
+  [actions]="formActions"
+  (actionClicked)="onFormAction($event)">
+
+  <!-- ── Advertisement Details ─────────────────────────────────────── -->
+  <div class="section-container">
+    <h3>Advertisement Details</h3>
+    <form [formGroup]="advertisementForm" novalidate>
+
+      <div class="input-group">
+        <label for="title" class="input-label">Title</label>
+        <input id="title" type="text" class="modern-input"
+          [class.error]="advertisementForm.get('title')?.invalid && advertisementForm.get('title')?.touched"
+          formControlName="title"
+          (blur)="advertisementForm.get('title')?.markAsTouched()"
+          required>
+        @if (advertisementForm.get('title')?.invalid && advertisementForm.get('title')?.touched) {
+          <div class="error-message">Title is required</div>
+        }
+      </div>
+
+ <div class="input-group">
+  <label for="description" class="input-label">Description</label>
+  <textarea id="description" class="modern-textarea"
+    [class.error]="advertisementForm.get('description')?.invalid && advertisementForm.get('description')?.touched"
+    formControlName="description" rows="4"
+    (blur)="advertisementForm.get('description')?.markAsTouched()"
+    required minlength="50" maxlength="1000"></textarea>
+  
+  <!-- Contatore caratteri (opzionale ma utile) -->
+  <div class="character-count" [class.text-danger]="advertisementForm.get('description')?.value?.length > 1000">
+    {{ advertisementForm.get('description')?.value?.length || 0 }}/1000
+  </div>
+  
+  <!-- Required error -->
+  @if (advertisementForm.get('description')?.hasError('required') && advertisementForm.get('description')?.touched) {
+    <div class="error-message">Description is required</div>
+  }
+  
+  <!-- Minlength error -->
+  @if (advertisementForm.get('description')?.hasError('minlength') && advertisementForm.get('description')?.touched) {
+    <div class="error-message">Description must be at least 50 characters</div>
+  }
+  
+  <!-- Maxlength error -->
+  @if (advertisementForm.get('description')?.hasError('maxlength') && advertisementForm.get('description')?.touched) {
+    <div class="error-message">Description cannot exceed 1000 characters</div>
+  }
+</div>
+      <div class="input-group">
+        <label for="createdAt" class="input-label">Created at</label>
+        <input id="createdAt" type="text" class="modern-input readonly"
+          [value]="advertisementForm.get('createdAt')?.value | date: 'dd/MM/yyyy HH:mm'" readonly>
+      </div>
+
+      <div class="input-group">
+        <label for="type" class="input-label">Advertisement type</label>
+        <input id="type" type="text" class="modern-input readonly" formControlName="type" readonly>
+      </div>
+
+      <div class="input-group checkbox-field">
+        <label class="checkbox-container">
+          <input type="checkbox" formControlName="agency"
+            (change)="advertisementForm.get('agency')?.value ? enableAgencyFields() : disableAgencyFields()">
+          <span class="checkbox-label">It's an agency: <span class="checkbox-value">{{ advertisementForm.get('agency')?.value ? 'Yes' : 'No' }}</span></span>
+        </label>
+      </div>
+
+      @if (advertisementForm.get('agency')?.value) {
+        <div class="agency-fields">
+          
+          <!-- Agency Name -->
+          <div class="input-group">
+            <label for="agencyName" class="input-label">Agency name</label>
+            <input id="agencyName" type="text" class="modern-input"
+              [class.error]="advertisementForm.get('agencyName')?.invalid && (advertisementForm.get('agencyName')?.touched || advertisementForm.get('agencyName')?.dirty)"
+              formControlName="agencyName"
+              (blur)="advertisementForm.get('agencyName')?.markAsTouched()"
+              [attr.required]="advertisementForm.get('agency')?.value ? true : null">
+            @if (advertisementForm.get('agencyName')?.hasError('required') && (advertisementForm.get('agencyName')?.touched || advertisementForm.get('agencyName')?.dirty)) {
+              <div class="error-message">Agency name is required</div>
+            }
+            @if (advertisementForm.get('agencyName')?.hasError('pattern') && (advertisementForm.get('agencyName')?.touched || advertisementForm.get('agencyName')?.dirty)) {
+              <div class="error-message">Agency name can only contain letters and spaces (e.g., My Agency Ltd)</div>
+            }
+          </div>
+
+          <!-- Commission % -->
+          <div class="input-group">
+            <label for="agencyFeePercent" class="input-label">Commission %</label>
+            <input id="agencyFeePercent" type="text" class="modern-input"
+              [class.error]="advertisementForm.get('agencyFeePercent')?.invalid && (advertisementForm.get('agencyFeePercent')?.touched || advertisementForm.get('agencyFeePercent')?.dirty)"
+              formControlName="agencyFeePercent"
+              (blur)="advertisementForm.get('agencyFeePercent')?.markAsTouched()"
+              (keydown)="blockInvalidAndTooHigh($event)"
+              (paste)="blockInvalidPaste($event)"
+              [attr.required]="advertisementForm.get('agency')?.value ? true : null">
+            @if (advertisementForm.get('agencyFeePercent')?.hasError('required') && (advertisementForm.get('agencyFeePercent')?.touched || advertisementForm.get('agencyFeePercent')?.dirty)) {
+              <div class="error-message">Commission percentage is required</div>
+            }
+            @if (advertisementForm.get('agencyFeePercent')?.hasError('min') && (advertisementForm.get('agencyFeePercent')?.touched || advertisementForm.get('agencyFeePercent')?.dirty)) {
+              <div class="error-message">Commission cannot be negative</div>
+            }
+            @if (advertisementForm.get('agencyFeePercent')?.hasError('max') && (advertisementForm.get('agencyFeePercent')?.touched || advertisementForm.get('agencyFeePercent')?.dirty)) {
+              <div class="error-message">Commission cannot exceed 100%</div>
+            }
+            @if (advertisementForm.get('agencyFeePercent')?.hasError('pattern') && (advertisementForm.get('agencyFeePercent')?.touched || advertisementForm.get('agencyFeePercent')?.dirty)) {
+              <div class="error-message">Please enter a valid percentage (numbers only, e.g., 15)</div>
+            }
+          </div>
+
+          <!-- Agency URL -->
+          <div class="input-group">
+            <label for="agencyUrl" class="input-label">Agency URL</label>
+            <input id="agencyUrl" type="url" class="modern-input"
+              [class.error]="advertisementForm.get('agencyUrl')?.invalid && (advertisementForm.get('agencyUrl')?.touched || advertisementForm.get('agencyUrl')?.dirty)"
+              formControlName="agencyUrl"
+              (blur)="advertisementForm.get('agencyUrl')?.markAsTouched()"
+              [attr.required]="advertisementForm.get('agency')?.value ? true : null">
+            @if (advertisementForm.get('agencyUrl')?.hasError('required') && (advertisementForm.get('agencyUrl')?.touched || advertisementForm.get('agencyUrl')?.dirty)) {
+              <div class="error-message">Agency URL is required</div>
+            }
+            @if (advertisementForm.get('agencyUrl')?.hasError('pattern') && (advertisementForm.get('agencyUrl')?.touched || advertisementForm.get('agencyUrl')?.dirty)) {
+              <div class="error-message">Please enter a valid HTTPS URL (e.g., https://example.com)</div>
+            }
+          </div>
+
+        </div>
+      }
+
+      @if (advertisementForm.get('logoImg')?.value) {
+        <img class="imageLogo" [src]="advertisementForm.get('logoImg')?.value | safeUrl" alt="Logo preview">
+      }
+
+    </form>
+  </div>
+
+  <!-- ── Product Details ───────────────────────────────────────────── -->
+  <div class="section-container">
+    <h3>Product Details</h3>
+    <form [formGroup]="productForm" novalidate>
+
+      <div class="input-group">
+        <label for="price" class="input-label">Price</label>
+        <input id="price" type="text" class="modern-input"
+          [class.error]="productForm.get('price')?.invalid && productForm.get('price')?.touched"
+          formControlName="price"
+          (blur)="productForm.get('price')?.markAsTouched()"
+          required
+          (keydown)="blockInvalidAndTooHighPrice($event)"
+          (paste)="blockInvalidPastePrice($event, productForm.get('price')!)">
+        @if (productForm.get('price')?.hasError('required') && productForm.get('price')?.touched) {
+          <div class="error-message">The price is required</div>
+        }
+        @if (productForm.get('price')?.hasError('pattern') && productForm.get('price')?.touched) {
+          <div class="error-message">Please enter a valid price format - up to 6 digits with optional 2 decimals (e.g., 99.99 or 1000)</div>
+        }
+        @if (productForm.get('price')?.hasError('min') && productForm.get('price')?.touched) {
+          <div class="error-message">Price cannot be negative</div>
+        }
+        @if (productForm.get('price')?.hasError('max') && productForm.get('price')?.touched) {
+          <div class="error-message">Price cannot exceed 999999.99</div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label for="condition" class="input-label">Condition</label>
+        <div class="radio-group">
+          <div class="radio-option">
+            <input id="condition-new" type="radio" value="NEW" formControlName="condition" class="radio-input">
+            <label for="condition-new" class="radio-label">NEW</label>
+          </div>
+          <div class="radio-option">
+            <input id="condition-used" type="radio" value="USED" formControlName="condition" class="radio-input">
+            <label for="condition-used" class="radio-label">USED</label>
+          </div>
+        </div>
+        @if (productForm.get('condition')?.hasError('required') && productForm.get('condition')?.touched) {
+          <div class="error-message">The condition is required</div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label for="stockQuantity" class="input-label">Stock Quantity</label>
+        <input id="stockQuantity" type="number" class="modern-input"
+          [class.error]="productForm.get('stockQuantity')?.invalid && productForm.get('stockQuantity')?.touched"
+          formControlName="stockQuantity"
+          (blur)="productForm.get('stockQuantity')?.markAsTouched()"
+          (keydown)="blockOnlyNumbers($event)"
+          (paste)="blockPasteNumbers($event)"
+          required min="1" max="100">
+        @if (productForm.get('stockQuantity')?.hasError('required') && productForm.get('stockQuantity')?.touched) {
+          <div class="error-message">Stock Quantity is required</div>
+        }
+        @if (productForm.get('stockQuantity')?.hasError('min') || productForm.get('stockQuantity')?.hasError('max')) {
+          <div class="error-message">Stock Quantity must be between 1 and 100</div>
+        }
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ── Address Details ───────────────────────────────────────────── -->
+  <div class="section-container">
+    <h3>Address Details</h3>
+    <form [formGroup]="addressForm" novalidate>
+
+      <div class="input-group">
+        <label for="street" class="input-label">Street</label>
+        <input id="street" type="text" class="modern-input"
+          [class.error]="addressForm.get('street')?.invalid && addressForm.get('street')?.touched"
+          formControlName="street"
+          (blur)="addressForm.get('street')?.markAsTouched()"
+          required>
+        @if (addressForm.get('street')?.invalid && addressForm.get('street')?.touched) {
+          <div class="error-message">Street is required</div>
+        }
+      </div>
+
+  <!-- Street Number -->
+<div class="input-group">
+  <label for="streetNumber" class="input-label">Number</label>
+  <input id="streetNumber" type="text" class="modern-input"
+    [class.error]="addressForm.get('streetNumber')?.invalid && addressForm.get('streetNumber')?.touched"
+    formControlName="streetNumber"
+    (blur)="addressForm.get('streetNumber')?.markAsTouched()"
+    required>
+  
+  <!-- Required error -->
+  @if (addressForm.get('streetNumber')?.hasError('required') && addressForm.get('streetNumber')?.touched) {
+    <div class="error-message">Street number is required</div>
+  }
+  
+  <!-- Pattern error (formato non valido) -->
+   @if (addressForm.get('streetNumber')?.hasError('pattern') && addressForm.get('streetNumber')?.touched) {
+    <div class="error-message">Please enter a valid street number (1-10 characters: e.g., 12, 12A, 12/B)</div>
+  }
+  
+</div>
+
+      <div class="input-group">
+        <label for="country" class="input-label">Country</label>
+        <input type="text" id="country" placeholder="Pick one" aria-label="Country" matInput
+          formControlName="country" [matAutocomplete]="auto" class="modern-input"
+          [class.error]="addressForm.get('country')?.invalid && addressForm.get('country')?.touched"
+          (blur)="addressForm.get('country')?.markAsTouched()"
+          required />
+        @if (addressForm.get('country')?.invalid && addressForm.get('country')?.touched) {
+          <div class="error-message">Country is required</div>
+        }
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCountry.bind(this)"
+          (optionSelected)="onCountrySelected($event)">
+          <mat-option *ngFor="let country of filteredCountries | async" [value]="country">{{ country }}</mat-option>
+        </mat-autocomplete>
+      </div>
+
+      <div class="input-group">
+        <label for="region" class="input-label">Region</label>
+        <input id="region" type="text" class="modern-input" [matAutocomplete]="regionAuto" matInput
+          [class.error]="addressForm.get('region')?.invalid && addressForm.get('region')?.touched"
+          formControlName="region"
+          (blur)="addressForm.get('region')?.markAsTouched()"
+          required>
+        @if (addressForm.get('region')?.invalid && addressForm.get('region')?.touched) {
+          <div class="error-message">Region is required</div>
+        }
+        <mat-autocomplete #regionAuto="matAutocomplete" [displayWith]="displayRegion.bind(this)">
+          <mat-option *ngFor="let region of regions | async" [value]="region">{{ region }}</mat-option>
+        </mat-autocomplete>
+      </div>
+
+      <div class="input-group">
+        <label for="province" class="input-label">Province</label>
+        <input id="province" type="text" class="modern-input" [matAutocomplete]="provinceAuto" matInput
+          [class.error]="addressForm.get('province')?.invalid && addressForm.get('province')?.touched"
+          formControlName="province"
+          (blur)="addressForm.get('province')?.markAsTouched()">
+        @if (addressForm.get('province')?.invalid && addressForm.get('province')?.touched) {
+          <div class="error-message">Province is required</div>
+        }
+        <mat-autocomplete #provinceAuto="matAutocomplete" [displayWith]="displayProvince.bind(this)">
+          <mat-option *ngFor="let province of filteredProvinces | async" [value]="province">{{ province }}</mat-option>
+        </mat-autocomplete>
+      </div>
+
+      <div class="input-group flex-grow">
+        <label for="city" class="input-label">City</label>
+        <input id="city" type="text" class="modern-input" [matAutocomplete]="cityAuto" matInput
+          [class.error]="addressForm.get('city')?.invalid && addressForm.get('city')?.touched"
+          formControlName="city"
+          (blur)="addressForm.get('city')?.markAsTouched()"
+          required>
+        @if (addressForm.get('city')?.invalid && addressForm.get('city')?.touched) {
+          <div class="error-message">City is required</div>
+        }
+        <mat-autocomplete #cityAuto="matAutocomplete" [displayWith]="displayCity.bind(this)">
+          <mat-option *ngFor="let city of filteredCities | async" [value]="city">{{ city }}</mat-option>
+        </mat-autocomplete>
+      </div>
+
+      <div class="input-group">
+        <label for="zipCode" class="input-label">Zip Code</label>
+        <input id="zipCode" type="text" class="modern-input"
+          [class.error]="addressForm.get('zipCode')?.invalid && addressForm.get('zipCode')?.touched"
+          formControlName="zipCode"
+          (blur)="addressForm.get('zipCode')?.markAsTouched()"
+          required>
+        @if (addressForm.get('zipCode')?.invalid && addressForm.get('zipCode')?.touched) {
+          <div class="error-message">Zip code is required</div>
+        }
+      </div>
+
+      <div class="coordinates-row">
+        <div class="input-group">
+          <label for="latitude" class="input-label">Latitude</label>
+          <input id="latitude" type="text" class="modern-input readonly" formControlName="latitude" readonly>
+        </div>
+        <div class="input-group">
+          <label for="longitude" class="input-label">Longitude</label>
+          <input id="longitude" type="text" class="modern-input readonly" formControlName="longitude" readonly>
+        </div>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ── Images Details ────────────────────────────────────────────── -->
+  <div class="section-container">
+    <h3>Images Details</h3>
+
+    <div class="file-input-container">
+      <button type="button" mat-stroked-button (click)="fileInput.click()">
+        <mat-icon>add_photo_alternate</mat-icon>
+        Select Images
+      </button>
+      <input hidden (change)="onFileSelected($event)" #fileInput type="file" multiple accept="image/*">
+      @if (selectedFiles.length > 0) {
+        <span class="file-count">{{ selectedFiles.length }} selected files</span>
+      }
+      @if (selectedFiles.length === 0 && isSubmitting) {
+        <div class="error-message">At least one image is required</div>
+      }
+    </div>
+
+    @if (selectedFiles.length > 0) {
+      <div class="image-preview-container">
+        @for (file of selectedFiles; track $index) {
+          <div class="image-preview-item">
+            <img [src]="file ? (file | fileToUrl) : ''" alt="Preview">
+            <button type="button" class="remove-image-btn" (click)="removeImage($index)">
+            </button>
+            <span class="file-name">{{ file.name }}</span>
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+
+</lib-form-layout>

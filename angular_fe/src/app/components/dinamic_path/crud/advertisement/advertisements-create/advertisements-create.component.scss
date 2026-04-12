@@ -1,0 +1,109 @@
+@use 'tokens' as *;
+
+.container {
+  width: auto;
+}
+
+.mat-card {
+  margin-bottom: 20px;
+}
+
+.title {
+  color: $midnight;
+}
+
+.mat-spinner {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+input#country,
+.mat-autocomplete-panel {
+  font-family:
+    "Segoe UI Emoji",
+    "Apple Color Emoji",
+    "Noto Color Emoji",
+    "Twitter Color Emoji",
+    "JoyPixels",
+    "EmojiOne Color",
+    "Twemoji Mozilla",
+    "Segoe UI Symbol",
+    sans-serif;
+
+  font-variant-emoji: emoji;
+  -webkit-font-feature-settings: "liga" on, "calt" on, "ccmp" on;
+  font-feature-settings: "liga" on, "calt" on, "ccmp" on;
+  text-rendering: optimizeLegibility;
+}
+
+::ng-deep .checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+
+  input[type="checkbox"] {
+    width: 15px;
+    height: 15px;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 2px solid $border;
+    border-radius: 3px;
+    background: $bg;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    position: relative;
+
+    &:checked {
+      background: linear-gradient(135deg, $blue-royal, $violet);
+      border-color: $blue-royal;
+
+      &::after {
+        content: '✓';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: $white;
+        font-weight: bold;
+        font-size: 9px;
+        line-height: 1;
+      }
+    }
+
+    &:hover {
+      border-color: $blue-royal;
+    }
+  }
+
+  .checkbox-label {
+    font-size: 0.82rem;
+    color: $text;
+    font-weight: 500;
+    user-select: none;
+
+    .checkbox-value {
+      font-size: 0.82rem;
+      color: $blue-royal;
+      font-weight: 600;
+    }
+  }
+}
+
+.character-count {
+  font-size: 0.7rem;
+  color: $muted;
+  text-align: right;
+  margin-top: 2px;
+
+  &.text-danger {
+    color: $cancelled;
+  }
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+  cursor: not-allowed;
+}

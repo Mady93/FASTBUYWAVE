@@ -1,0 +1,175 @@
+<!-- Search Bar -->
+
+<div class="search-header">
+ <button *ngIf="!(isNormalLoad && !pagedAds.length)" 
+        (click)="toggleSearch()" 
+        class="cyber-button">
+  <span class="cyber-text">
+    {{ isSearchOpen ? 'Hide filters' : 'Filters' }}
+  </span>
+  <span class="cyber-glow"></span>
+  <span class="cyber-border"></span>
+</button>
+
+  <div *ngIf="isSearchOpen" class="search-form-container">
+    <form [formGroup]="searchForm" novalidate (ngSubmit)="applySearch()" class="search-form">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Country:</label>
+          <input type="text" formControlName="country" placeholder="e.g. Italy" [matAutocomplete]="autoCountry"
+            (focus)="getCountries()">
+          <mat-autocomplete #autoCountry="matAutocomplete" [displayWith]="displayCountry"
+            (optionSelected)="onCountrySelected($event)">
+            <mat-option *ngFor="let country of filteredCountries | async" [value]="country">
+              {{ country }}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+
+        <div class="form-group">
+          <label>City <span *ngIf="!searchForm.get('city')?.disabled" class="red">*</span></label>
+          <input type="text" formControlName="city"
+            [placeholder]="searchForm.get('city')?.disabled ? 'Select a country first' : 'e.g. Rome'"
+            [matAutocomplete]="autoCity" [readonly]="searchForm.get('city')?.disabled">
+          <mat-autocomplete #autoCity="matAutocomplete" [displayWith]="displayCity">
+            <mat-option *ngFor="let city of filteredCities | async" [value]="city">
+              {{ city }}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+
+        <div class="form-group tooltip-container">
+          <label>Title:</label>
+          <div class="input-with-icon">
+            <input type="text" formControlName="title" placeholder="Search by title">
+            <!-- Icona info -->
+            <span class="info-icon" (mouseenter)="showTooltip = true" (mouseleave)="showTooltip = false">ℹ️</span>
+
+            <!-- Tooltip -->
+            <div class="tooltip-text" *ngIf="showTooltip">
+              Search in title: type a word or part of it; the system will find all products containing it.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group price-range-group">
+          <label>Price Range:</label>
+          <div class="price-range-container">
+            <div class="range-inputs" (mouseenter)="showPriceValues = true" (mouseleave)="showPriceValues = false">
+              <!-- Track colorato tra i due valori -->
+              <div class="range-track" [style.left.%]="getMinPercent()" [style.width.%]="getRangeWidth()"></div>
+
+              <!-- Min slider con range dinamico -->
+              <input type="range" class="range-input range-min" formControlName="minPrice" (input)="onMinChange($event)"
+                [min]="MIN_PRICE" [max]="MAX_PRICE" [step]="PRICE_STEP">
+
+              <!-- Max slider con range dinamico -->
+              <input type="range" class="range-input range-max" formControlName="maxPrice" (input)="onMaxChange($event)"
+                [min]="MIN_PRICE" [max]="MAX_PRICE" [step]="PRICE_STEP">
+
+              <!-- Tooltip min (Desktop only) -->
+              <div class="range-tooltip tooltip-min" [class.visible]="showPriceValues || isDraggingMin"
+                [style.left.%]="getMinPercent()">
+                MIN: {{ formatPriceWrapper(searchForm.get('minPrice')?.value ?? MIN_PRICE, productCurrencySymbol) }}
+              </div>
+
+              <!-- Tooltip max (Desktop only) -->
+              <div class="range-tooltip tooltip-max" [class.visible]="showPriceValues || isDraggingMax"
+                [style.left.%]="getMaxPercent()">
+                MAX: {{ formatPriceWrapper(searchForm.get('maxPrice')?.value ?? MAX_PRICE, productCurrencySymbol) }}
+              </div>
+            </div>
+
+            <!-- 🔥 NUOVO: Display fisso per Mobile -->
+            <div class="price-display-mobile">
+              <div class="price-values-mobile">
+                <div class="price-value-mobile min-price">
+                  <strong>MIN:</strong><br>
+                  {{ formatPriceWrapper(searchForm.get('minPrice')?.value ?? MIN_PRICE, productCurrencySymbol) }}
+                </div>
+                <div class="price-value-mobile max-price">
+                  <strong>MAX:</strong><br>
+                  {{ formatPriceWrapper(searchForm.get('maxPrice')?.value ?? MAX_PRICE, productCurrencySymbol) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Condition:</label>
+          <select formControlName="condition">
+            <option value="NEW">NEW</option>
+            <option value="USED">USED</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Min Date:</label>
+          <input type="date" formControlName="minDate">
+        </div>
+        <div class="form-group">
+          <label>Max Date:</label>
+          <input type="date" formControlName="maxDate">
+        </div>
+        <div class="form-group checkbox-group">
+          <label>
+            <input type="checkbox" formControlName="agency"> Agencies only
+          </label>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="!searchForm.valid">Search</button>
+        <button type="button" (click)="resetSearch()">Clear Filters</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+
+<div class="ads-container">
+  <lib-card *ngFor="let ad of pagedAds" 
+  [ad]="ad" 
+  [maxWords]="16" 
+  [maxWordsTitle]="4"
+  [isUserAd]="getIsUserAdForCard(ad)" 
+  [canLike]="getCanLikeForCard(ad)" 
+  [canAddToCart]="getCanAddToCartForCard(ad)"
+  [isMaxQuantityReached]="getIsMaxQuantityReachedForCard(ad)"
+  (viewAd)="onAdSelected($event)"
+  (likeChanged)="handleLikeChange($event)" 
+  (addToCart)="onAddToCart($event)">
+</lib-card>
+
+  <div *ngIf="!(isLoading$ | async) && pagedAds.length === 0">
+
+    <!-- Nessun dato nel DB -->
+    <lib-empty-state [show]="isNoData()" [logoSrc]="getLogoSrc()">
+      <h3>No ads yet</h3>
+      <p>Ads will appear here</p>
+    </lib-empty-state>
+
+    <!-- Filtri applicati ma nessun risultato -->
+    <lib-empty-state [show]="isEmptyState()" [logoSrc]="getLogoSrc()">
+      <h3>No ads match your filters</h3>
+      <p>Try adjusting your search or filter settings</p>
+    </lib-empty-state>
+
+  </div>
+</div>
+
+<lib-pagination *ngIf="!(isLoading$ | async) && filteredAds.length > 0" [totalItems]="filteredAds.length"
+  [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (pageChanged)="onPageChanged($event)">
+</lib-pagination>
+
+<div class="spinner-container" *ngIf="isLoading$ | async">
+  <lib-spinner [spinner]="getspinner()" [isLoading]="isLoading()"></lib-spinner>
+</div>

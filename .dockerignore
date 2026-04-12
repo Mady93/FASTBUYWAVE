@@ -1,0 +1,81 @@
+# ========================
+# Node / Angular
+# ========================
+node_modules
+**/node_modules
+# dist
+# **/dist
+.angular
+**/.angular
+
+# Ignora tutto tranne gli environment.ts
+angular_fe/src/environments/*
+!angular_fe/src/environments/environment.ts
+!angular_fe/src/environments/environment.prod.ts
+
+# ========================
+# Java / Spring Boot
+# ========================
+target
+**/target
+*.jar
+
+# ========================
+# Python
+# ========================
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+**/env/
+**/venv/
+
+# ========================
+# Logs
+# ========================
+logs/
+**/logs/
+*.log
+
+# ========================
+# Git / IDE / OS
+# ========================
+.git
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ========================
+# Optional / Coverage
+# ========================
+coverage/
+**/coverage
+
+# ========================
+# TypeDoc / Docs
+# ========================
+docs/
+**/docs/
+documentation/
+**/documentation/
+typedoc/
+**/typedoc/
+_build/
+site/
+html/
+*.html
+
+# ========================
+# Docker
+# ========================
+*.dockerignore
+Dockerfile
+
+# ========================
+# Secrets locali (non copiabili)
+# ========================
+*.json

@@ -1,0 +1,201 @@
+<!-- ── Toggle Button ──────────────────────────────────────────── -->
+<button *ngIf="!isOpen" class="cart-toggle-btn" (click)="toggleDrawer()" aria-label="Open cart">
+  🛒
+  <span *ngIf="itemsCount > 0" class="cart-badge">{{ itemsCount }}</span>
+</button>
+
+<!-- ── Overlay ────────────────────────────────────────────────── -->
+<div class="cart-overlay" [class.open]="isOpen" (click)="closeDrawer()" aria-hidden="true"></div>
+
+<!-- ── Drawer ─────────────────────────────────────────────────── -->
+<div class="cart-drawer" [class.open]="isOpen" role="dialog" aria-modal="true">
+
+  <div class="drawer-header">
+    <div class="drawer-title">
+      <div class="drawer-icon">🛒</div>
+      <h2>Cart</h2>
+      <span class="items-count">{{ itemsCount }} item{{ itemsCount !== 1 ? 's' : '' }}</span>
+    </div>
+    <button class="drawer-close" (click)="closeDrawer()" aria-label="Close cart">✕</button>
+  </div>
+
+  <div class="cart-body">
+
+    <!-- Empty state -->
+    <div *ngIf="items.length === 0" class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      <h3>Nothing here yet</h3>
+      <p>Add some products and they'll appear here</p>
+      <button (click)="closeDrawer()">Start Shopping</button>
+    </div>
+
+    <!-- Items -->
+    <div *ngFor="let item of items; trackBy: trackById" class="cart-item">
+
+      <div class="cart-item-header">
+        <img class="cart-item-img" [src]="item.product.imageUrl" [alt]="item.product.title" />
+        <div class="cart-item-info">
+          <h3>{{ item.product.title }}</h3>
+          <div class="item-price">
+            {{ getCurrencySymbol(item) }} {{ item.unitPrice.toFixed(2) }}
+          </div>
+          <span class="item-condition">{{ item.product.condition }}</span>
+        </div>
+      </div>
+
+      <p *ngIf="item.product.stockQuantity > 0" class="stock-badge in-stock">
+        In stock ({{ item.product.stockQuantity }})
+      </p>
+      <p *ngIf="!item.product.stockQuantity || item.product.stockQuantity === 0" class="stock-badge out-stock">
+        Out of stock
+      </p>
+
+      <div class="cyber-quantity" *ngIf="item.product.stockQuantity > 0">
+        <button class="cyber-quantity-control" (click)="onDecrease(item)" [disabled]="item.quantity <= 1">−</button>
+
+        <input type="number" class="cyber-quantity-value" [value]="item.quantity" min="1"
+          [max]="item.product.stockQuantity" (input)="onQuantityInput(item, $any($event.target).valueAsNumber)" />
+
+        <button class="cyber-quantity-control" (click)="onIncrease(item)"
+          [disabled]="item.quantity >= item.product.stockQuantity">+</button>
+      </div>
+
+      <div class="item-subtotal">
+        <span>Subtotal</span>
+        <strong>{{ getCurrencySymbol(item) }} {{ item.subtotal.toFixed(2) }}</strong>
+      </div>
+
+      <button class="remove-btn" (click)="onRemove(item)">Remove</button>
+    </div>
+
+  </div><!-- /cart-body -->
+
+  <!-- Footer -->
+  <div class="cart-footer" *ngIf="items.length > 0">
+    <div class="cart-total-row">
+      <span class="total-label">
+        Total
+        <span class="info-icon" (mouseenter)="showTooltip = true" (mouseleave)="showTooltip = false">ℹ️</span>
+        <div class="tooltip-text" *ngIf="showTooltip">Sum of all items in the cart.</div>
+      </span>
+      <span class="total-amount">{{ getFormattedTotal() }}</span>
+    </div>
+    <div class="drawer-actions">
+      <button class="checkout-btn" (click)="proceedToCheckout()" [disabled]="isCheckingOut">
+        {{ isCheckingOut ? 'Processing...' : 'Proceed to Checkout →' }}
+      </button>
+      <button class="close-btn" (click)="closeDrawer()">Continue Shopping</button>
+    </div>
+  </div>
+
+</div><!-- /cart-drawer -->
+
+
+<!-- ══════════════════════════════════════════════════════
+     CHECKOUT MODAL
+══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showCheckoutModal" (click)="closeCheckoutModal()">
+  <div class="modal-content checkout-modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2><span class="modal-icon">📋</span> Your Order</h2>
+    </div>
+
+    <div class="modal-body">
+      <p class="section-label">Order Summary</p>
+      <div class="order-summary">
+        <div class="order-item" *ngFor="let item of items; trackBy: trackById">
+          <span class="order-title">{{ item.product.title }}</span>
+          <span class="order-details">
+            {{ item.quantity }} × {{ getCurrencySymbol(item) }}{{ item.product.price.toFixed(2) }}
+            &nbsp;→&nbsp;<strong>{{ getCurrencySymbol(item) }}{{ item.subtotal.toFixed(2) }}</strong>
+          </span>
+        </div>
+        <div class="order-total">
+          <span>Order Total</span>
+          <strong>{{ getFormattedTotal() }}</strong>
+        </div>
+      </div>
+
+      <div class="order-form">
+        <label for="lib-notes">
+          Order Notes
+          <span class="notes-optional">(optional)</span>
+        </label>
+        <textarea id="lib-notes" placeholder="Special instructions, delivery notes…" rows="3"
+          (input)="onOrderNotesChange($event)"></textarea>
+      </div>
+
+      <div class="modal-actions">
+        <button class="cancel-btn" (click)="closeCheckoutModal()">Cancel</button>
+        <button class="confirm-order-btn" (click)="confirmOrder()" [disabled]="isCheckingOut">
+          {{ isCheckingOut ? 'Placing Order…' : 'Place Order →' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+     PAYMENT MODAL
+══════════════════════════════════════════════════════ -->
+<div class="modal-overlay" *ngIf="showPaymentModal" (click)="closePaymentModal()">
+  <div class="modal-content payment-modal" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2><span class="modal-icon">💳</span> Payment</h2>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="payment-order-info" *ngIf="currentOrder">
+        <h3>Order #{{ currentOrder.orderNumber }}</h3>
+        <p><strong>Amount due:</strong> €{{ currentOrder.totalAmount.toFixed(2) }}</p>
+        <p><strong>Items:</strong> {{ currentOrder.orderItems?.length || 0 }}</p>
+      </div>
+
+      <p class="section-label">Payment Method</p>
+      <div class="payment-methods">
+        <div class="payment-options">
+          <div *ngFor="let method of paymentMethods" class="payment-option"
+            [class.selected]="selectedPaymentMethod === method" (click)="selectPaymentMethod(method)">
+            <input type="radio" [id]="'lib-pm-' + method" [value]="method" [checked]="selectedPaymentMethod === method"
+              name="lib-paymentMethod" />
+            <label [for]="'lib-pm-' + method">{{ getPaymentMethodLabel(method) }}</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card form -->
+      <div class="payment-form" *ngIf="selectedPaymentMethod && selectedPaymentMethod !== 'PAYPAL'">
+        <h4>Card Details</h4>
+        <p class="mock-notice">Mock payment — use any token for testing.</p>
+        <input type="text" class="payment-input" placeholder="Card Token" (input)="onCardTokenChange($event)" />
+      </div>
+
+      <!-- PayPal form -->
+      <div class="payment-form" *ngIf="selectedPaymentMethod === 'PAYPAL'">
+        <h4>PayPal</h4>
+        <p class="mock-notice">Mock payment — use any email for testing.</p>
+        <input type="email" class="payment-input" placeholder="PayPal Email" (input)="onPaypalEmailChange($event)" />
+      </div>
+
+      <!-- Mock toggle -->
+      <div class="payment-mode-toggle">
+        <label>
+          <input type="checkbox" [checked]="useMockPayment" (change)="onMockToggle($event)" />
+          Use mock payment (testing)
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button class="cancel-btn" (click)="closePaymentModal()">Cancel</button>
+        <button class="pay-btn" (click)="confirmPayment()" [disabled]="!selectedPaymentMethod || isProcessingPayment">
+          {{ isProcessingPayment ? 'Processing…' : 'Pay Now →' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>

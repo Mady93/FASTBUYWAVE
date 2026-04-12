@@ -1,0 +1,125 @@
+<!-- table-layout.component.html -->
+<div class="table-layout" [class.table-layout--loading]="loading">
+
+  <!-- ── Header ──────────────────────────────────────────────────────────────── -->
+  @if (title || (actions && actions.length > 0)) {
+    <div class="tl-header">
+      <div class="tl-header-left">
+        <h3 class="tl-title" *ngIf="title">{{ title }}</h3>
+        <p class="tl-subtitle" *ngIf="subtitle">{{ subtitle }}</p>
+      </div>
+      <div class="tl-header-actions" *ngIf="actions && actions.length > 0">
+        <ng-container *ngFor="let act of actions">
+          <button
+            *ngIf="!act.hidden"
+            class="lm-btn lm-btn--{{ act.type || 'secondary' }}"
+            [disabled]="act.disabled || act.loading"
+            [matTooltip]="act.tooltip || ''"
+            (click)="actionClicked.emit(act.id)">
+            <span class="lm-spinner" *ngIf="act.loading">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5"
+                        stroke-dasharray="28" stroke-dashoffset="9" />
+              </svg>
+            </span>
+            <span *ngIf="act.icon && !act.loading">{{ act.icon }}</span>
+            {{ act.loading ? act.label + '…' : act.label }}
+          </button>
+        </ng-container>
+      </div>
+    </div>
+  }
+
+  <!-- ── Skeleton loading ─────────────────────────────────────────────────────── -->
+  @if (loading) {
+    <div class="tl-skeleton">
+      <div class="tl-sk-row tl-sk-header-row">
+        @for (col of skeletonCols; track $index) {
+          <div class="fl-sk-bar tl-sk-th"></div>
+        }
+      </div>
+      @for (row of skeletonRows; track row) {
+        <div class="tl-sk-row">
+          @for (col of skeletonCols; track $index) {
+            <div class="fl-sk-bar tl-sk-td"></div>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── Empty state ──────────────────────────────────────────────────────────── -->
+  <lib-empty-state
+    [show]="isEmptyStateFn ? isEmptyStateFn() : (!loading && isEmpty)"
+    [logoSrc]="getLogoSrcFn ? getLogoSrcFn() : (emptyStateLogo || '')">
+    <h3>{{ emptyStateMessage || 'No data available' }}</h3>
+    <p *ngIf="emptyStateSubtitle">{{ emptyStateSubtitle }}</p>
+  </lib-empty-state>
+
+  <!-- ── Tabella ──────────────────────────────────────────────────────────────── -->
+  @if (!loading && !isEmpty) {
+    <div class="tl-table-wrapper">
+      <table class="tl-table">
+        <thead>
+          <tr>
+            <th *ngIf="selectable" class="tl-col-select">
+              <input type="checkbox"
+                [checked]="isAllSelected()"
+                [indeterminate]="isIndeterminate()"
+                (change)="toggleAll()">
+            </th>
+            <th *ngFor="let col of columns"
+                [style.width]="col.width"
+                [style.min-width]="col.minWidth">
+              {{ col.label }}
+            </th>
+            <th *ngIf="actionButtonsTemplate" class="tl-col-actions">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of data"
+              (click)="rowClick.emit(row)"
+              [class.tl-row--clickable]="rowClick.observed"
+              [class.tl-row--selected]="isSelected(row)">
+
+            <td *ngIf="selectable" class="tl-col-select">
+              <input type="checkbox"
+                [checked]="isSelected(row)"
+                (change)="toggleRow(row)"
+                (click)="$event.stopPropagation()">
+            </td>
+
+            <td *ngFor="let col of columns" [attr.data-label]="col.label">
+              <ng-container *ngIf="!col.template; else customCellOutlet">
+                {{ row[col.field] }}
+              </ng-container>
+              <ng-template #customCellOutlet>
+                <ng-container *ngTemplateOutlet="customCellTemplate || null; context: { $implicit: row, column: col }">
+                </ng-container>
+              </ng-template>
+            </td>
+
+            <td *ngIf="actionButtonsTemplate" class="tl-col-actions" [attr.data-label]="'Actions'">
+              <ng-container *ngTemplateOutlet="actionButtonsTemplate; context: { $implicit: row }">
+              </ng-container>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    @if (pageable && totalItems > 0) {
+      <div class="tl-pagination">
+        <lib-pagination
+          [totalItems]="totalItems"
+          [pageSize]="pageSize"
+          [currentPage]="currentPage"
+          [pageSizeOptions]="pageSizeOptions"
+          (pageChanged)="pageChanged.emit($event)">
+        </lib-pagination>
+      </div>
+    }
+  }
+
+</div>

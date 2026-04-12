@@ -1,0 +1,18 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Local files (not needed in the container)
+.env
+token.json
+credentials.json
+
+# Documentation
+docs/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/

@@ -1,0 +1,43 @@
+<div class="dynamic-form-container gradient-form">
+    <div class="container h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-xl-10">
+          <div class="card rounded-3 text-black">
+            <div class="row g-0">
+              <div class="col-lg-6">
+                <div *ngIf="formTitle" class="text-center">
+                  <img [src]="logo" alt="logo">
+                  <h4 class="mt-1 mb-5 pb-1 baroque-title">{{ formTitle }}</h4>
+                </div>
+                <div class="card-body p-md-5 mx-md-4">
+                  <lib-dynamic-form [formTitle]="formTitle" [formConfig]="formConf" [layout]="layout"
+                    [formClass]="formClass" [cardClass]="cardClass" [backdrop]="backdrop" [backdropBlur]="backdropBlur"
+                    [enableSocialLogin]="enableSocialLogin" (formSubmit)="onLoginSubmit($event)"
+                    (formStatusChange)="onFormStatusChange($event)" (fieldValueChange)="onFieldValueChange($event)" (register)="onRegister()"
+                    ></lib-dynamic-form>
+  
+                </div>
+              </div>
+
+
+              <div class="col-lg-6 d-flex align-items-center gradient-custom-2" *ngIf="true" style="min-height: 33rem;">
+                <div class="w-100 h-100 d-flex justify-content-center align-items-center p-md-5">
+                  <img
+                    [src]="logo_"
+                    alt="logo_"
+                    class="img-fluid w-100 h-100 rounded shadow"
+                    style="object-fit: contain; max-height: 100%;"
+                  />
+                </div>
+              </div>
+              
+              
+  
+  
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,155 @@
+@use '@angular/material' as mat;
+
+@include mat.core();
+
+$custom-snackbar-theme: (
+  container-color: rgb(0, 0, 0),
+  button-color: #ffffff,
+  supporting-text-font: ('Cinzel', 'Baskerville', 'Georgia', serif),
+  supporting-text-size: 15px,
+  container-shape: '30px 5px 30px 5px / 10px 20px 10px 20px',
+  supporting-text-color: #ffffff
+);
+
+@include mat.snack-bar-overrides($custom-snackbar-theme);
+
+
+// Swiper
+@import 'swiper/css';
+@import 'swiper/css/navigation';
+@import 'swiper/css/pagination';
+@import 'swiper/css/zoom';
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  overflow: hidden;
+}
+
+@media (max-width: 576px) {
+  body .mat-mdc-snack-bar-container {
+    position: fixed !important;
+    top: 2.5rem !important;
+    left: 5% !important;
+    right: 5% !important;
+    width: 90% !important;
+    margin: 0 !important;
+    pointer-events: none !important;
+  }
+
+  body .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+    min-height: 36px !important;
+    height: 36px !important;
+    padding: 0 0.8rem !important;
+    border-radius: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    pointer-events: all !important;
+    position: relative !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  body .mat-mdc-snack-bar-container .mdc-snackbar__label {
+    font-size: 0.7rem !important;
+    line-height: 36px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    vertical-align: middle !important;
+  }
+}
+
+div:where(.swal2-icon) {
+  font-size: 7px !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm) {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel) {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ff3f3f 100%) !important;
+}
+
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-confirm),
+div:where(.swal2-container) button:where(.swal2-styled):where(.swal2-cancel) {
+  font-size: 12px !important;
+  padding: 6px 12px !important;
+  margin: 0 5px !important;
+}
+
+div:where(.swal2-container) h2:where(.swal2-title) {
+  font-size: 17px !important;
+}
+
+div:where(.swal2-container) div:where(.swal2-html-container) {
+  font-size: 11px !important;
+}
+
+div:where(.swal2-container) div:where(.swal2-popup) {
+  width: auto !important;
+  color: black !important;
+}
+
+div:where(.swal2-icon).swal2-warning {
+  border-color: #e90d0d !important;
+  color: #e90d0d !important;
+}
+
+.mat-mdc-select-panel {
+  .mat-mdc-option {
+    font-size: 0.72rem !important;
+    min-height: 32px !important;
+    padding: 0 12px !important;
+    line-height: 32px !important;
+  }
+}
+
+.mat-mdc-paginator {
+  .mat-mdc-select-value-text {
+    font-size: 0.65rem !important;
+  }
+
+  .mat-mdc-select-arrow {
+    transform: scale(0.8);
+  }
+}
+
+// Mobile
+@media (max-width: 768px) {
+  .mat-mdc-select-panel .mat-mdc-option {
+    font-size: 0.65rem !important;
+    min-height: 28px !important;
+    line-height: 28px !important;
+  }
+}
+
+// SweetAlert2 mobile
+@media (max-width: 768px) {
+  .swal2-popup {
+    max-width: 45% !important;
+    font-size: 0.5rem !important;
+  }
+
+  .swal2-title {
+    padding: 0 !important;
+  }
+
+  .swal2-icon {
+    width: 1.5rem !important;
+    height: 1.5rem !important;
+  }
+
+  .swal2-actions button {
+    font-size: 0.7rem !important;
+    padding: 3px 8px !important;
+  }
+
+  .swal2-title {
+    font-size: 15px !important;
+  }
+}

@@ -1,0 +1,178 @@
+<lib-modal
+  [isOpen]="true"
+  [title]="modalTitle"
+  [subtitle]="modalSubtitle"
+  [icon]="'event'"
+  [showClose]="true"
+  [closeOnBackdrop]="true"
+  [maxWidth]="'560px'"
+  [maxHeight]="'90vh'"
+  [actions]="modalActions"
+  (close)="closeDialog()"
+  (actionClicked)="onModalAction($event)">
+
+  <!-- ── Status + ruolo ────────────────────────────────────────── -->
+  <div class="apt-meta">
+    <span class="status-pill status-pill--{{ apt.status | lowercase }}">
+      <span class="status-dot"></span>
+      {{ getStatusLabel(apt.status) }}
+    </span>
+    <span class="role-pill" [class.role-pill--organizer]="isOrganizer">
+      {{ isOrganizer ? 'You are organizing' : 'You requested' }}
+    </span>
+  </div>
+
+  <!-- ── Prodotto ───────────────────────────────────────────────── -->
+  <div class="detail-product" *ngIf="apt.product.advertisement?.title">
+    <mat-icon>shopping_bag</mat-icon>
+    <span>{{ apt.product.advertisement!.title }}</span>
+    <span class="detail-price" *ngIf="apt.product.price">· €{{ apt.product.price }}</span>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- ── Data / Ora / Durata ────────────────────────────────────── -->
+  <div class="detail-section">
+    <h4 class="detail-section__label">
+      <mat-icon>schedule</mat-icon> Date & Time
+    </h4>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <span class="detail-item__key">Date</span>
+        <span class="detail-item__val">{{ apt.appointmentDatetime | date:'EEEE, d MMMM yyyy' }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__key">Time</span>
+        <span class="detail-item__val">{{ apt.appointmentDatetime | date:'HH:mm' }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-item__key">Duration</span>
+        <span class="detail-item__val">{{ apt.durationMinutes }} min</span>
+      </div>
+      <div class="detail-item" *ngIf="apt.confirmedAt">
+        <span class="detail-item__key">Confirmed</span>
+        <span class="detail-item__val">{{ apt.confirmedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- ── Partecipanti ──────────────────────────────────────────── -->
+  <div class="detail-section">
+    <h4 class="detail-section__label">
+      <mat-icon>people</mat-icon> Participants
+    </h4>
+    <div class="detail-people">
+      <div class="detail-person">
+        <div class="detail-person__avatar detail-person__avatar--org">
+          <mat-icon>event</mat-icon>
+        </div>
+        <div class="detail-person__info">
+          <span class="detail-person__role">Organizer</span>
+          <span class="detail-person__name">{{ apt.organizer.firstName }} {{ apt.organizer.lastName }}</span>
+          <span class="detail-person__email">{{ apt.organizer.email }}</span>
+        </div>
+      </div>
+      <div class="detail-person">
+        <div class="detail-person__avatar detail-person__avatar--req">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="detail-person__info">
+          <span class="detail-person__role">Requester</span>
+          <span class="detail-person__name">{{ apt.requester.firstName }} {{ apt.requester.lastName }}</span>
+          <span class="detail-person__email">{{ apt.requester.email }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Location + mappa ──────────────────────────────────────── -->
+  <ng-container *ngIf="apt.locationAddress">
+    <mat-divider></mat-divider>
+    <div class="detail-section">
+      <h4 class="detail-section__label">
+        <mat-icon>location_on</mat-icon> Location
+      </h4>
+      <p class="detail-address">{{ apt.locationAddress }}</p>
+      <p class="detail-notes" *ngIf="apt.locationNotes">{{ apt.locationNotes }}</p>
+      <div class="detail-map" #mapContainer *ngIf="apt.latitude && apt.longitude"></div>
+      <p class="detail-no-map" *ngIf="!apt.latitude || !apt.longitude">
+        <mat-icon>location_off</mat-icon> Map not available
+      </p>
+    </div>
+  </ng-container>
+
+  <!-- ── Descrizione ───────────────────────────────────────────── -->
+  <ng-container *ngIf="apt.description">
+    <mat-divider></mat-divider>
+    <div class="detail-section">
+      <h4 class="detail-section__label"><mat-icon>notes</mat-icon> Notes</h4>
+      <p class="detail-desc">{{ apt.description }}</p>
+    </div>
+  </ng-container>
+
+  <!-- ── Alert cancellazione ───────────────────────────────────── -->
+  <ng-container *ngIf="apt.status === AppointmentStatus.CANCELLED">
+    <mat-divider></mat-divider>
+    <div class="detail-alert detail-alert--danger">
+      <mat-icon>cancel</mat-icon>
+      <div>
+        <strong>Cancelled</strong>
+        <span *ngIf="apt.cancelledAt"> · {{ apt.cancelledAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        <p *ngIf="apt.cancellationReason">{{ apt.cancellationReason }}</p>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ── Completato + rating ───────────────────────────────────── -->
+  <ng-container *ngIf="apt.status === AppointmentStatus.COMPLETED">
+    <mat-divider></mat-divider>
+    <div class="detail-alert detail-alert--success">
+      <mat-icon>check_circle</mat-icon>
+      <div>
+        <strong>Completed</strong>
+        <span *ngIf="apt.completedAt"> · {{ apt.completedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+        <div class="rating" *ngIf="apt.rating">
+          <mat-icon *ngFor="let s of starRange"
+            [class.rating__star--filled]="s <= apt.rating!">star</mat-icon>
+          <span>{{ apt.rating }}/5</span>
+        </div>
+        <p *ngIf="apt.feedback">"{{ apt.feedback }}"</p>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- ── Proposte pending ───────────────────────────────────────── -->
+  <ng-container *ngIf="proposals.length > 0">
+    <mat-divider></mat-divider>
+    <div class="detail-section">
+      <h4 class="detail-section__label">
+        <mat-icon>swap_horiz</mat-icon> Pending Proposals
+      </h4>
+      <div class="proposal-list">
+        <div class="proposal-item" *ngFor="let p of proposals">
+          <div class="proposal-item__meta">
+            <span class="proposal-item__by">{{ p.proposedBy.firstName }} {{ p.proposedBy.lastName }}</span>
+            <span class="proposal-item__date">{{ p.createdAt | date:'dd/MM/yy HH:mm' }}</span>
+          </div>
+          <div class="proposal-item__details">
+            <span *ngIf="p.proposedDatetime">
+              <mat-icon>calendar_today</mat-icon>
+              {{ p.proposedDatetime | date:'dd/MM/yyyy HH:mm' }}
+            </span>
+            <span *ngIf="p.proposedLocationAddress">
+              <mat-icon>location_on</mat-icon>
+              {{ p.proposedLocationAddress }}
+            </span>
+            <span *ngIf="p.proposedDuration">
+              <mat-icon>timer</mat-icon>
+              {{ p.proposedDuration }} min
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+</lib-modal>

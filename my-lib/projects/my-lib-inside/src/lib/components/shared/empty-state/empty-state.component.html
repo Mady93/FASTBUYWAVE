@@ -1,0 +1,17 @@
+<div class="empty-state" *ngIf="isVisible">
+
+  <div class="particle-container">
+    <div class="particle" *ngFor="let p of particles" #particleEl></div>
+  </div>
+
+  <!-- 🆕 Griglia HUD -->
+  <canvas #hudGrid class="hud-grid"></canvas>
+
+  <div class="content">
+    <div class="logo-wrapper">
+      <img class="loader_logo" [src]="logo"/>
+    </div>
+    <ng-content></ng-content>
+  </div>
+
+</div>

@@ -1,0 +1,13 @@
+{
+  "name": "my-lib-inside",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^18.2.0",
+    "@angular/core": "^18.2.0"
+  },
+  "dependencies": {
+    "swiper": "^12.1.2",
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

@@ -1,0 +1,59 @@
+<lib-layout>
+
+  <lib-navbar *ngIf="(userRoles.includes('USER') || userRoles.includes('ADMIN'))" [menuItems]="combinedMenuItems" [logoUrl]="getLogoUrl()" (breadcrumbChangeNav)="onNavbarBreadcrumbChange($event)"
+    (linkActive)="onLinkActive($event)" [currentRoute]="currentRoute" [currentYear]="currentYear"
+    (navigateDasboard)="onNavigateDasboard($event)" 
+    (navigateLink)="onNavigateLink($event)" (logout)="onLogout($event)" [routeSource]="getRouteSource">
+  </lib-navbar>
+
+  <div class="first">
+
+    <div class="sidebar-container" *ngIf="(sidebarVisible$ | async) && (userRoles.includes('USER') || userRoles.includes('ADMIN'))">
+      <lib-sidebar [menuItemsSidebar]="menuItemsSidebar" (breadcrumbChangeSidebar)="onSidebarBreadcrumbChange($event)"
+        (linkActive)="onLinkActive($event)" (navigateDasboard)="onNavigateDasboard($event)"
+        (navigateLink)="onNavigateLink($event)" [routeSource]="getRouteSource">
+      </lib-sidebar>
+    </div>
+
+    <div class="main-content" [class.sidebar-open]="sidebarVisible$ | async">
+      <div class="content-area">
+
+        <lib-breadcrumb 
+        *ngIf="(breadcrumbListSidebar && breadcrumbListSidebar.length > 0) || 
+               (breadcrumbListNavbar && breadcrumbListNavbar.length > 0)"
+        [breadcrumbListSidebar]="breadcrumbListSidebar" 
+        [breadcrumbListNavbar]="breadcrumbListNavbar">
+      </lib-breadcrumb>
+      
+        <div class="widget-container" *ngIf="(hasProfile && profileCheckComplete) || currentCategory === 'settings_profile'">
+          <div class="container">
+            <ng-container *ngIf="currentComponent && currentRouteSource === 'navbar'"
+              [ngComponentOutlet]="currentComponent" [ngComponentOutletInjector]="injector"
+              [ngComponentOutletInputs]="{ category: currentCategory }">
+            </ng-container>
+
+            <ng-container *ngIf="currentComponent && currentRouteSource === 'sidebar'"
+              [ngComponentOutlet]="currentComponent" [ngComponentOutletInjector]="injector" [ngComponentOutletInputs]="
+              currentRoute !== '/dashboard' ? { category: currentCategory } : {}">
+            </ng-container>
+
+            <app-cart-project *ngIf="cartVisible"></app-cart-project>
+
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="spinner-container" *ngIf="isLoading$ | async">
+    <lib-spinner [spinner]="getspinner()" [isLoading]="isLoading"></lib-spinner>
+  </div>
+
+  <div class="container-footer">
+    <lib-footer [footerLinkItems]="footerLinkItems" [footerPaymentMethodItems]="footerPaymentMethodItems"></lib-footer>
+  </div>
+
+</lib-layout>
+<router-outlet></router-outlet>

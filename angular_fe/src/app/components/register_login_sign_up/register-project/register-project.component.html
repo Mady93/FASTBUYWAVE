@@ -1,0 +1,58 @@
+<div class="dynamic-form-container gradient-form">
+  <div class="container h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-xl-10">
+        <div class="card rounded-3 text-black">
+          <div class="row g-0">
+            <div class="col-lg-6">
+              <div *ngIf="formTitle" class="text-center">
+                <img [src]="logo" alt="logo">
+                <h4 class="mt-1 mb-5 pb-1 baroque-title">{{ formTitle }}</h4>
+              </div>
+              <div class="card-body p-md-5 mx-md-4">
+                <lib-dynamic-form [formTitle]="formTitle" [formConfig]="formConf" [layout]="layout"
+                  [formClass]="formClass" [cardClass]="cardClass" [backdrop]="backdrop" [backdropBlur]="backdropBlur"
+                  [enableSocialLogin]="enableSocialLogin" (formSubmit)="onRegisterSubmit($event)"
+                  (formStatusChange)="onFormStatusChange($event)" (fieldValueChange)="onFieldValueChange($event)"
+                  (googleSignin)="onGoogleSignIn()" (login)="login()">
+                </lib-dynamic-form>
+
+              </div>
+            </div>
+
+            <div class="col-lg-6 d-flex align-items-center gradient-custom-2" *ngIf="true">
+              <div class="text-white px-3 py-4 p-md-5 mx-md-4">
+                <h4 class="mb-4 fst-italic text-light">✨ Discover the smart way to buy and sell</h4>
+                <p class="small mb-0">
+                  Imagine a world where every purchase is simple, secure, and instantaneous.
+                  With <strong>Fast Buy Wave</strong>, you don't just buy or sell, you become part of a dynamic and
+                  ever-growing community.
+                  Every day brings new opportunities, new products, and new deals. Everything at your fingertips,
+                  wherever you are.
+                </p>
+                <br>
+                <div class="d-flex flex-column gap-2">
+                  <div class="small mb-0"><i class="fas fa-bolt text-warning me-2"></i>Post ads in 30 seconds</div>
+                  <div class="small mb-0"><i class="fas fa-tags text-warning me-2"></i>Find deals in your favorite
+                    category</div>
+                  <div class="small mb-0"><i class="fas fa-shield-alt text-warning me-2"></i>Secure transactions and
+                    verified users</div>
+                </div>
+                <p class="mt-4 small text-light">
+                  Forget the old way of selling. Discover Fast Buy Wave
+                </p>
+                <div class="image-container position-relative">
+                  <img [src]="logo_" alt="logo" class="positioned-image">
+                </div>
+
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

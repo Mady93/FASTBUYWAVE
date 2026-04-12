@@ -1,0 +1,719 @@
+@use 'tokens' as *;
+
+// ── MIXINS ────────────────────────────────────────────────────────────────────
+@mixin mobile {
+  @media (max-width: 768px) { @content; }
+}
+
+@mixin tablet {
+  @media (max-width: 1024px) { @content; }
+}
+
+.details {
+  color: $text;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  color: $text;
+
+  @include mobile { font-size: 12px; }
+}
+
+.one-wrap {
+  background: $bg;
+  height: 3rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: $white;
+    border-color: rgba($blue, 0.2);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($blue, 0.08);
+  }
+}
+
+.tgA {
+  @include mobile { font-size: 12px; }
+}
+
+.contact-icon {
+  color: $blue;
+}
+
+// =============================================================================
+//  COLOR UTILITY
+// =============================================================================
+
+.color {
+  background: $grad-primary;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 600;
+}
+
+.colorr {
+  color: $grey-900 !important;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+@include mobile {
+  .colorr      { font-size: 13px; }
+  .comment-date { font-size: 12px; }
+  .reply-count  { font-size: 12px; }
+}
+
+// =============================================================================
+//  COMMENT FORM
+// =============================================================================
+
+.custom-comment-form {
+  margin-bottom: 1rem;
+
+  .floating-comment-box {
+    background: linear-gradient(135deg, $white 0%, $grey-50 100%);
+    border: 1px solid $border;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba($midnight, 0.06);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    &.active { border-color: $blue; }
+
+    &.error {
+      .modern-textarea {
+        background: $error-bg;
+        color: $cancelled;
+        &::placeholder { color: $error-border; }
+      }
+      .corner-line { border-color: $cancelled; }
+    }
+  }
+
+  .comment-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .user-avatar-mini {
+        width: 28px; height: 28px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid $border;
+        transition: border-color 0.3s ease;
+
+        img { width: 100%; height: 1.9rem; object-fit: cover; }
+
+        .floating-comment-box.active & { border-color: $blue; }
+      }
+
+      .user-info {
+        display: flex;
+        flex-direction: column;
+
+        .username  { font-weight: 600; color: $text; font-size: 0.8rem; }
+        .posting-as { font-size: 0.7rem; color: $muted; }
+      }
+    }
+
+    .char-display {
+      .char-count {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.2rem 0.4rem;
+        border-radius: 10px;
+        background: $bg;
+        color: $grey-700;
+        transition: all 0.3s ease;
+
+        &.warning { background: $warning-bg; color: $pending; }
+      }
+    }
+  }
+
+  .textarea-wrapper {
+    position: relative;
+    margin-bottom: 0.75rem;
+
+    .modern-textarea {
+      width: 100%;
+      border: none; outline: none; resize: none;
+      background: transparent;
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 0.875rem;
+      line-height: 1.4;
+      color: $text;
+      min-height: 60px;
+      max-height: 150px;
+      padding: 0;
+
+      &::placeholder { color: $muted; font-style: italic; }
+      &:focus { outline: none; }
+    }
+
+    .corner-decoration {
+      position: absolute;
+      bottom: -6px; right: -6px;
+      width: 30px; height: 30px;
+      pointer-events: none;
+
+      .corner-line {
+        position: absolute;
+        bottom: 0; right: 0;
+        width: 15px; height: 15px;
+        border-bottom: 2px solid $border;
+        border-right: 2px solid $border;
+        border-bottom-right-radius: 6px;
+        transition: all 0.3s ease;
+
+        .floating-comment-box.active & {
+          border-color: $blue;
+          width: 18px; height: 18px;
+        }
+      }
+    }
+  }
+
+  .comment-box-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 0.75rem;
+    border-top: 1px solid $bg;
+
+    .footer-left {
+      display: flex;
+      gap: 0.5rem;
+
+      .action-btn {
+        background: none; border: none;
+        width: 30px; height: 30px;
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        cursor: pointer;
+        color: $muted;
+        transition: all 0.3s ease;
+
+        &:hover { background: $bg; color: $grey-700; transform: scale(1.05); }
+
+        mat-icon { font-size: 16px; width: 16px; height: 16px; }
+      }
+    }
+
+    .footer-right { display: flex; gap: 0.5rem; }
+  }
+
+  .error-messages {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+
+    .error-message {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      color: $cancelled;
+      font-size: 0.8rem;
+      animation: slideDown 0.3s ease;
+      background: $error-bg;
+      border-radius: 6px;
+      border-left: 3px solid $cancelled;
+
+      mat-icon { font-size: 14px; width: 14px; height: 14px; color: $cancelled; }
+    }
+  }
+}
+
+// =============================================================================
+//  BOTTONI ICONA FOOTER COMMENTI
+// =============================================================================
+
+.comment-box-footer .footer-right {
+
+  .cancel-btn,
+  .submit-btn {
+    padding: 0.5rem !important;
+    border: none;
+    border-radius: 50% !important;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative; overflow: hidden;
+    width: 40px; height: 40px; min-width: 40px !important;
+    display: flex; align-items: center; justify-content: center;
+
+    .btn-content {
+      display: flex; align-items: center; justify-content: center;
+
+      .btn-text { display: none !important; }
+
+      .btn-spinner { margin: 0 !important; circle { stroke: currentColor; } }
+
+      mat-icon { margin: 0 !important; font-size: 18px; width: 18px; height: 18px; transition: transform 0.2s ease; }
+    }
+
+    &:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+  }
+
+  .cancel-btn {
+    background: rgba($grey-50, 0.8);
+    color: $muted;
+    border: 1.5px solid $border !important;
+    backdrop-filter: blur(8px);
+
+    &:hover:not(:disabled) {
+      background: $error-bg;
+      color: $cancelled;
+      border-color: $error-border !important;
+      transform: scale(1.05);
+    }
+
+    &:active:not(:disabled) { transform: scale(0.95); transition: transform 0.1s ease; }
+  }
+
+  .submit-btn {
+    background: linear-gradient(90deg, $midnight, $navy);
+    color: $white;
+    border: 1px solid transparent !important;
+
+    &::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba($white, .1) 0%, rgba($white, 0) 50%);
+      border-radius: 50%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover:not(:disabled) {
+      background: linear-gradient(90deg, $navy, $blue-royal);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transform: scale(1.05);
+      &::before { opacity: 1; }
+    }
+
+    &.pulsing { animation: soft-breathing 4s ease-in-out infinite; }
+
+    &:active:not(:disabled) { transform: scale(0.95); transition: transform 0.1s ease; }
+
+    &:disabled { background: $btn-disabled-bg; color: $btn-disabled-text; }
+  }
+}
+
+// Reply form bottoni compatti
+.reply-form .comment-box-footer .footer-right {
+  .cancel-btn,
+  .submit-btn {
+    width: 34px !important; height: 34px !important; min-width: 34px !important;
+    .btn-content mat-icon { font-size: 15px !important; width: 15px !important; height: 15px !important; }
+  }
+}
+
+// =============================================================================
+//  ANIMAZIONI
+// =============================================================================
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes soft-breathing {
+  0%, 100% { transform: scale(1);    box-shadow: 0 2px 8px  rgba($midnight, 0.15); }
+  50%       { transform: scale(1.02); box-shadow: 0 4px 12px rgba($blue, 0.25); }
+}
+
+@keyframes gentle-pulse {
+  0%, 100% { box-shadow: 0 2px 8px  rgba($midnight, 0.2),  0 0 0 0 rgba($blue, 0.1); }
+  50%       { box-shadow: 0 4px 16px rgba($midnight, 0.3),  0 0 0 4px rgba($blue, 0); }
+}
+
+@keyframes highlight-fade {
+  0%   { background-color: $highlight-bg; }
+  100% { background-color: transparent; }
+}
+
+// =============================================================================
+//  COMMENT TREE
+// =============================================================================
+
+.comment-tree-container {
+  width: 100%;
+  padding: 1rem 0;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.comment-stats {
+  background: $white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 20px;
+  box-shadow: $sh-card;
+  border: 1px solid $border;
+}
+
+.stat-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.875rem;
+  color: $text;
+}
+
+.icon-small {
+  font-size: 16px; width: 16px; height: 16px;
+  color: $blue !important;
+}
+
+.counter { font-weight: 600; color: $text; }
+
+.new-comment-card {
+  border-radius: 12px;
+  box-shadow: $sh-card;
+  border: 1px solid $border;
+  background: $white;
+  transition: box-shadow 0.3s ease;
+  margin-bottom: 1.25rem;
+
+  &:hover { box-shadow: 0 8px 24px rgba($midnight, 0.12); }
+}
+
+.comments-list { display: flex; flex-direction: column; gap: 0; }
+
+.comment-item {
+  position: relative; width: 100%; margin-top: 1.5rem;
+
+  &:first-child { margin-top: 0; }
+  .children-container & { margin-top: 1rem; }
+}
+
+.comment-main { display: flex; gap: 0; position: relative; z-index: 2; }
+
+.comment-content-wrapper { flex: 1; min-width: 0; width: 100%; }
+
+.comment-card {
+  background: transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important; margin: 0 !important;
+  box-shadow: none !important; border: none !important;
+
+  &.mat-mdc-card { background: transparent !important; box-shadow: none !important; }
+  &.highlight { animation: highlight-fade 1.5s ease-out; }
+}
+
+.author-with-avatar {
+  display: flex; gap: 1rem; flex: 1; width: 100%;
+  @include mobile { gap: 0.75rem; }
+}
+
+.inline-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%; overflow: hidden; flex-shrink: 0;
+  background: $grad-primary;
+  box-shadow: 0 2px 8px rgba($midnight, 0.15);
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+
+  @include mobile { width: 32px; height: 32px; }
+}
+
+.default-avatar {
+  font-size: 40px; color: $white;
+  @include mobile { font-size: 32px; }
+}
+
+.comment-author { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+
+.comment-date { font-size: 0.875rem; color: $muted; font-weight: 400; margin: 0; }
+
+.reply-count {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 0.875rem; color: $blue;
+  cursor: pointer; transition: all 0.2s ease; font-weight: 400;
+
+  &:hover { color: $navy; }
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+}
+
+.comment-level-indicator { display: none; }
+
+.comment-content {
+  font-size: 0.875rem !important;
+  color: $grey-700;
+  line-height: 1.6;
+  margin: 0 !important; padding: 0 !important;
+  word-wrap: break-word;
+
+  @include mobile { font-size: 0.8rem !important; }
+}
+
+.menu-trigger-btn {
+  background: transparent !important; border: none !important; box-shadow: none !important;
+  color: $muted; width: 32px; height: 32px; padding: 0 !important; min-width: auto !important;
+
+  &:hover { color: $blue; background: transparent !important; }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+.children-container {
+  margin-left: 1em !important; margin-top: 1rem;
+  @include mobile { margin-left: 0.8em !important; }
+}
+
+.reply-form { margin-top: 1rem; padding-top: 0; border-top: none; }
+
+.reply-context {
+  display: inline-flex; align-items: center; gap: 0.25rem;
+  margin-bottom: 0.5rem; font-size: 0.8rem;
+
+  .reply-prefix-icon { font-size: 14px; width: 14px; height: 14px; color: $muted; margin-right: 0.1rem; }
+
+  .reply-to {
+    color: $blue; font-weight: 500; cursor: pointer; transition: color 0.2s ease;
+    &:active { color: $navy; }
+  }
+
+  @include mobile {
+    font-size: 0.75rem; margin-bottom: 0.4rem;
+    .reply-prefix-icon { font-size: 12px; width: 12px; height: 12px; }
+  }
+}
+
+// =============================================================================
+//  NO COMMENTS / LOADING / DELETED
+// =============================================================================
+
+.no-comments {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 3rem 1.5rem; text-align: center; color: $muted; min-height: 200px;
+
+  .no-comments-icon { font-size: 48px; width: 48px; height: 48px; color: $border; margin-bottom: 1rem; }
+  .ncmt { font-size: 1.1rem; font-weight: 600; color: $text; margin-bottom: 0.5rem; }
+  p { font-size: 0.9rem; color: $muted; margin: 0; }
+}
+
+.loading-container {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 2rem; gap: 1rem;
+  p { color: $muted; font-size: 0.9rem; }
+}
+
+.comment-deleted  { opacity: 0.6; }
+.deleted-comment  { opacity: 0.5; }
+.deleted-content  { font-style: italic; color: $muted !important; }
+
+// =============================================================================
+//  EMOJI PICKER
+// =============================================================================
+
+.emoji-picker-container { position: relative; }
+
+.emoji-picker-wrapper {
+  position: absolute; bottom: 100%; left: 0;
+  transform: translateZ(0); will-change: transform;
+}
+
+::ng-deep .custom-comment-form,
+::ng-deep .floating-comment-box,
+::ng-deep .comment-box-footer { overflow: visible !important; }
+
+.simple-emoji-picker {
+  background: $white;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba($midnight, 0.15);
+  border: 1px solid $border;
+  font-family: 'Segoe UI', sans-serif;
+
+  .emoji-categories {
+    padding: 12px 16px;
+    border-bottom: 1px solid $bg;
+    background: $bg; text-align: center;
+    .category-title { font-weight: 600; color: $text; font-size: 14px; }
+  }
+
+  .emoji-grid {
+    display: grid; grid-template-columns: repeat(8, 1fr);
+    gap: 2px; padding: 12px;
+
+    .emoji-item {
+      font-size: 1rem; cursor: pointer; border-radius: 6px;
+      text-align: center;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex; align-items: center; justify-content: center;
+
+      &:hover { background: $bg; transform: scale(1.2); }
+    }
+  }
+}
+
+// =============================================================================
+//  MATERIAL OVERRIDES
+// =============================================================================
+
+::ng-deep .comment-card.mat-mdc-card {
+  background: transparent !important;
+  box-shadow: none !important; border-radius: 0 !important; padding: 0 !important;
+
+  .mat-mdc-card-header  { padding: 0 !important; margin: 0 !important; }
+  .mat-mdc-card-title   { margin: 0 !important; padding: 0 !important; }
+  .mat-mdc-card-subtitle { margin: 0 !important; padding: 0 !important; }
+
+  .mat-mdc-card-content {
+    padding: 0 !important; margin: 0 !important;
+    &:last-child { padding-bottom: 0 !important; }
+    p { margin: 0 !important; }
+  }
+
+  .mat-mdc-card-actions {
+    padding: 0 !important; margin: 0.75rem 0 0 0 !important;
+    &:last-child { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+  }
+}
+
+::ng-deep .mat-mdc-card-actions {
+  display: flex; flex-direction: row; align-items: center;
+  box-sizing: border-box; min-height: 0; padding: 8px;
+}
+
+::ng-deep .comment-card .mat-mdc-card-content {
+  padding: 0 !important; margin: 0 !important;
+  &:last-child { padding-bottom: 0 !important; }
+  p { margin: 0 !important; }
+}
+
+::ng-deep .comment-card .mat-mdc-card-actions {
+  padding: 0 !important; margin: 0.75rem 0 0 0 !important;
+}
+
+// =============================================================================
+//  MOBILE MENU
+// =============================================================================
+
+@include mobile {
+  ::ng-deep .mat-mdc-menu-panel {
+    max-width: min(300px, 90vw) !important;
+    max-height: min(250px, 60vh) !important;
+    overflow-y: auto !important;
+    position: fixed !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  ::ng-deep .mat-mdc-menu-content {
+    .mat-mdc-menu-item {
+      .mat-icon { font-size: 20px !important; width: 20px !important; height: 20px !important; margin-right: 12px !important; }
+      span { font-size: 14px !important; }
+      .rplto { font-size: 10px !important; }
+    }
+  }
+}
+
+// =============================================================================
+//  UTILITY CLASSES
+// =============================================================================
+
+.d-flex                  { display: flex !important; }
+.justify-content-between { justify-content: space-between !important; }
+.justify-content-center  { justify-content: center; }
+.align-items-center      { align-items: center !important; }
+.flex-grow-1             { flex-grow: 1 !important; }
+.flex-shrink-1           { flex-shrink: 1 !important; }
+.flex-start              { display: flex; align-items: flex-start; }
+.mt-1                    { margin-top: 0.5rem; }
+.mt-2                    { margin-top: 1rem; }
+.mt-4                    { margin-top: 1.5rem; }
+.mb-0                    { margin-bottom: 0 !important; }
+.mb-1                    { margin-bottom: 0.25rem !important; }
+.mb-2                    { margin-bottom: 1rem; }
+.me-3                    { margin-right: 1rem !important; }
+.small                   { font-size: 0.875rem; }
+
+// =============================================================================
+//  RESPONSIVE MOBILE
+// =============================================================================
+
+@include mobile {
+  .content-container { padding: 0.5rem; gap: 1rem; }
+  .error-message { font-size: 9px !important; }
+
+  .custom-comment-form {
+    .floating-comment-box { padding: 0.5rem; border-radius: 6px; }
+
+    .comment-box-header {
+      margin-bottom: 0.4rem;
+      .user-avatar-mini { width: 20px; height: 20px; }
+      .user-info {
+        .username   { font-size: 0.65rem; }
+        .posting-as { font-size: 0.6rem; }
+      }
+      .char-count { font-size: 0.6rem; padding: 0.1rem 0.3rem; }
+    }
+
+    .textarea-wrapper .modern-textarea {
+      min-height: 40px; max-height: 90px;
+      font-size: 0.75rem; line-height: 1.25;
+      &::placeholder { font-size: 0.7rem; }
+    }
+
+    .error-messages .error-message {
+      font-size: 0.65rem !important; padding: 0.3rem 0.4rem;
+      mat-icon { font-size: 10px; width: 10px; height: 10px; }
+    }
+
+    .comment-box-footer {
+      padding-top: 0.4rem;
+      .action-btn { width: 24px; height: 24px; mat-icon { font-size: 12px; width: 12px; height: 12px; } }
+      .footer-right {
+        .cancel-btn, .submit-btn {
+          width: 30px !important; height: 30px !important; min-width: 30px !important;
+          .btn-content mat-icon { font-size: 14px !important; width: 14px !important; height: 14px !important; }
+        }
+      }
+    }
+  }
+
+  .reply-form .custom-comment-form {
+    .floating-comment-box { padding: 0.45rem; }
+    .textarea-wrapper .modern-textarea { min-height: 35px; max-height: 70px; font-size: 0.7rem; }
+    .cancel-btn, .submit-btn { width: 26px !important; height: 26px !important; min-width: 26px !important; }
+  }
+
+  .no-comments {
+    padding: 2rem 1rem; min-height: 150px;
+    .no-comments-icon { font-size: 36px; width: 36px; height: 36px; }
+    .ncmt { font-size: 1rem; }
+    p { font-size: 0.8rem; }
+  }
+
+  .simple-emoji-picker {
+    .emoji-categories { padding: 6px; }
+    .emoji-grid {
+      grid-template-columns: repeat(7, 1fr); gap: 1px; padding: 10px;
+      .emoji-item { font-size: 0.9rem; padding: 2px; }
+    }
+  }
+}
+
+.cdk-overlay-backdrop.cdk-overlay-dark-backdrop {
+  background: rgba($midnight, 0.45);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}

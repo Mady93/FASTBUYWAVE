@@ -1,0 +1,15 @@
+<div class="form-field email-field" [class.invalid]="showError">
+  <label *ngIf="label" [for]="name" class="form-label">
+    {{ label }} <span *ngIf="required" class="required-marker">*</span>
+  </label>
+
+  <div class="input-container">
+    <input type="email" [formControl]="formControl" [id]="name" [placeholder]="placeholder || ''" [value]="value"
+       [required]="required" class="form-control email-input" [class.is-invalid]="showError"
+      (input)="onInput($event)" (blur)="onBlur()" />
+
+    <div *ngIf="showError" class="error-message">
+      {{ getErrorMessage() }}
+    </div>
+  </div>
+</div>

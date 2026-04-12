@@ -1,0 +1,90 @@
+<lib-table-layout
+  title=""
+  [data]="(users$ | async) || []"
+  [columns]="columns"
+  [actions]="tableActions"
+  [loading]="(isLoading$ | async) ?? false"
+  [pageable]="true"
+  [totalItems]="(pagination$ | async)?.totalItems || 0"
+  [pageSize]="pageable.size"
+  [currentPage]="(pagination$ | async)?.currentPage || 0"
+  [pageSizeOptions]="[5, 10, 15, 20]"
+  [emptyStateMessage]="(showActive$ | async) ? 'No active users found' : 'No inactive users found'"
+  [emptyStateSubtitle]="(showActive$ | async) ? 'There are no active users at the moment.' : 'There are no inactive users at the moment.'"
+  [isEmptyStateFn]="isEmptyState"
+  [getLogoSrcFn]="getLogoSrc"
+  (actionClicked)="onTableActionClicked($event)"
+  (pageChanged)="onPageChanged($event)">
+
+  <!-- ── Celle personalizzate ──────────────────────────────────────────────── -->
+  <ng-template #customCell let-row let-col="column">
+
+    <!-- Email -->
+    <ng-container *ngIf="col.field === 'email'">
+      <input
+        #emailInput
+        [(ngModel)]="row.email"
+        (blur)="row.userId && updateUser(row.userId, row)"
+        (keydown.enter)="row.userId && updateUser(row.userId, row)" />
+    </ng-container>
+
+    <!-- Roles -->
+    <ng-container *ngIf="col.field === 'roles'">
+      <input
+        #rolesInput
+        [(ngModel)]="row.roles"
+        (blur)="row.userId && updateUser(row.userId, row)"
+        (keydown.enter)="row.userId && updateUser(row.userId, row)" />
+    </ng-container>
+
+    <!-- Registration -->
+    <ng-container *ngIf="col.field === 'registrationDate'">
+      {{ row.registrationDate | date:'dd/MM/yyyy HH:mm' }}
+    </ng-container>
+
+    <!-- Last Login -->
+    <ng-container *ngIf="col.field === 'lastLogin'">
+      {{ row.lastLogin | date:'dd/MM/yyyy HH:mm' }}
+    </ng-container>
+
+    <!-- Active -->
+    <ng-container *ngIf="col.field === 'active'">
+      {{ row.active ? 'Yes' : 'No' }}
+    </ng-container>
+
+  </ng-template>
+
+  <!-- ── Bottoni azione per riga ───────────────────────────────────────────── -->
+  <ng-template #actionButtons let-row>
+    <div class="status-badge-container">
+      <div class="badge-with-info">
+        <button mat-icon-button
+          [color]="row.active ? 'primary' : 'warn'"
+          [class.loading]="isUserLoading(row.userId)"
+          [matTooltip]="isCurrentUser(row.userId) ? 'You cannot deactivate yourself' : (isMobile ? '' : (row.active ? 'Tap icon to deactivate this user' : 'Tap icon to activate this user'))"
+          [disabled]="isUserLoading(row.userId) || isCurrentUser(row.userId)"
+          (click)="!isUserLoading(row.userId) && !isCurrentUser(row.userId) && toggleActive(row)">
+          <ng-container *ngIf="isUserLoading(row.userId); else iconContent">
+            <mat-spinner diameter="20"></mat-spinner>
+          </ng-container>
+          <ng-template #iconContent>
+            <mat-icon>{{ row.active ? 'check_circle' : 'cancel' }}</mat-icon>
+          </ng-template>
+        </button>
+
+        <span class="mobile-info-icon"
+          *ngIf="!isUserLoading(row.userId)"
+          (click)="toggleMobileHint(row.userId)">
+          ℹ️
+        </span>
+      </div>
+
+      <div class="mobile-hint-wrapper" *ngIf="showMobileHint[row.userId]">
+        <div class="mobile-hint">
+          {{ row.active ? 'Tap icon to deactivate this user' : 'Tap icon to activate this user' }}
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+</lib-table-layout>

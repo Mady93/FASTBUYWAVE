@@ -1,0 +1,905 @@
+/* ========================================
+   TEMA CHIARO PERSONALIZZATO PER TYPEDOC
+   NAVBAR BLU (#051552) CON IMMAGINE
+   ======================================== */
+
+/* 1. VARIABILI GLOBALI PER IL TEMA CHIARO */
+:root {
+    --color-background: #ffffff !important;
+    --color-background-secondary: #f8fafc !important;
+    --color-background-navbar: #051552 !important;
+    --color-text: #1e293b !important;
+    --color-text-aside: #475569 !important;
+    --color-link: #2563eb !important;
+    --color-accent: #e1dff3 !important;
+    --color-border: #e2e8f0 !important;
+    --color-table-header-bg: #f1f5f9 !important;
+    --color-table-border: #e2e8f0 !important;
+    --color-code-bg: #f1f5f9 !important;
+    --color-code-text: #1e293b !important;
+    /* --- SCROLL: BLU SCURO METALLIZZATO --- */
+    --color-scrollbar-track: #e2e8f0 !important;
+    --color-scrollbar-thumb: #1e3a8a !important;
+    --color-scrollbar-thumb-hover: #0f2b6d !important;
+    /* --- FINE SCROLL --- */
+    --color-on-this-page-bg: #f8fafc !important;
+    --color-on-this-page-border: #e2e8f0 !important;
+    --color-on-this-page-text: #475569 !important;
+    --color-on-this-page-text-hover: #2563eb !important;
+    --color-on-this-page-current: #2563eb !important;
+    --hl-6: black !important;
+    --hl-2: #E85113 !important;
+    --hl-3: #068EFF !important;
+    --hl-4: #15A018 !important;
+    --hl-0: #163098 !important;
+    --hl-7: #700EC2 !important;
+    --hl-1: #897676 !important;
+    --hl-9: #FC06CA !important;
+    --hl-10: #E01616 !important;
+    --hl-11: #45DEC8 !important;
+    --font-family-text: inherit !important;
+    --font-family-code: inherit !important;
+}
+
+/* 2. NASCONDI IL SELECTOR DEL TEMA */
+select.tsd-theme,
+.tsd-theme-toggle,
+.settings-label,
+option[value="os"],
+option[value="light"],
+option[value="dark"] {
+    display: none !important;
+}
+
+.tsd-toolbar-contents .tsd-theme-toggle,
+.tsd-toolbar-contents select,
+.tsd-toolbar-contents .settings-label {
+    display: none !important;
+}
+
+/* 3. STILI GENERALI DEL CORPO E DEI TITOLI */
+html {
+    color-scheme: light !important;
+}
+
+body {
+    background: var(--color-background) !important;
+    color: var(--color-text) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--color-text) !important;
+}
+
+/* Stile specifico per l'h1 principale delle pagine */
+.tsd-page-title h1 {
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--color-link) !important;
+    background: rgba(37, 99, 235, 0.08) !important;
+    border: 1px solid rgba(37, 99, 235, 0.2) !important;
+    border-radius: 999px;
+    padding: 3px 10px;
+    display: inline flow-root list-item;
+}
+
+/* 4. STILI PER LA NAVBAR */
+.tsd-toolbar {
+    background: var(--color-background-navbar) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.tsd-toolbar-contents {
+    background: var(--color-background-navbar) !important;
+}
+
+/* Stile per il titolo nella navbar */
+.title {
+    font-size: 0 !important;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none !important;
+}
+
+/* TU inserirai qui la tua immagine (sostituisci url('')) */
+.title::before {
+    content: "";
+    display: inline-block;
+    width: 73px;
+    height: 60px;
+    background-image: url('data:image/png;base64,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');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    flex-shrink: 0;
+}
+
+.title::after {
+    content: "Ui Library · Docs";
+    font-size: 1.6rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    font-family: 'Almendra', serif !important;
+    background: white !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+#angular-project-setup {
+    display: none !important;
+}
+
+/* 5. STILI PER LE TABELLE */
+.col-content table,
+.tsd-comment table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin: 1rem 0 1.5rem;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--color-border) !important;
+}
+
+.col-content table thead tr,
+.tsd-comment table thead tr {
+    background: var(--color-table-header-bg) !important;
+    border-bottom: 1px solid var(--color-border) !important;
+}
+
+.col-content table thead th,
+.tsd-comment table thead th {
+    padding: 0.7rem 1rem !important;
+    font-size: 0.68rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    color: var(--color-text) !important;
+}
+
+.col-content table tbody tr,
+.tsd-comment table tbody tr {
+    border-bottom: 1px solid var(--color-border) !important;
+    transition: background 0.12s;
+}
+
+.col-content table tbody tr:last-child,
+.tsd-comment table tbody tr:last-child {
+    border-bottom: none !important;
+}
+
+.col-content table tbody tr:nth-child(even),
+.tsd-comment table tbody tr:nth-child(even) {
+    background: rgba(0, 0, 0, 0.02) !important;
+}
+
+.col-content table tbody tr:hover,
+.tsd-comment table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.05) !important;
+}
+
+.col-content table tbody td,
+.tsd-comment table tbody td {
+    vertical-align: middle !important;
+    border: none !important;
+}
+
+.col-content table tbody td:first-child,
+.tsd-comment table tbody td:first-child {
+    font-family: 'Courier New', monospace !important;
+    font-size: 0.78rem !important;
+    color: var(--color-link) !important;
+    white-space: nowrap;
+}
+
+.col-content table tbody td:nth-child(2),
+.tsd-comment table tbody td:nth-child(2) {
+    color: var(--color-text-aside) !important;
+    font-size: 0.78rem !important;
+}
+
+/* 6. STILI PER LO SCROLL - VERSIONE PULITA */
+/* WebKit (Chrome, Safari, Edge) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+.tsd-navigation::-webkit-scrollbar,
+.tsd-page-content::-webkit-scrollbar,
+.col-content::-webkit-scrollbar {
+    width: 12px !important;
+    height: 12px !important;
+}
+
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track,
+.tsd-navigation::-webkit-scrollbar-track,
+.tsd-page-content::-webkit-scrollbar-track,
+.col-content::-webkit-scrollbar-track {
+    background: var(--color-scrollbar-track) !important;
+    border-radius: 20px !important;
+}
+
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb,
+.tsd-navigation::-webkit-scrollbar-thumb,
+.tsd-page-content::-webkit-scrollbar-thumb,
+.col-content::-webkit-scrollbar-thumb {
+    background: var(--color-scrollbar-thumb) !important;
+    border-radius: 20px !important;
+}
+
+html::-webkit-scrollbar-thumb:hover,
+body::-webkit-scrollbar-thumb:hover,
+.tsd-navigation::-webkit-scrollbar-thumb:hover,
+.tsd-page-content::-webkit-scrollbar-thumb:hover,
+.col-content::-webkit-scrollbar-thumb:hover {
+    background: var(--color-scrollbar-thumb-hover) !important;
+}
+
+/* Firefox */
+html,
+body,
+.tsd-navigation,
+.tsd-page-content,
+.col-content {
+    scrollbar-width: thin !important;
+    scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track) !important;
+}
+
+/* 7. STILI PER IL PANNELLO "ON THIS PAGE" */
+.page-menu,
+.tsd-page-menu {
+    padding-left: 1.25rem;
+    margin-left: 0.5rem;
+    background: ghostwhite !important;
+}
+
+.tsd-page-navigation {
+    font-size: 0.78rem;
+}
+
+.tsd-page-navigation>summary,
+.tsd-page-navigation .tsd-accordion-summary {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-aside) !important;
+    margin-bottom: 0.6rem;
+    list-style: none;
+    cursor: default;
+}
+
+.tsd-page-navigation a {
+    display: block;
+    padding: 3px 0 3px 0.75rem;
+    color: var(--color-text-aside) !important;
+    text-decoration: none;
+    line-height: 1.5;
+    transition: all 0.12s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tsd-page-navigation a:hover {
+    color: var(--color-on-this-page-text-hover) !important;
+}
+
+.tsd-page-navigation a.current {
+    color: var(--color-on-this-page-current) !important;
+    border-left-color: var(--color-on-this-page-current) !important;
+}
+
+.tsd-page-navigation ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tsd-page-navigation ul ul a {
+    padding-left: 1.5rem;
+    color: var(--color-text-aside) !important;
+}
+
+.tsd-page-navigation ul ul ul a {
+    padding-left: 2.25rem;
+}
+
+/* Nascondi filtri Private / Inherited / External */
+.tsd-filter-visibility,
+.tsd-filter-group {
+    display: none !important;
+}
+
+.tsd-navigation.settings {
+    display: none !important;
+}
+
+/* 8. LAYOUT PRINCIPALE - PROPORZIONI CORRETTE */
+.container-main {
+    display: flex !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
+    padding: 0 2rem !important;
+    gap: 2rem !important;
+}
+
+/* Colonna SINISTRA - contiene navigation e site-menu */
+.col-sidebar {
+    width: 280px !important;
+    flex-shrink: 0 !important;
+    order: 1 !important;
+}
+
+/* Colonna CENTRALE - contenuto principale */
+.col-content {
+    flex: 1 !important;
+    min-width: 0 !important;
+    order: 2 !important;
+}
+
+/* Colonna DESTRA - "On this page" */
+.page-menu {
+    width: 260px !important;
+    flex-shrink: 0 !important;
+    order: 3 !important;
+    position: sticky !important;
+    top: 20px !important;
+    align-self: flex-start !important;
+}
+
+/* Sticky per la sidebar sinistra (opzionale) */
+.col-sidebar {
+    position: sticky !important;
+    top: 20px !important;
+    align-self: flex-start !important;
+    max-height: calc(100vh - 40px) !important;
+    overflow-y: auto !important;
+}
+
+
+.tsd-nested-navigation>li>details {
+    margin-left: -0.9375rem !important;
+}
+
+.tsd-page-navigation>.tsd-accordion-summary h3 {
+    text-transform: unset !important;
+    color: var(--color-accent) !important;
+    font-weight: bold !important;
+}
+
+/* Versione con più spazio */
+.site-menu,
+.tsd-navigation,
+.page-menu,
+.col-content {
+    padding-right: 16px !important;
+}
+
+.col-content {
+    padding-right: 20px !important;
+}
+
+.hl-1 {
+    font-weight: bold !important;
+    font-size: 16px !important;
+}
+
+.tsd-page-navigation>.tsd-accordion-summary h3 {
+    color: #230de2 !important;
+}
+
+/* O ancora più specifico per le singole celle */
+.col-content table thead th,
+.tsd-comment table thead th,
+table thead th {
+    background-color: var(--color-background-navbar) !important;
+    color: white !important;
+}
+
+.col-content table {
+    border-radius: 0px !important;
+}
+
+tsd-typography hr {
+    color: #c9a1e5 !important;
+}
+
+code:not(.tsd-tag) {
+    background-color: unset !important;
+    color: #3b1ec5 !important;
+    font-size: 12px !important;
+}
+
+#platform-documentation {
+    color: #4f97b9 !important;
+    text-align: center !important;
+}
+
+#table-of-contents {
+    color: #c22bb2 !important;
+    text-align: center !important;
+}
+
+#installation {
+    color: #c22bb2 !important;
+    text-align: center !important;
+}
+
+#usage {
+    color: #c22bb2 !important;
+    text-align: center !important;
+}
+
+#build {
+    color: #c22bb2 !important;
+    text-align: center !important;
+}
+
+#documentation {
+    color: #c22bb2 !important;
+    text-align: center !important;
+}
+
+#available-scripts {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#how-works {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#delete-documentation {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#dependency-graph {
+    color: #c22bb2 !important;
+    text-align: center !important;
+}
+
+#node-colors {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#prerequisites {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#generate-the-mermaid-graph-file {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#regenerate-the-graph {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#delete-the-graph-files {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#export-graph-as-svg {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#delete-the-svg {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#file-locations {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#dependencies {
+    color: #c22bb2 !important;
+    text-align: center !important;
+}
+
+#peer-dependencies {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#dependencies-1 {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#workspace-setup {
+    color: #c22bb2 !important;
+    text-align: center !important;
+}
+
+#\31 -create-a-new-angular-workspace-without-an-application {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#\32 -generate-the-library {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#\33 -generate-a-component-inside-the-library {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#\34-install-library-dependencies {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#\35-build-and-link {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#\36-clean-cache {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+#what-does {
+    color: #c2642b !important;
+    text-align: center !important;
+}
+
+.tsd-page-title {
+    text-align: center !important;
+    list-style: none !important;
+    display: grid !important;
+    margin-bottom: 2rem !important;
+}
+
+.site-menu {
+    background: ghostwhite !important;
+}
+
+.tsd-small-nested-navigation {
+    margin-left: 1rem !important;
+}
+
+.tsd-accordion-summary {
+    display: flex !important;
+    align-items: center !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+}
+
+.tsd-accordion-summary svg {
+    order: 3 !important;
+    flex-shrink: 0 !important;
+    margin-left: 4px !important;
+}
+
+.tsd-accordion-summary>span {
+    order: 1 !important;
+    flex: 1 !important;
+}
+
+.tsd-accordion-summary>span:last-child {
+    order: 2 !important;
+    flex: 0 !important;
+    margin-right: 4px !important;
+}
+
+.hl-14 {
+    color: #0870A8 !important;
+}
+
+/* ========================================
+   EFFETTO HOVER
+   Linea che si allarga dal centro PER TITOLI SEZIONI (Constructors, Properties, Methods)
+   ======================================== */
+
+/* Rimuove lo sfondo originale di TypeDoc */
+.tsd-page-navigation .tsd-accordion-summary[data-key]:hover {
+    background: transparent !important;
+    background-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Il nostro hover figo - solo linea che si allarga dal centro */
+.tsd-page-navigation .tsd-accordion-summary[data-key] {
+    position: relative !important;
+    cursor: pointer !important;
+}
+
+.tsd-page-navigation .tsd-accordion-summary[data-key]:hover span {
+    color: #3b82f6 !important;
+}
+
+.tsd-page-navigation .tsd-accordion-summary[data-key]:hover::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: -4px !important;
+    left: 20% !important;
+    width: 60% !important;
+    height: 2px !important;
+    background: linear-gradient(90deg, transparent, #3b82f6 30%, #3b82f6 70%, transparent) !important;
+    border-radius: 2px !important;
+    animation: slideLine 0.25s ease-out !important;
+}
+
+@keyframes slideLine {
+    from {
+        transform: scaleX(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scaleX(1);
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   EFFETTO HOVER
+   Linea che si allarga dal centro
+   ======================================== */
+
+/* 1. Per i titoli nella sidebar sinistra (categorie) */
+.col-sidebar .tsd-accordion-summary span:first-child,
+.site-menu .tsd-accordion-summary span:first-child,
+.tsd-navigation .tsd-accordion-summary span:first-child {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.col-sidebar .tsd-accordion-summary span:first-child:hover {
+    color: #3b82f6 !important;
+}
+
+.col-sidebar .tsd-accordion-summary span:first-child:hover::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 20%;
+    width: 60%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #3b82f6 30%, #3b82f6 70%, transparent);
+    border-radius: 2px;
+    animation: slideLine 0.25s ease-out;
+}
+
+/* 2. Per i titoli "Constructors", "Properties", "Methods" nella sezione destra (page-menu) */
+.page-menu .tsd-accordion-summary[data-key] {
+    position: relative;
+    cursor: pointer;
+}
+
+.page-menu .tsd-accordion-summary[data-key]:hover span {
+    color: #3b82f6 !important;
+}
+
+.page-menu .tsd-accordion-summary[data-key]:hover::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 20%;
+    width: 60%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #3b82f6 30%, #3b82f6 70%, transparent);
+    border-radius: 2px;
+    animation: slideLine 0.25s ease-out;
+}
+
+/* Animazione condivisa */
+@keyframes slideLine {
+    from {
+        transform: scaleX(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scaleX(1);
+        opacity: 1;
+    }
+}
+
+/* Effetto hover per le categorie della sidebar sinistra - VERSIONE CSS */
+#tsd-nav-container .tsd-accordion-summary {
+    position: relative;
+    cursor: pointer;
+}
+
+#tsd-nav-container .tsd-accordion-summary span:first-child {
+    transition: color 0.2s ease;
+}
+
+#tsd-nav-container .tsd-accordion-summary:hover span:first-child {
+    color: #3b82f6 !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+}
+
+#tsd-nav-container .tsd-accordion-summary:hover::after {
+    content: '' !important;
+    position: absolute !important;
+    bottom: -4px !important;
+    left: 20% !important;
+    width: 60% !important;
+    height: 2px !important;
+    background: linear-gradient(90deg, transparent, #3b82f6 30%, #3b82f6 70%, transparent) !important;
+    border-radius: 2px !important;
+    animation: slideLine 0.25s ease-out !important;
+    pointer-events: none !important;
+    display: block !important;
+}
+
+@keyframes slideLine {
+    from {
+        transform: scaleX(0);
+        opacity: 0;
+    }
+
+    to {
+        transform: scaleX(1);
+        opacity: 1;
+    }
+}
+
+/* Rimuove completamente il breadcrumb */
+.tsd-breadcrumb {
+    display: none !important;
+}
+
+/* Contenitore principale */
+.tsd-comment .tsd-typography {
+    max-width: 100%;
+}
+
+/* Ogni sezione */
+.tsd-tag-description,
+.tsd-tag-author,
+.tsd-tag-version {
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.tsd-tag-version {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Titoli con colori */
+.tsd-tag-description h4 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #3b82f6 !important;
+    margin-bottom: 0.5rem;
+}
+
+.tsd-tag-author h4 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #8b5cf6 !important;
+    margin-bottom: 0.5rem;
+}
+
+.tsd-tag-version h4 {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #10b981 !important;
+    margin-bottom: 0.5rem;
+}
+
+/* Contenuto */
+.tsd-tag-description p,
+.tsd-tag-author p,
+.tsd-tag-version p {
+    margin: 0.5rem 0;
+    line-height: 1.5;
+    color: #2d3748;
+    font-size: 0.9rem;
+}
+
+/* Bullet points */
+.tsd-tag-description ul {
+    margin: 0.5rem 0;
+    padding-left: 1.25rem;
+    list-style-type: disc;
+}
+
+.tsd-tag-description li {
+    margin: 0.3rem 0;
+    line-height: 1.5;
+    color: #2d3748;
+    font-size: 0.9rem;
+}
+
+/* Codice */
+.tsd-tag-description pre {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    padding: 0.6rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin: 0.6rem 0;
+    font-size: 0.8rem;
+    font-family: monospace;
+    color: #2d3748;
+}
+
+.tsd-tag-description code {
+    background: #f7fafc;
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #e53e3e;
+}
+
+/* Author e Version */
+.tsd-tag-author p,
+.tsd-tag-version p {
+    margin: 0;
+    font-size: 0.85rem;
+}
+
+/* Implements (OnInit, OnDestroy) */
+.tsd-panel>h4,
+section.tsd-panel>h4 {
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+    color: #64748b !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.tsd-hierarchy {
+    margin: 0 !important;
+    padding-left: 0 !important;
+}
+
+.tsd-hierarchy li {
+    list-style: none !important;
+    font-size: 0.85rem !important;
+    color: #2d3748 !important;
+    margin: 0.2rem 0 !important;
+}
+
+.tsd-hierarchy .tsd-signature-type {
+    color: #4299e1 !important;
+}
+
+
+img {
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+}
+
+img:active {
+    transform: scale(1.5);
+    cursor: zoom-out;
+}

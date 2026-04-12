@@ -1,0 +1,52 @@
+<ng-container *ngIf="isOpen">
+
+<!-- Backdrop -->
+  <div class="lm-backdrop" [class.transparent]="transparentBackdrop" @backdropAnim (click)="onBackdropClick()">
+  </div>
+
+  <!-- Panel -->
+  <div class="lm-panel" @modalAnim role="dialog" [attr.aria-modal]="true"
+    [attr.aria-labelledby]="title ? 'lm-title' : null" [style.max-width]="maxWidth" [style.max-height]="maxHeight">
+
+    <!-- ── Header ─────────────────────────────────────── -->
+    <div class="lm-header" *ngIf="title || showClose">
+      <div class="lm-header-left">
+        <div class="lm-icon-wrap" *ngIf="icon">
+          <mat-icon>{{ icon }}</mat-icon>
+        </div>
+        <div class="lm-header-text">
+          <h2 class="lm-title" id="lm-title">{{ title }}</h2>
+          <p class="lm-subtitle" *ngIf="subtitle">{{ subtitle }}</p>
+        </div>
+      </div>
+      <button *ngIf="showClose" class="lm-close" mat-icon-button (click)="close.emit()" aria-label="Chiudi modale">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="lm-divider" *ngIf="title || showClose"></div>
+
+    <!-- ── Body (ng-content libero) ───────────────────── -->
+    <div class="lm-body">
+      <ng-content></ng-content>
+    </div>
+
+    <!-- ── Footer ────────────────────────────────────── -->
+    <ng-container *ngIf="actions && actions.length > 0">
+      <div class="lm-divider"></div>
+      <div class="lm-footer">
+        <button *ngFor="let act of actions" class="lm-btn lm-btn--{{ act.type }}"
+          [disabled]="act.disabled || act.loading" (click)="actionClicked.emit(act.id)">
+          <span class="lm-spinner" *ngIf="act.loading">
+            <svg viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5" stroke-dasharray="28"
+                stroke-dashoffset="9" />
+            </svg>
+          </span>
+          {{ act.loading ? act.label + '…' : act.label }}
+        </button>
+      </div>
+    </ng-container>
+
+  </div>
+</ng-container>

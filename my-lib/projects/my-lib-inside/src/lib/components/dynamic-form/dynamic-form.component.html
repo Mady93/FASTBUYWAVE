@@ -1,0 +1,30 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" [ngClass]="formClass || ''">
+  <div class="form-fields-container">
+    <ng-container #dynamicInputContainer></ng-container>
+  </div>
+
+  <ng-container *ngFor="let error of formConfig.formErrorMessages | keyvalue">
+    <div *ngIf="hasFormError(error.key)" class="form-error-message">
+      {{ error.value }}
+    </div>
+  </ng-container>
+
+  <div class="form-buttons" [ngClass]="{'buttons-horizontal': layout === 'horizontal'}">
+    <ng-container *ngIf="formConfig.buttons && formConfig.buttons.length > 0;">
+
+      <button *ngFor="let button of formConfig.buttons" [id]="button.id + '-btn'"
+        [type]="button.type === 'submit' ? 'submit' : 'button'" [disabled]="
+  button.disabled || 
+  (form.invalid && (button.type === 'submit' || button.id === 'refresh'))
+" [ngClass]="[
+    'btn',
+    'btn-' + button.color,
+    button.class,
+    (button.type === 'submit' && form.invalid) ? 'submit-invalid' : ''
+  ]" (click)="button.type !== 'submit' ? handleButtonClick(button) : null">
+        <fa-icon *ngIf="button.icon" [icon]="button.icon" class="button-icon"></fa-icon>
+        {{ button.label }}
+      </button>
+    </ng-container>
+  </div>
+</form>

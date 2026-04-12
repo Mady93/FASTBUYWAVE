@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "debug angular",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:4200",
+            "webRoot": "${workspaceFolder}/angular_fe",
+            "preLaunchTask": "ng serve",
+            "sourceMaps": true,
+            "trace": true
+        },
+        {
+            "name": "python",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "gmail_auto_reply.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/ServerEmailPython"
+        },
+        {
+            "type": "java",
+            "name": "Debug Spring Boot",
+            "request": "launch",
+            "mainClass": "com.mady.springboot_be.SpringbootBeApplication",
+            "projectName": "springboot_be",
+            "env": {
+                "SPRING_PROFILES_ACTIVE": "dev"
+            }
+        }
+    ]
+}

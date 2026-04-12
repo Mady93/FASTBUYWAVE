@@ -1,0 +1,155 @@
+<!-- ═══════════════════════════════════════════════════════════
+     CAROUSEL WRAPPER
+     ═══════════════════════════════════════════════════════════ -->
+<div class="carousel-wrapper">
+
+  <!-- ── Main Swiper ───────────────────────────────────────── -->
+  <swiper-container #swiperContainer init="false" class="main-swiper">
+    @for (img of images; track img.picByte; let i = $index) {
+      <swiper-slide>
+        <div class="slide-inner" (click)="openZoomModal(i)">
+
+          <img
+            [src]="getImageSrc(img.picByte)"
+            [alt]="'Product image ' + (i + 1)"
+            class="main-carousel-image"
+            draggable="false"
+          />
+
+          <!-- Zoom overlay -->
+          <div class="zoom-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="M21 21l-4.35-4.35"/>
+              <line x1="11" y1="8"  x2="11" y2="14"/>
+              <line x1="8"  y1="11" x2="14" y2="11"/>
+            </svg>
+          </div>
+
+        </div>
+      </swiper-slide>
+    }
+  </swiper-container>
+
+  <!-- ── Thumbnails ───────────────────────────────────────── -->
+  @if (images.length > 1) {
+    <div class="thumbnails-container" role="tablist" aria-label="Image thumbnails">
+      @for (img of images; track img.picByte; let i = $index) {
+        <button
+          class="thumbnail-item"
+          role="tab"
+          [class.active]="i === activeIndex"
+          [attr.aria-selected]="i === activeIndex"
+          [attr.aria-label]="'View image ' + (i + 1)"
+          (click)="goToSlide(i)"
+          type="button"
+        >
+          <img
+            [src]="getImageSrc(img.picByte)"
+            [alt]="'Thumbnail ' + (i + 1)"
+            class="thumbnail-image"
+            draggable="false"
+          />
+        </button>
+      }
+    </div>
+  }
+
+  <!-- ── Empty state ──────────────────────────────────────── -->
+  @if (images.length === 0) {
+    <div class="no-images" role="status">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+      <p>No images available</p>
+    </div>
+  }
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     ZOOM MODAL  (teleportato fuori dal wrapper)
+     ═══════════════════════════════════════════════════════════ -->
+@if (showZoomModal) {
+  <div
+    class="zoom-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Image zoom"
+    (click)="closeZoomModal()"
+  >
+    <div class="zoom-modal-content" (click)="$event.stopPropagation()">
+
+      <!-- Close -->
+      <button class="zoom-close-btn" (click)="closeZoomModal()" title="Close (Esc)" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <line x1="18" y1="6"  x2="6"  y2="18"/>
+          <line x1="6"  y1="6"  x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <!-- Prev -->
+      @if (images.length > 1) {
+        <button
+  class="zoom-nav-btn zoom-prev-btn"
+  [class.disabled]="isFirstZoom"
+  (click)="previousZoomImage($event)"
+  title="Previous (←)"
+  type="button"
+  [attr.aria-disabled]="isFirstZoom"
+>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="15 18 9 12 15 6"/>
+  </svg>
+</button>
+      }
+
+      <!-- Image -->
+      <img
+        [src]="currentZoomImage"
+        alt="Zoomed product image"
+        class="zoom-image"
+        draggable="false"
+      />
+
+      <!-- Next -->
+      @if (images.length > 1) {
+        <button
+  class="zoom-nav-btn zoom-next-btn"
+  [class.disabled]="isLastZoom"
+  (click)="nextZoomImage($event)"
+  title="Next (→)"
+  type="button"
+  [attr.aria-disabled]="isLastZoom"
+>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+    <polyline points="9 18 15 12 9 6"/>
+  </svg>
+</button>
+      }
+
+      <!-- Counter -->
+      @if (images.length > 1) {
+        <div class="zoom-counter" aria-live="polite">
+          {{ currentZoomIndex + 1 }}&thinsp;/&thinsp;{{ images.length }}
+        </div>
+      }
+
+      <!-- Dot indicators nello zoom -->
+      @if (images.length > 1) {
+        <div class="zoom-dots">
+          @for (img of images; track img.picByte; let i = $index) {
+            <span
+              class="zoom-dot"
+              [class.active]="i === currentZoomIndex"
+              (click)="currentZoomIndex = i; syncZoom(i); $event.stopPropagation()"
+            ></span>
+          }
+        </div>
+      }
+
+    </div>
+  </div>
+}

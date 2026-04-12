@@ -1,0 +1,75 @@
+<mat-card class="no-shadow">
+  <!-- Header personalizzato con logo esplicitamente a sinistra -->
+  <div class="custom-header">
+    <img [src]="ad.imageUrl" alt="avatar" class="custom-avatar" />
+    <h3 *ngIf="ad.title" class="custom-title">{{ ad.title | truncateWordsPipe:maxWordsTitle }}</h3>
+  </div>
+
+  <img mat-card-image [src]="ad.picByte" alt="ad-image" class="ad-image body-image" />
+  <mat-card-content>
+     <p *ngIf="ad.description" class="ad-price"><strong>Description:</strong> {{ ad.description }}</p>
+
+    <!-- Aggiunta di Price e Type -->
+    <div class="ad-meta">
+      <p class="ad-price"><strong>Price:</strong> {{ ad.price | number:'1.2-2'}} €</p>
+      <p class="ad-price"><strong>Condition:</strong> {{ ad.condition }}</p>
+      <p class="ad-price"><strong>Stock Quantity:</strong> {{ ad.stockQuantity }}</p>
+      <p class="ad-price"><strong>Published:</strong> {{ ad.agencyName ? ad.agencyName : 'Private' }}</p> 
+      <p class="ad-price"><strong>Posted on:</strong> {{ad.createdAt | date:'dd/MM/yyyy' }}</p>
+    </div>
+  </mat-card-content>
+
+ <mat-card-actions class="actions-row add-to-cart">
+
+  <button *ngIf="isUserAd()==false" mat-button (click)="onLikeClick()"
+    matTooltip="{{ ad.liked ? 'Remove like' : 'Like' }}">
+    <div class="btn-inner">
+      <mat-icon *ngIf="ad.liked" class="liked-heart">favorite</mat-icon>
+      <mat-icon *ngIf="!ad.liked" class="unliked-heart">favorite_border</mat-icon>
+      <span class="btn-label">{{ ad.liked ? 'Liked' : 'Like' }}</span>
+    </div>
+  </button>
+
+  <span *ngIf="isUserAd() && ad.likes !== undefined"
+    class="likes-count"
+    matTooltip="{{ad.likes}} like{{ad.likes > 1 ? 's' : ''}}"
+    (click)="onLikeClick()"
+    style="cursor: pointer;">
+    <mat-icon [ngClass]="ad.likes > 0 ? 'liked-heart' : 'broken-heart'" aria-label="likes">
+      {{ ad.likes > 0 ? 'favorite' : 'heart_broken' }}
+      <span class="like-count-inside">{{ ad.likes | formatLikes }}</span>
+    </mat-icon>
+  </span>
+
+  <button mat-button *ngIf="ad.advertisementId"
+    (click)="onViewAdClick(ad.advertisementId)"
+    matTooltip="View details">
+    <div class="btn-inner">
+      <mat-icon>visibility</mat-icon>
+      <span class="btn-label">View</span>
+    </div>
+  </button>
+
+  <button mat-button
+  (click)="onAddToCartClick()"
+  *ngIf="canAddToCart()"
+  [disabled]="isAddToCartDisabled()"
+  [ngClass]="{
+    'out-of-stock-btn': isOutOfStock(),
+    'max-qty-btn': !isOutOfStock() && isMaxQuantityReached(),
+    'add-to-cart-btn': !isAddToCartDisabled()
+  }"
+  [matTooltip]="isOutOfStock() ? 'Out of stock' : isMaxQuantityReached() ? 'Quantità massima nel carrello' : 'Add to cart'">
+  <div class="btn-inner">
+    <mat-icon>
+      {{ isOutOfStock() ? 'remove_shopping_cart' : isMaxQuantityReached() ? 'production_quantity_limits' : 'add_shopping_cart' }}
+    </mat-icon>
+    <span class="btn-label">
+      {{ isOutOfStock() ? 'Esaurito' : isMaxQuantityReached() ? 'Max qty' : 'Add' }}
+    </span>
+  </div>
+</button>
+
+</mat-card-actions>
+
+</mat-card>

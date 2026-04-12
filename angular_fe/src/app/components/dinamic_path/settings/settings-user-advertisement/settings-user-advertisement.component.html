@@ -1,0 +1,26 @@
+<div class="ads-container">
+<lib-card *ngFor="let ad of pagedAds" 
+  [ad]="ad" [maxWords]="16" 
+  [maxWordsTitle]="4" 
+  [isUserAd]="isUserAd" 
+  [canAddToCart]="canAddToCart" 
+  (viewAd)="onAdSelected($event)"
+  (viewLikers)="onViewLikers($event)">
+</lib-card>
+  
+  <div *ngIf="!pagedAds.length && !(isLoading$ | async)" class="no-ads">
+    Nessun annuncio trovato
+  </div>
+</div>
+
+<lib-pagination
+  *ngIf="this.ads.length > 0"
+  [totalItems]="this.ads.length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 20]"
+  (pageChanged)="onPageChanged($event)">
+</lib-pagination>
+
+ <div class="spinner-container" *ngIf="isLoading$ | async">
+    <lib-spinner [spinner]="getspinner()" [isLoading]="isLoading()"></lib-spinner>
+  </div>

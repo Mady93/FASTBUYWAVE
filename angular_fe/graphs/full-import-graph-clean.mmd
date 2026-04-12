@@ -1,0 +1,561 @@
+graph TD
+    app_component["app.component"]:::component
+    appointments_calendar_component["appointments-calendar.component"]:::component
+    cart_component["cart.component"]:::component
+    dashboard_component["dashboard.component"]:::component
+    ad_detail_dialog_component["ad-detail-dialog.component"]:::component
+    likers_dialog_component["likers-dialog.component"]:::component
+    send_message_dialog_component["send-message-dialog.component"]:::component
+    appointment_detail_dialog_component["appointment-detail-dialog.component"]:::component
+    appointments_list_component["appointments-list.component"]:::component
+    contact_requests_list_component["contact-requests-list.component"]:::component
+    proposal_form_component["proposal-form.component"]:::component
+    admin_category_create_component["admin-category-create.component"]:::component
+    admin_category_list_component["admin-category-list.component"]:::component
+    admin_users_list_component["admin-users-list.component"]:::component
+    advertisements_create_component["advertisements-create.component"]:::component
+    advertisements_view_component["advertisements-view.component"]:::component
+    dasboard_content_component["dasboard-content.component"]:::component
+    favorites_component["favorites.component"]:::component
+    search_component["search.component"]:::component
+    settings_language_component["settings-language.component"]:::component
+    settings_notifications_component["settings-notifications.component"]:::component
+    settings_privacy_component["settings-privacy.component"]:::component
+    settings_profile_component["settings-profile.component"]:::component
+    settings_user_advertisement_component["settings-user-advertisement.component"]:::component
+    login_component["login.component"]:::component
+    register_project_component["register-project.component"]:::component
+    auth_urls["auth-urls"]:::constant
+    environment["environment"]:::constant
+    ICONS_FE["ICONS_FE"]:::constant
+    addToCartRequestDTO_interface["addToCartRequestDTO.interface"]:::interface
+    cartDTO_interface["cartDTO.interface"]:::interface
+    cartItemDTO_interface["cartItemDTO.interface"]:::interface
+    cartResponseDTO_interface["cartResponseDTO.interface"]:::interface
+    createOrderRequestDTO_interface["createOrderRequestDTO.interface"]:::interface
+    productSummaryDTO_interface["productSummaryDTO.interface"]:::interface
+    updateCartItemRequest_interface["updateCartItemRequest.interface"]:::interface
+    createOrderRequest_interface["createOrderRequest.interface"]:::interface
+    orderDTO_interface["orderDTO.interface"]:::interface
+    orderItemDTO_interface["orderItemDTO.interface"]:::interface
+    orderResponseDTO_interface["orderResponseDTO.interface"]:::interface
+    orderStatus_enum["orderStatus.enum"]:::enum
+    userSummaryDTO_interface["userSummaryDTO.interface"]:::interface
+    initiatePaymentRequestDTO_interface["initiatePaymentRequestDTO.interface"]:::interface
+    paymentDTO_interface["paymentDTO.interface"]:::interface
+    paymentMethod_enum["paymentMethod.enum"]:::enum
+    paymentResponseDTO_interface["paymentResponseDTO.interface"]:::interface
+    paymentStatus_enum["paymentStatus.enum"]:::enum
+    countryStatesResponse["countryStatesResponse"]:::interface
+    country_response["country_response"]:::interface
+    rest_country_interface["rest_country.interface"]:::interface
+    state["state"]:::interface
+    categoryStatsDTO_interface["categoryStatsDTO.interface"]:::interface
+    dailyRevenueDTO_interface["dailyRevenueDTO.interface"]:::interface
+    dashboardStatsDTO_interface["dashboardStatsDTO.interface"]:::interface
+    orderStatsDTO_interface["orderStatsDTO.interface"]:::interface
+    revenueStatsDTO_interface["revenueStatsDTO.interface"]:::interface
+    revenueTimelineDTO_interface["revenueTimelineDTO.interface"]:::interface
+    topProductDTO_interface["topProductDTO.interface"]:::interface
+    totalsDTO_interface["totalsDTO.interface"]:::interface
+    upcomingAppointmentDTO_interface["upcomingAppointmentDTO.interface"]:::interface
+    api_response["api_response"]:::interface
+    api_response_data["api_response_data"]:::interface
+    adress_dto_interface["adress_dto.interface"]:::interface
+    advertisement_dto_interface["advertisement_dto.interface"]:::interface
+    category_dto_interface["category_dto.interface"]:::interface
+    comment_dto["comment_dto"]:::interface
+    comment_statistics_dto_interface["comment_statistics_dto.interface"]:::interface
+    user_profile_dto_interface["user_profile_dto.interface"]:::interface
+    appointmentStatus_enum["appointmentStatus.enum"]:::enum
+    appointment_dto_interface["appointment_dto.interface"]:::interface
+    appointment_proposal_interface["appointment_proposal.interface"]:::interface
+    appointment_proposal_dto["appointment_proposal_dto"]:::interface
+    contactMethod_enum["contactMethod.enum"]:::enum
+    contactRequestDTO_interface["contactRequestDTO.interface"]:::interface
+    createContactRequestPayload_interface["createContactRequestPayload.interface"]:::interface
+    locationType_enum["locationType.enum"]:::enum
+    messageType_enum["messageType.enum"]:::enum
+    requestStatus_enum["requestStatus.enum"]:::enum
+    product_search_criteria_dto_interface["product_search_criteria_dto.interface"]:::interface
+    category_dto_update_active_interface["category_dto_update_active.interface"]:::interface
+    image_dto_interface["image_dto.interface"]:::interface
+    like_user_dto["like-user.dto"]:::interface
+    like_request_dto["like_request_dto"]:::interface
+    like_status_dto_interface["like_status_dto.interface"]:::interface
+    product_dto_interface["product_dto.interface"]:::interface
+    profile_dto_interface["profile_dto.interface"]:::interface
+    advertisement_create_dto_interface["advertisement_create_dto.interface"]:::interface
+    image_create_dto_interface["image_create_dto.interface"]:::interface
+    product_to_create_dto_interface["product_to_create_dto.interface"]:::interface
+    user_dto_interface["user_dto.interface"]:::interface
+    refresh_request_interface["refresh_request.interface"]:::interface
+    register_login_request_interface["register_login_request.interface"]:::interface
+    token_response_interface["token_response.interface"]:::interface
+    user_info_dto_interface["user_info_dto.interface"]:::interface
+    pageable_interface["pageable.interface"]:::interface
+    page_response_interface["page_response.interface"]:::interface
+    carousel_items["carousel_items"]:::model
+    footer_link_item["footer_link_item"]:::model
+    footer_payment_method["footer_payment_method"]:::model
+    navbar_item["navbar_item"]:::model
+    file_to_url_pipe["file-to-url.pipe"]:::model
+    safe_url_pipe["safe-url.pipe"]:::model
+    api_config_service["api-config.service"]:::service
+    auth_google_service["auth-google.service"]:::service
+    auth_guard_service["auth-guard.service"]:::service
+    geocoding_service["geocoding.service"]:::service
+    token_interceptor["token.interceptor"]:::constant
+    address_service["address.service"]:::service
+    advetisement_service["advetisement.service"]:::service
+    appointment_service["appointment.service"]:::service
+    cart_service["cart.service"]:::service
+    order_service["order.service"]:::service
+    payment_service["payment.service"]:::service
+    category_service["category.service"]:::service
+    comment_service["comment.service"]:::service
+    appointment_proposal_service["appointment-proposal.service"]:::service
+    contact_request_service["contact-request.service"]:::service
+    dashboard_service["dashboard.service"]:::service
+    advertisement_likes_service["advertisement-likes.service"]:::service
+    premium_user_service["premium-user.service"]:::service
+    product_service["product.service"]:::service
+    profile_service["profile.service"]:::service
+    user_service["user.service"]:::service
+    route_manager_service["route-manager.service"]:::service
+    sort_service["sort.service"]:::service
+    advertisement_utils["advertisement-utils"]:::util
+    agency_validators_utils["agency-validators-utils"]:::util
+    arrayNotEmptyValidator["arrayNotEmptyValidator"]:::util
+    blobToBase64["blobToBase64 "]:::util
+    cart_utils["cart-utils"]:::util
+    category_normalization_util["category-normalization.util"]:::util
+    comment_utils["comment-utils"]:::util
+    comment_utils_1["comment.utils"]:::util
+    dashboard_utils["dashboard.utils"]:::util
+    send_message_dialog_utils["send-message-dialog.utils"]:::util
+    constants_routes_default["constants_routes_default"]:::constant
+    constants_routes_navbar["constants_routes_navbar"]:::constant
+    constants_routes_sidebar["constants_routes_sidebar"]:::constant
+    constant_routes_error_quatro_cento_quatro["constant_routes_error_quatro_cento_quatro"]:::constant
+    contact_request_list_utils["contact-request-list-utils"]:::util
+    country_utils["country.utils"]:::util
+    date_utils["date-utils"]:::util
+    emoji_utils["emoji-utils"]:::util
+    file_utils["file-utils"]:::util
+    filter_display_utils["filter-display-utils"]:::util
+    form_utils["form-utils"]:::util
+    formatLocalDateTime["formatLocalDateTime"]:::util
+    geocoding_utils["geocoding.utils"]:::util
+    languages_curency_utils["languages-curency-utils"]:::model
+    price_utils["price-utils"]:::util
+    snackbar_utils["snackbar.utils"]:::util
+    ui_utils["ui-utils"]:::util
+    validation_utils["validation-utils"]:::util
+    validators_pattern_utils["validators-pattern-utils"]:::constant
+    appointments_calendar_component --> appointment_proposal_dto
+    appointments_calendar_component --> filter_display_utils
+    cart_component --> cartDTO_interface
+    cart_component --> cartItemDTO_interface
+    cart_component --> orderDTO_interface
+    cart_component --> paymentMethod_enum
+    cart_component --> paymentResponseDTO_interface
+    cart_component --> geocoding_service
+    cart_component --> cart_service
+    cart_component --> order_service
+    cart_component --> payment_service
+    cart_component --> cart_utils
+    cart_component --> cart_utils
+    cart_component --> cart_utils
+    cart_component --> cart_utils
+    cart_component --> country_utils
+    cart_component --> snackbar_utils
+    dashboard_component --> navbar_item
+    dashboard_component --> carousel_items
+    dashboard_component --> footer_link_item
+    dashboard_component --> footer_payment_method
+    dashboard_component --> route_manager_service
+    dashboard_component --> auth_google_service
+    dashboard_component --> category_service
+    dashboard_component --> profile_service
+    dashboard_component --> snackbar_utils
+    dashboard_component --> cart_component
+    dashboard_component --> sort_service
+    dashboard_component --> dashboard_utils
+    dashboard_component --> dashboard_utils
+    dashboard_component --> dashboard_utils
+    dashboard_component --> dashboard_utils
+    ad_detail_dialog_component --> image_dto_interface
+    ad_detail_dialog_component --> file_utils
+    ad_detail_dialog_component --> product_dto_interface
+    ad_detail_dialog_component --> send_message_dialog_component
+    ad_detail_dialog_component --> comment_service
+    ad_detail_dialog_component --> comment_dto
+    ad_detail_dialog_component --> snackbar_utils
+    ad_detail_dialog_component --> profile_service
+    ad_detail_dialog_component --> comment_utils
+    ad_detail_dialog_component --> comment_utils
+    ad_detail_dialog_component --> comment_utils
+    ad_detail_dialog_component --> ui_utils
+    ad_detail_dialog_component --> emoji_utils
+    ad_detail_dialog_component --> emoji_utils
+    ad_detail_dialog_component --> auth_google_service
+    ad_detail_dialog_component --> api_config_service
+    likers_dialog_component --> like_user_dto
+    likers_dialog_component --> advertisement_likes_service
+    send_message_dialog_component --> product_dto_interface
+    send_message_dialog_component --> snackbar_utils
+    send_message_dialog_component --> validators_pattern_utils
+    send_message_dialog_component --> contactMethod_enum
+    send_message_dialog_component --> createContactRequestPayload_interface
+    send_message_dialog_component --> send_message_dialog_utils
+    send_message_dialog_component --> send_message_dialog_utils
+    send_message_dialog_component --> send_message_dialog_utils
+    send_message_dialog_component --> send_message_dialog_utils
+    send_message_dialog_component --> send_message_dialog_utils
+    send_message_dialog_component --> send_message_dialog_utils
+    send_message_dialog_component --> send_message_dialog_utils
+    send_message_dialog_component --> send_message_dialog_utils
+    send_message_dialog_component --> send_message_dialog_utils
+    send_message_dialog_component --> send_message_dialog_utils
+    send_message_dialog_component --> contact_request_service
+    appointment_detail_dialog_component --> appointment_dto_interface
+    appointment_detail_dialog_component --> appointmentStatus_enum
+    appointment_detail_dialog_component --> appointment_proposal_dto
+    appointment_detail_dialog_component --> appointment_proposal_service
+    appointment_detail_dialog_component --> appointment_proposal_interface
+    appointment_detail_dialog_component --> filter_display_utils
+    appointments_list_component --> appointment_dto_interface
+    appointments_list_component --> appointmentStatus_enum
+    appointments_list_component --> auth_google_service
+    appointments_list_component --> appointment_service
+    appointments_list_component --> appointment_detail_dialog_component
+    appointments_list_component --> appointments_calendar_component
+    appointments_list_component --> appointments_calendar_component
+    appointments_list_component --> appointment_proposal_service
+    appointments_list_component --> appointment_proposal_dto
+    appointments_list_component --> proposal_form_component
+    contact_requests_list_component --> contactMethod_enum
+    contact_requests_list_component --> contactRequestDTO_interface
+    contact_requests_list_component --> requestStatus_enum
+    contact_requests_list_component --> auth_google_service
+    contact_requests_list_component --> profile_service
+    contact_requests_list_component --> api_config_service
+    contact_requests_list_component --> snackbar_utils
+    contact_requests_list_component --> date_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_list_utils
+    contact_requests_list_component --> contact_request_service
+    proposal_form_component --> user_profile_dto_interface
+    proposal_form_component --> appointment_dto_interface
+    proposal_form_component --> appointment_proposal_interface
+    proposal_form_component --> appointment_proposal_dto
+    proposal_form_component --> send_message_dialog_utils
+    proposal_form_component --> send_message_dialog_utils
+    proposal_form_component --> send_message_dialog_utils
+    proposal_form_component --> send_message_dialog_utils
+    proposal_form_component --> send_message_dialog_utils
+    admin_category_create_component --> category_service
+    admin_category_create_component --> snackbar_utils
+    admin_category_list_component --> category_dto_interface
+    admin_category_list_component --> page_response_interface
+    admin_category_list_component --> pageable_interface
+    admin_category_list_component --> category_service
+    admin_category_list_component --> snackbar_utils
+    admin_category_list_component --> sort_service
+    admin_category_list_component --> ICONS_FE
+    admin_users_list_component --> user_dto_interface
+    admin_users_list_component --> page_response_interface
+    admin_users_list_component --> pageable_interface
+    admin_users_list_component --> user_service
+    admin_users_list_component --> snackbar_utils
+    admin_users_list_component --> auth_google_service
+    advertisements_create_component --> category_dto_interface
+    advertisements_create_component --> advetisement_service
+    advertisements_create_component --> category_service
+    advertisements_create_component --> advertisement_dto_interface
+    advertisements_create_component --> geocoding_service
+    advertisements_create_component --> product_dto_interface
+    advertisements_create_component --> adress_dto_interface
+    advertisements_create_component --> file_to_url_pipe
+    advertisements_create_component --> safe_url_pipe
+    advertisements_create_component --> validation_utils
+    advertisements_create_component --> validation_utils
+    advertisements_create_component --> validation_utils
+    advertisements_create_component --> validation_utils
+    advertisements_create_component --> validation_utils
+    advertisements_create_component --> validation_utils
+    advertisements_create_component --> category_normalization_util
+    advertisements_create_component --> category_normalization_util
+    advertisements_create_component --> formatLocalDateTime
+    advertisements_create_component --> date_utils
+    advertisements_create_component --> form_utils
+    advertisements_create_component --> form_utils
+    advertisements_create_component --> form_utils
+    advertisements_create_component --> form_utils
+    advertisements_create_component --> form_utils
+    advertisements_create_component --> form_utils
+    advertisements_create_component --> file_utils
+    advertisements_create_component --> validators_pattern_utils
+    advertisements_create_component --> snackbar_utils
+    advertisements_create_component --> country_utils
+    advertisements_create_component --> country_utils
+    advertisements_create_component --> country_utils
+    advertisements_create_component --> country_utils
+    advertisements_create_component --> countryStatesResponse
+    advertisements_create_component --> country_response
+    advertisements_create_component --> geocoding_utils
+    advertisements_create_component --> geocoding_utils
+    advertisements_create_component --> geocoding_utils
+    advertisements_create_component --> geocoding_utils
+    advertisements_create_component --> agency_validators_utils
+    advertisements_create_component --> auth_google_service
+    advertisements_view_component --> image_dto_interface
+    advertisements_view_component --> like_request_dto
+    advertisements_view_component --> advertisement_likes_service
+    advertisements_view_component --> product_service
+    advertisements_view_component --> advertisement_utils
+    advertisements_view_component --> advertisement_utils
+    advertisements_view_component --> advertisement_utils
+    advertisements_view_component --> advertisement_utils
+    advertisements_view_component --> advertisement_utils
+    advertisements_view_component --> advertisement_utils
+    advertisements_view_component --> advertisement_utils
+    advertisements_view_component --> snackbar_utils
+    advertisements_view_component --> product_search_criteria_dto_interface
+    advertisements_view_component --> geocoding_service
+    advertisements_view_component --> country_response
+    advertisements_view_component --> country_utils
+    advertisements_view_component --> country_utils
+    advertisements_view_component --> country_utils
+    advertisements_view_component --> form_utils
+    advertisements_view_component --> form_utils
+    advertisements_view_component --> form_utils
+    advertisements_view_component --> form_utils
+    advertisements_view_component --> price_utils
+    advertisements_view_component --> cart_service
+    advertisements_view_component --> auth_google_service
+    dasboard_content_component --> dashboard_service
+    dasboard_content_component --> dashboardStatsDTO_interface
+    dasboard_content_component --> revenueTimelineDTO_interface
+    dasboard_content_component --> topProductDTO_interface
+    dasboard_content_component --> categoryStatsDTO_interface
+    dasboard_content_component --> upcomingAppointmentDTO_interface
+    dasboard_content_component --> snackbar_utils
+    dasboard_content_component --> filter_display_utils
+    dasboard_content_component --> filter_display_utils
+    dasboard_content_component --> filter_display_utils
+    dasboard_content_component --> filter_display_utils
+    dasboard_content_component --> filter_display_utils
+    settings_profile_component --> profile_service
+    settings_profile_component --> geocoding_service
+    settings_profile_component --> form_utils
+    settings_profile_component --> form_utils
+    settings_profile_component --> form_utils
+    settings_profile_component --> form_utils
+    settings_profile_component --> profile_dto_interface
+    settings_profile_component --> adress_dto_interface
+    settings_profile_component --> languages_curency_utils
+    settings_profile_component --> validators_pattern_utils
+    settings_profile_component --> arrayNotEmptyValidator
+    settings_profile_component --> file_utils
+    settings_profile_component --> file_utils
+    settings_profile_component --> safe_url_pipe
+    settings_profile_component --> country_utils
+    settings_profile_component --> country_utils
+    settings_profile_component --> country_utils
+    settings_profile_component --> country_utils
+    settings_profile_component --> country_response
+    settings_profile_component --> countryStatesResponse
+    settings_profile_component --> snackbar_utils
+    settings_profile_component --> geocoding_utils
+    settings_profile_component --> geocoding_utils
+    settings_profile_component --> geocoding_utils
+    settings_profile_component --> geocoding_utils
+    settings_profile_component --> auth_google_service
+    settings_user_advertisement_component --> likers_dialog_component
+    settings_user_advertisement_component --> image_dto_interface
+    settings_user_advertisement_component --> like_user_dto
+    settings_user_advertisement_component --> auth_google_service
+    settings_user_advertisement_component --> advertisement_likes_service
+    settings_user_advertisement_component --> product_service
+    settings_user_advertisement_component --> advertisement_utils
+    settings_user_advertisement_component --> advertisement_utils
+    settings_user_advertisement_component --> advertisement_utils
+    login_component --> auth_google_service
+    register_project_component --> auth_google_service
+    cartDTO_interface --> cartItemDTO_interface
+    cartItemDTO_interface --> productSummaryDTO_interface
+    cartResponseDTO_interface --> cartDTO_interface
+    orderDTO_interface --> paymentDTO_interface
+    orderDTO_interface --> orderItemDTO_interface
+    orderDTO_interface --> orderStatus_enum
+    orderDTO_interface --> userSummaryDTO_interface
+    orderItemDTO_interface --> productSummaryDTO_interface
+    orderResponseDTO_interface --> orderDTO_interface
+    paymentDTO_interface --> paymentMethod_enum
+    paymentResponseDTO_interface --> paymentDTO_interface
+    countryStatesResponse --> state
+    dashboardStatsDTO_interface --> orderStatsDTO_interface
+    dashboardStatsDTO_interface --> revenueStatsDTO_interface
+    revenueTimelineDTO_interface --> dailyRevenueDTO_interface
+    revenueTimelineDTO_interface --> totalsDTO_interface
+    advertisement_dto_interface --> category_dto_interface
+    advertisement_dto_interface --> product_dto_interface
+    advertisement_dto_interface --> user_dto_interface
+    comment_dto --> user_profile_dto_interface
+    appointment_dto_interface --> user_profile_dto_interface
+    appointment_dto_interface --> product_dto_interface
+    appointment_dto_interface --> appointmentStatus_enum
+    appointment_dto_interface --> locationType_enum
+    appointment_proposal_dto --> user_profile_dto_interface
+    appointment_proposal_dto --> appointment_dto_interface
+    appointment_proposal_dto --> appointment_proposal_interface
+    contactRequestDTO_interface --> user_profile_dto_interface
+    contactRequestDTO_interface --> product_dto_interface
+    contactRequestDTO_interface --> contactMethod_enum
+    contactRequestDTO_interface --> requestStatus_enum
+    createContactRequestPayload_interface --> contactMethod_enum
+    image_dto_interface --> product_dto_interface
+    product_dto_interface --> adress_dto_interface
+    product_dto_interface --> advertisement_dto_interface
+    product_dto_interface --> image_dto_interface
+    profile_dto_interface --> adress_dto_interface
+    profile_dto_interface --> user_dto_interface
+    navbar_item --> constants_routes_navbar
+    api_config_service --> environment
+    auth_google_service --> token_response_interface
+    auth_google_service --> user_info_dto_interface
+    auth_google_service --> refresh_request_interface
+    auth_google_service --> register_login_request_interface
+    auth_google_service --> user_dto_interface
+    auth_google_service --> api_config_service
+    auth_guard_service --> auth_google_service
+    geocoding_service --> country_response
+    geocoding_service --> countryStatesResponse
+    geocoding_service --> rest_country_interface
+    token_interceptor --> auth_google_service
+    token_interceptor --> auth_urls
+    address_service --> adress_dto_interface
+    address_service --> page_response_interface
+    address_service --> pageable_interface
+    address_service --> api_config_service
+    advetisement_service --> api_response
+    advetisement_service --> adress_dto_interface
+    advetisement_service --> advertisement_dto_interface
+    advetisement_service --> category_dto_interface
+    advetisement_service --> product_dto_interface
+    advetisement_service --> api_config_service
+    appointment_service --> api_response_data
+    appointment_service --> appointment_dto_interface
+    appointment_service --> api_config_service
+    cart_service --> addToCartRequestDTO_interface
+    cart_service --> cartDTO_interface
+    cart_service --> cartResponseDTO_interface
+    cart_service --> updateCartItemRequest_interface
+    cart_service --> api_config_service
+    order_service --> createOrderRequestDTO_interface
+    order_service --> orderDTO_interface
+    order_service --> orderResponseDTO_interface
+    order_service --> orderStatus_enum
+    order_service --> api_config_service
+    payment_service --> initiatePaymentRequestDTO_interface
+    payment_service --> paymentMethod_enum
+    payment_service --> paymentResponseDTO_interface
+    payment_service --> api_config_service
+    category_service --> category_dto_interface
+    category_service --> page_response_interface
+    category_service --> pageable_interface
+    category_service --> api_config_service
+    comment_service --> comment_dto
+    comment_service --> user_profile_dto_interface
+    comment_service --> api_config_service
+    appointment_proposal_service --> appointment_proposal_dto
+    appointment_proposal_service --> api_config_service
+    contact_request_service --> api_response_data
+    contact_request_service --> contactRequestDTO_interface
+    contact_request_service --> createContactRequestPayload_interface
+    contact_request_service --> api_config_service
+    dashboard_service --> categoryStatsDTO_interface
+    dashboard_service --> dashboardStatsDTO_interface
+    dashboard_service --> revenueTimelineDTO_interface
+    dashboard_service --> topProductDTO_interface
+    dashboard_service --> upcomingAppointmentDTO_interface
+    dashboard_service --> api_config_service
+    advertisement_likes_service --> api_response_data
+    advertisement_likes_service --> like_request_dto
+    advertisement_likes_service --> like_status_dto_interface
+    advertisement_likes_service --> api_config_service
+    advertisement_likes_service --> like_user_dto
+    premium_user_service --> auth_google_service
+    product_service --> product_search_criteria_dto_interface
+    product_service --> product_dto_interface
+    product_service --> api_config_service
+    profile_service --> adress_dto_interface
+    profile_service --> profile_dto_interface
+    profile_service --> page_response_interface
+    profile_service --> api_config_service
+    user_service --> user_dto_interface
+    user_service --> page_response_interface
+    user_service --> pageable_interface
+    user_service --> api_config_service
+    route_manager_service --> appointments_list_component
+    route_manager_service --> contact_requests_list_component
+    route_manager_service --> admin_category_create_component
+    route_manager_service --> admin_category_list_component
+    route_manager_service --> admin_users_list_component
+    route_manager_service --> advertisements_create_component
+    route_manager_service --> advertisements_view_component
+    route_manager_service --> dasboard_content_component
+    route_manager_service --> favorites_component
+    route_manager_service --> search_component
+    route_manager_service --> settings_language_component
+    route_manager_service --> settings_notifications_component
+    route_manager_service --> settings_privacy_component
+    route_manager_service --> settings_profile_component
+    route_manager_service --> settings_user_advertisement_component
+    sort_service --> category_dto_interface
+    advertisement_utils --> file_utils
+    advertisement_utils --> ad_detail_dialog_component
+    advertisement_utils --> country_utils
+    agency_validators_utils --> validators_pattern_utils
+    cart_utils --> cartItemDTO_interface
+    comment_utils --> comment_dto
+    comment_utils_1 --> comment_dto
+    dashboard_utils --> category_dto_interface
+    dashboard_utils --> ICONS_FE
+    dashboard_utils --> ICONS_FE
+    send_message_dialog_utils --> contactMethod_enum
+    contact_request_list_utils --> contactMethod_enum
+    contact_request_list_utils --> contactRequestDTO_interface
+    contact_request_list_utils --> requestStatus_enum
+    contact_request_list_utils --> api_config_service
+    filter_display_utils --> appointmentStatus_enum
+    form_utils --> country_utils
+
+    classDef component fill:#1f77b4,stroke:#000,stroke-width:1px,color:#fff;
+    classDef service fill:#2ca02c,stroke:#000,stroke-width:1px,color:#fff;
+    classDef util fill:#ffc107,stroke:#000,stroke-width:1px,color:#fff;
+    classDef constant fill:#17a2b8,stroke:#000,stroke-width:1px,color:#fff;
+    classDef model fill:#6f42c1,stroke:#000,stroke-width:1px,color:#fff;
+    classDef interface fill:#e83e8c,stroke:#000,stroke-width:1px,color:#fff;
+    classDef enum fill:#fd7e14,stroke:#000,stroke-width:1px,color:#fff;
+    classDef guard fill:#20c997,stroke:#000,stroke-width:1px,color:#fff;
+    classDef pipe fill:#dc3545,stroke:#000,stroke-width:1px,color:#fff;
+    classDef directive fill:#6c757d,stroke:#000,stroke-width:1px,color:#fff;
+    classDef external fill:#ff7f0e,stroke:#000,stroke-width:1px,color:#fff;

@@ -1,0 +1,106 @@
+graph TD
+
+%% -- server.py --
+main["main()"]:::func
+IntermediaryHandler["IntermediaryHandler"]:::cls
+handle_DATA["handle_DATA()"]:::method
+is_reply["is_reply_to_intermediary()"]:::method
+track_email["track_forwarded_email()"]:::method
+forward_protect["forward_with_protection()"]:::method
+send_rejection["send_rejection_message()"]:::method
+decode_subject["decode_subject()"]:::method
+extract_content["extract_content()"]:::method
+send_via_gmail["send_email_via_gmail()"]:::method
+smtp_send["_smtp_send()"]:::method
+force_shutdown["force_shutdown()"]:::func
+log_server["log()"]:::func
+
+%% -- gmail_auto_reply.py --
+run_daemon["run_auto_reply_daemon()"]:::func
+gmail_auth["gmail_authenticate()"]:::func
+list_unread["list_unread_messages()"]:::func
+get_message["get_message()"]:::func
+create_html["create_html_message()"]:::func
+send_message["send_message()"]:::func
+mark_read["mark_as_read()"]:::func
+process_unread["process_unread_messages()"]:::func
+log_bot["log()"]:::func
+
+%% -- External Libraries --
+aiosmtpd["aiosmtpd
+Controller"]:::lib
+smtplib["smtplib
+SMTP / STARTTLS"]:::lib
+dotenv["python-dotenv
+load_dotenv"]:::lib
+gmail_api["google-api-python-client
+gmail API v1"]:::lib
+google_auth["google-auth-oauthlib
+OAuth2 Flow"]:::lib
+asyncio_lib["asyncio
+event loop"]:::lib
+email_lib["email / MIME
+MIMEMultipart / MIMEText"]:::lib
+signal_lib["signal
+SIGINT / SIGTERM"]:::lib
+threading_lib["threading
+daemon thread"]:::lib
+
+%% -- Config / Secrets --
+env_file[".env
+RELAY_EMAIL
+RELAY_PASSWORD"]:::config
+credentials["credentials.json
+OAuth2 client"]:::config
+token["token.json
+OAuth2 token"]:::config
+
+%% -- server.py internal relations --
+main --> IntermediaryHandler
+main --> force_shutdown
+main --> signal_lib
+IntermediaryHandler --> handle_DATA
+handle_DATA --> is_reply
+handle_DATA --> forward_protect
+handle_DATA --> send_rejection
+handle_DATA --> track_email
+forward_protect --> decode_subject
+forward_protect --> extract_content
+forward_protect --> send_via_gmail
+send_via_gmail --> smtp_send
+send_rejection --> send_via_gmail
+
+%% -- gmail_auto_reply.py internal relations --
+run_daemon --> gmail_auth
+run_daemon --> process_unread
+process_unread --> list_unread
+process_unread --> get_message
+process_unread --> create_html
+process_unread --> send_message
+process_unread --> mark_read
+
+%% -- External library relations --
+main --> aiosmtpd
+smtp_send --> smtplib
+IntermediaryHandler --> dotenv
+IntermediaryHandler --> asyncio_lib
+handle_DATA --> email_lib
+forward_protect --> email_lib
+gmail_auth --> google_auth
+gmail_auth --> gmail_api
+list_unread --> gmail_api
+get_message --> gmail_api
+send_message --> gmail_api
+mark_read --> gmail_api
+main --> threading_lib
+
+%% -- Config file relations --
+IntermediaryHandler --> env_file
+gmail_auth --> credentials
+gmail_auth --> token
+
+classDef cls       fill:#7c3aed,stroke:#5b21b6,stroke-width:2px,color:#fff
+classDef method    fill:#a78bfa,stroke:#7c3aed,stroke-width:1px,color:#fff
+classDef func      fill:#2563eb,stroke:#1d4ed8,stroke-width:2px,color:#fff
+classDef lib       fill:#059669,stroke:#065f46,stroke-width:2px,color:#fff
+classDef config    fill:#d97706,stroke:#92400e,stroke-width:2px,color:#fff

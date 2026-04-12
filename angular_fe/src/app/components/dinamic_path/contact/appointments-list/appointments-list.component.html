@@ -1,0 +1,63 @@
+<div class="apt-shell">
+
+  <!-- HEADER - visibile SOLO se ci sono appuntamenti -->
+  <div class="apt-header" *ngIf="!loading() && appointments().length > 0">
+    <div class="apt-header__left">
+      <h2 class="apt-header__title"></h2>
+      <span class="apt-header__count">
+        {{ appointments().length }} meeting{{ appointments().length !== 1 ? 's' : '' }}
+      </span>
+    </div>
+    <div class="apt-header__chips">
+      <span class="stat-chip stat-chip--pending" *ngIf="countByStatus('PENDING') > 0">
+        <span class="stat-dot"></span>{{ countByStatus('PENDING') }} Pending
+      </span>
+      <span class="stat-chip stat-chip--confirmed" *ngIf="countByStatus('CONFIRMED') > 0">
+        <span class="stat-dot"></span>{{ countByStatus('CONFIRMED') }} Confirmed
+      </span>
+      <span class="stat-chip stat-chip--completed" *ngIf="countByStatus('COMPLETED') > 0">
+        <span class="stat-dot"></span>{{ countByStatus('COMPLETED') }} Completed
+      </span>
+      <span class="stat-chip stat-chip--cancelled" *ngIf="countByStatus('CANCELLED') > 0">
+        <span class="stat-dot"></span>{{ countByStatus('CANCELLED') }} Cancelled
+      </span>
+    </div>
+  </div>
+
+  <!-- LOADING -->
+  <div class="apt-loading" *ngIf="loading()">
+    <mat-spinner diameter="32"></mat-spinner>
+    <span>Loading appointments…</span>
+  </div>
+
+  <!-- ERROR -->
+  <div class="apt-error" *ngIf="error() && !loading()">
+    <mat-icon>error_outline</mat-icon>
+    <span>{{ error() }}</span>
+    <button mat-stroked-button (click)="loadAppointments()">Retry</button>
+  </div>
+
+  <!-- EMPTY STATE 1: Nessun appuntamento in assoluto -->
+  <lib-empty-state 
+    *ngIf="!loading() && !error() && appointments().length === 0"
+    [show]="true" 
+    [logoSrc]="getLogoSrc()">
+    <h3>No appointments scheduled yet</h3>
+    <p>Your meetings will appear here once a contact request is accepted</p>
+  </lib-empty-state>
+
+  <!-- CALENDARIO - visibile SOLO se ci sono appuntamenti -->
+  <ng-container *ngIf="!loading() && !error() && appointments().length > 0">
+    
+    <div class="calendar-wrapper">
+      <app-appointments-calendar
+        [events]="calendarEvents()"
+        [currentUserId]="currentUserId"
+        (action)="onCalendarAction($event)">
+        <!-- ↑ RIMOSSO (filteredEventsChange) -->
+      </app-appointments-calendar>
+    </div>
+
+  </ng-container>
+
+</div>

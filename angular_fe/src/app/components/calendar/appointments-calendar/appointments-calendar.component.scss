@@ -1,0 +1,527 @@
+@use 'tokens' as *;
+
+// ── Shell ─────────────────────────────────────────────────────────────────────
+.calendar {
+  width: 100%;
+  background: $white;
+  border-radius: 12px;
+  border: 1px solid $border;
+  box-shadow: 5px 8px 12px $shadow-c, -5px 8px 12px $shadow-c, 0 -4px 10px $shadow-c;
+  overflow: visible;
+  position: relative;
+}
+
+// ── Toolbar ───────────────────────────────────────────────────────────────────
+.cal-toolbar {
+  background: $white;
+  border-bottom: 1px solid $border-accent;
+  border-radius: 12px 12px 0 0;
+  padding: 0.6rem 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+}
+
+.cal-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+
+  &__btn {
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    border: 1.5px solid $border;
+    background: $white;
+    color: $midnight;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.14s;
+
+    &:hover  { background: $bg; border-color: $blue; color: $blue; }
+    &:active { transform: scale(0.92); }
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $midnight;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.14s;
+    white-space: nowrap;
+
+    &:hover { background: $bg; }
+  }
+
+  &__caret {
+    font-size: 0.6rem;
+    color: $muted;
+    transition: transform 0.18s;
+    display: inline-block;
+    &.open { transform: rotate(180deg); }
+  }
+}
+
+.cal-today-btn {
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 6px;
+  border: 1.5px solid $border;
+  background: $white;
+  color: $navy;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.14s;
+  white-space: nowrap;
+
+  &:hover { background: rgba($blue, 0.06); border-color: $blue; color: $blue; }
+}
+
+// ── Filtri ────────────────────────────────────────────────────────────────────
+.cal-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  flex-wrap: wrap;
+}
+
+.cal-filter {
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  border: 1.5px solid $border;
+  background: transparent;
+  color: $muted;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.14s;
+  white-space: nowrap;
+
+  &.active                { background: $navy;        border-color: $navy;        color: $white; }
+  &--confirmed.active     { background: $confirmed;   border-color: $confirmed;   color: $white; }
+  &--pending.active       { background: $pending;     border-color: $pending;     color: $white; }
+  &--rescheduled.active   { background: $rescheduled; border-color: $rescheduled; color: $white; }
+  &--cancelled.active     { background: $cancelled;   border-color: $cancelled;   color: $white; }
+}
+
+// ── Year picker ───────────────────────────────────────────────────────────────
+.year-picker {
+  background: $white;
+  border-bottom: 1px solid $border;
+  padding: 0.55rem 0.85rem;
+  animation: slideDown 0.14s ease-out;
+
+  &__grid { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+
+  &__btn {
+    height: 26px;
+    padding: 0 11px;
+    border-radius: 6px;
+    border: 1.5px solid $border;
+    background: $white;
+    color: $text;
+    font-size: 0.7rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.14s;
+
+    &:hover   { background: rgba($blue, 0.06); border-color: $blue; color: $blue; }
+    &.current { background: linear-gradient(135deg, $midnight, $blue); border-color: $blue; color: $white; }
+  }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ── Griglia header ────────────────────────────────────────────────────────────
+.cal-grid--header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: $bg;
+  border-bottom: 1px solid $border-accent;
+
+  > div {
+    padding: 7px 0;
+    text-align: center;
+    font-size: 0.63rem;
+    font-weight: 700;
+    color: rgba(69, 78, 223, 0.64);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-right: 1px solid $border-accent;
+    &:last-child { border-right: none; }
+  }
+}
+
+// ── Griglia body ──────────────────────────────────────────────────────────────
+.cal-grid--body {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.cal-cell {
+  min-height: auto;
+  border-right: 1px solid $border;
+  border-bottom: 1px solid $border;
+  padding: 4px 4px 4px 6px;
+  display: flex;
+  gap: 2px;
+  background: $white;
+  transition: background 0.1s;
+  overflow: hidden;
+  min-width: 0;
+  box-sizing: border-box;
+
+  &:nth-child(7n)        { border-right: none; }
+  &:nth-last-child(-n+7) { border-bottom: none; }
+  &:hover                { background: rgba($blue, 0.015); }
+  &--empty               { background: rgba($bg, 0.55); }
+
+  &--today {
+    background: rgba($blue, 0.03);
+
+    .cal-cell__num {
+      background: linear-gradient(135deg, $midnight, $blue);
+      color: $white;
+      border-radius: 50%;
+      width: 22px; height: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.68rem;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba($blue, 0.3);
+    }
+  }
+}
+
+.cal-cell__num {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: $text;
+  width: 22px; height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.cal-events {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+  flex: 1;
+}
+
+.cal-event {
+  display: block;
+  padding: 2px 5px;
+  border-radius: 3px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  transition: filter 0.12s, transform 0.1s, box-shadow 0.12s;
+  background: $blue;
+  color: $white;
+  position: relative;
+
+  &:hover    { filter: brightness(1.08); transform: translateY(-1px); box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+  &--active  { box-shadow: 0 0 0 2px $white, 0 0 0 3px $midnight !important; }
+
+  &--pending     { background: $pending;     color: $white; }
+  &--confirmed   { background: $confirmed;   color: $white; }
+  &--cancelled   { background: $cancelled;   color: $white; }
+  &--completed   { background: $violet;   color: $white; }
+  &--rescheduled { background: $rescheduled; color: $white; }
+  &--no_show     { background: $no-show;     color: $white; }
+}
+
+// ── Popover ───────────────────────────────────────────────────────────────────
+.cal-popover {
+  position  : fixed;
+  width     : 300px;
+  max-width : calc(100vw - 2rem);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  background: $white;
+  border-radius: 10px;
+  border: 1px solid $border;
+  box-shadow: 0 8px 24px rgba(5, 21, 82, 0.14), 0 2px 8px rgba(5, 21, 82, 0.08);
+  z-index: 1000;
+  animation: popIn 0.15s ease-out;
+
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.95) translateY(4px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0);   }
+  }
+
+  &__header {
+    padding: 0.7rem 0.85rem;
+    background: $bg;
+    border-bottom: 1px solid $border;
+    border-left: 4px solid $blue;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    &[data-status="PENDING"]     { border-left-color: $pending;     }
+    &[data-status="CONFIRMED"]   { border-left-color: $confirmed;   }
+    &[data-status="CANCELLED"]   { border-left-color: $cancelled;   }
+    &[data-status="COMPLETED"]   { border-left-color: $violet;   }
+    &[data-status="RESCHEDULED"] { border-left-color: $rescheduled; }
+    &[data-status="NO_SHOW"]     { border-left-color: $no-show;     }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  &__title {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: $midnight;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__date {
+    font-size: 0.65rem;
+    color: $muted;
+  }
+
+  &__close {
+    background: transparent;
+    border: none;
+    color: $muted;
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    line-height: 1;
+    transition: all 0.12s;
+
+    &:hover { background: rgba($cancelled, 0.1); color: $cancelled; }
+  }
+
+  &__status {
+    padding: 0.4rem 0.85rem;
+    border-bottom: 1px solid $border;
+  }
+
+  &__actions {
+    padding: 0.35rem 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+// ── Status badge ──────────────────────────────────────────────────────────────
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 8px;
+  border-radius: 999px;
+
+  &--pending     { background: rgba($pending,     0.12); color: darken($pending,     12%); }
+  &--confirmed   { background: rgba($confirmed,   0.12); color: darken($confirmed,   12%); }
+  &--cancelled   { background: rgba($cancelled,   0.12); color: darken($cancelled,   12%); }
+  &--completed   { background: rgba($violet,   0.12); color: darken($violet,   12%); }
+  &--rescheduled { background: rgba($rescheduled, 0.12); color: darken($rescheduled, 12%); }
+  &--no_show     { background: rgba($no-show,     0.12); color: darken($no-show,     12%); }
+}
+
+.status-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+// ── Bottoni popover ───────────────────────────────────────────────────────────
+.pop-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 0.42rem 0.65rem;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: $text;
+  font-size: 0.76rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+  text-align: left;
+
+  &__icon {
+    font-size  : 16px;
+    width      : 16px;
+    height     : 16px;
+    line-height: 1;
+    flex-shrink: 0;
+    text-align : center;
+  }
+
+  &:hover { background: $bg; }
+
+  &--details { &:hover { background: rgba($blue,       0.06); color: $blue;      } }
+  &--confirm { color: $confirmed;   &:hover { background: rgba($confirmed,   0.08); } }
+  &--propose { color: $rescheduled; &:hover { background: rgba($rescheduled, 0.08); } }
+  &--reject  { color: $cancelled;   &:hover { background: rgba($cancelled,   0.08); } }
+  &--contact { &:hover { background: rgba($navy,        0.06); color: $navy;      } }
+  &--cancel  { color: $cancelled;   &:hover { background: rgba($cancelled,   0.08); } }
+}
+
+// ── Pannello proposta ─────────────────────────────────────────────────────────
+.pop-proposal {
+  padding      : 0.5rem 0.65rem;
+  background   : rgba($rescheduled, 0.06);
+  border-left  : 3px solid $rescheduled;
+  border-radius: 0;
+  margin       : 0.25rem 0;
+
+  &__label {
+    font-size    : 0.68rem;
+    color        : $muted;
+    margin-bottom: 0.35rem;
+    line-height  : 1.4;
+
+    strong { color: $text; font-weight: 600; }
+  }
+
+  &__row {
+    display    : flex;
+    align-items: flex-start;
+    gap        : 6px;
+    font-size  : 0.72rem;
+    color      : $text;
+    padding    : 2px 0;
+    line-height: 1.4;
+  }
+
+  &__icon {
+    font-size  : 14px;
+    width      : 14px;
+    height     : 14px;
+    color      : $rescheduled;
+    flex-shrink: 0;
+    margin-top : 1px;
+  }
+
+  &__actions {
+    display   : flex;
+    gap       : 4px;
+    margin-top: 0.5rem;
+
+    .pop-btn {
+      flex           : 1;
+      justify-content: center;
+      font-size      : 0.68rem;
+      padding        : 0.35rem 0.3rem;
+    }
+  }
+}
+
+// ── Responsive ────────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .cal-toolbar    { padding: 0.5rem; }
+  .cal-cell       { min-height: 65px; padding: 2px 2px 2px 4px; }
+  .cal-event      { font-size: 0.6rem; padding: 1px 3px; }
+  .cal-nav__title { font-size: 0.82rem; }
+  .cal-filters    { gap: 0.2rem; }
+  .cal-filter     { font-size: 0.55rem; padding: 0 7px; height: 22px; }
+  .cal-popover    { width: 260px; }
+}
+
+lib-empty-state {
+  h3 { font-size: 15px; }
+}
+
+@media (max-width: 480px) {
+  .cal-toolbar__top { flex-wrap: wrap; }
+  .cal-cell         { min-height: 46px; }
+  .cal-cell__num    { font-size: 0.62rem; width: 18px; height: 18px; }
+  .cal-event        { font-size: 0; height: 6px; padding: 0; border-radius: 3px; }
+  .cal-popover      { width: calc(100vw - 2rem); }
+}
+
+// ── Empty state animations ────────────────────────────────────────────────────
+lib-empty-state {
+  h3 {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid $violet;
+    max-width: fit-content;
+    width: 0;
+    font-family: 'Almendra', serif;
+    animation: typewriter 2.5s steps(40) 0.3s forwards, blink 0.8s step-end infinite;
+  }
+
+  p {
+    opacity: 0;
+    font-family: 'Almendra', serif;
+    font-weight: 400;
+    font-style: italic;
+    animation: fadeInUp 0.6s ease 3s forwards;
+  }
+}
+
+@keyframes typewriter { to { width: 100%; } }
+@keyframes blink { 50% { border-color: transparent; } }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.cal-toolbar--no-border {
+  border-bottom: none;
+  border-radius: 12px;
+}

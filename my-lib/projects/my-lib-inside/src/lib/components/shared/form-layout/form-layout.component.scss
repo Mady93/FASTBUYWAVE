@@ -1,0 +1,921 @@
+@use 'tokens' as *;
+
+.form-layout {
+  position: relative;
+  width: 100%;
+
+  // ── CSS Variables ─────────────────
+  --gradient-btn-primary: #{$gradient-blue-to-violet};
+  --gradient-heading: #{$gradient-pink-original};
+  --gradient-level-0: #{$gradient-blue-to-violet};
+  --gradient-level-1: #{$gradient-primary-to-violet};
+  --gradient-level-2: #{$gradient-violet-to-light};
+  --gradient-level-3: #{$gradient-navy-to-blue};
+
+  &.gradient-recursive {
+    --gradient-heading: #{$gradient-full-spectrum};
+  }
+
+  ::ng-deep .mat-mdc-card {
+    box-shadow: unset !important;
+    margin-bottom: 20px;
+  }
+
+  ::ng-deep .mat-mdc-card-content:last-child {
+    margin-top: 15px;
+  }
+
+  .form-layout-title {
+    color: $midnight;
+  }
+
+  .form-layout-content {
+    margin-top: 15px;
+    display: grid;
+    gap: 24px;
+    align-items: start;
+
+    @media (max-width: 1400px) {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    @media (max-width: 768px) {
+      display: block;
+    }
+  }
+
+  // ── Section container ──────────────────────────────────────────────────────
+  ::ng-deep .section-container {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 16px;
+    border: 1px solid $gray-light-medium;
+    border-radius: 4px;
+    background-color: $white;
+    box-shadow:
+      9px 10px 6px rgba($blue-shadow, 0.09),
+      -9px 10px 6px rgba($blue-shadow, 0.09),
+      0px -10px 6px rgba($blue-shadow, 0.09);
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      padding-bottom: 8px;
+      font-size: 18px;
+      background: var(--gradient-heading);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      border-bottom: none;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background: var(--gradient-heading);
+      }
+    }
+  }
+
+  // ── Input group ────────────────────────────────────────────────────────────
+  ::ng-deep .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    margin-bottom: 14px;
+
+    .radio-group {
+      flex: 1;
+    }
+
+    .error-message {
+      width: 100%;
+    }
+  }
+
+  ::ng-deep .input-label {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: $midnight;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  // ── Modern inputs ──────────────────────────────────────────────────────────
+  ::ng-deep .modern-input,
+  ::ng-deep .modern-textarea {
+    width: 100%;
+    height: 32px;
+    padding: 0 0.65rem;
+    background: $bg-light;
+    border: 1.5px solid $border;
+    border-radius: 6px;
+    color: $text-dark;
+    font-size: 0.82rem;
+    font-family: inherit;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: $text-muted;
+      font-size: 0.75rem;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $blue;
+      background: $white;
+      box-shadow: 0 0 0 2px rgba($blue, 0.1);
+    }
+
+    &:hover:not(:focus):not(:disabled):not(.readonly) {
+      border-color: $indigo-light;
+    }
+
+    &.error {
+      border-color: $danger-color;
+      box-shadow: 0 0 0 2px rgba($danger-color, 0.1);
+    }
+  }
+
+  ::ng-deep .modern-input.readonly {
+    background: $readonly-bg;
+    color: $text-muted;
+    border-color: $readonly-border;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  ::ng-deep .modern-textarea {
+    height: auto;
+    min-height: 80px;
+    padding: 0.5rem 0.65rem;
+    resize: vertical;
+  }
+
+  // ── Error messages ─────────────────────────────────────────────────────────
+  ::ng-deep .error-message {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.7rem;
+    color: $danger-color;
+    font-weight: 500;
+  }
+
+  // ── Address ────────────────────────────────────────────────────────────────
+  ::ng-deep .address-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+
+    .input-group {
+      flex: 1;
+    }
+
+    .street-number {
+      flex: 0 0 100px;
+    }
+
+    .zip-code {
+      flex: 0 0 120px;
+    }
+
+    .flex-grow {
+      flex: 1;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  ::ng-deep .coordinates-row {
+    display: flex;
+    gap: 16px;
+
+    .input-group {
+      flex: 1;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  // ── Agency fields ──────────────────────────────────────────────────────────
+  ::ng-deep .agency-fields {
+    margin-top: 16px;
+    padding: 12px;
+    background-color: rgba($blue, 0.04);
+    border-radius: 8px;
+    border-left: 3px solid $blue;
+  }
+
+  // ── Checkbox ───────────────────────────────────────────────────────────────
+  ::ng-deep .checkbox-field {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  ::ng-deep .readonly-wrapper {
+    cursor: not-allowed;
+  }
+
+  ::ng-deep .readonly-checkbox {
+    pointer-events: none;
+  }
+
+  ::ng-deep input:not([disabled]):not(.readonly),
+  ::ng-deep textarea:not([disabled]):not(.readonly),
+  ::ng-deep mat-checkbox:not(.readonly-checkbox),
+  ::ng-deep .mat-mdc-checkbox:not(.readonly-checkbox) {
+    cursor: pointer;
+  }
+
+  // ── File input ─────────────────────────────────────────────────────────────
+  ::ng-deep .file-input-container {
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+
+    button {
+      font-size: 0.78rem;
+      padding: 5px 10px;
+      background-color: $bg-light;
+      border: 1.5px solid $border;
+      border-radius: 6px;
+      color: $midnight;
+      transition: all 0.2s ease;
+
+      &:hover {
+        border-color: $blue;
+        background: $white;
+        color: $blue;
+      }
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  ::ng-deep .file-count {
+    margin-left: 6px;
+    color: $blue;
+    font-weight: 600;
+    font-size: 0.78rem;
+  }
+
+  // ── Image preview ──────────────────────────────────────────────────────────
+  ::ng-deep .image-preview-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  ::ng-deep .image-preview-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 5px;
+    background-color: $white;
+    border: 1.5px solid $border;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba($midnight, 0.06);
+    transition: transform 0.2s ease;
+
+    &:hover {
+      transform: scale(1.02);
+    }
+
+    img {
+      width: 100%;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .remove-image-btn {
+      position: static !important;
+      width: 100% !important;
+      height: 20px !important;
+      border-radius: 4px !important;
+      background: rgba($danger-color, 0.08) !important;
+      color: $danger-color !important;
+      border: 1px solid rgba($danger-color, 0.3) !important;
+
+      &::before {
+        content: '✕ Remove';
+        font-size: 0.65rem;
+      }
+
+      &:hover {
+        background: $danger-color !important;
+        color: $white !important;
+        box-shadow: none !important;
+      }
+    }
+  }
+
+  ::ng-deep .file-name {
+    margin-top: 5px;
+    font-size: 0.65rem;
+    color: $text-muted;
+    text-align: center;
+    width: 100%;
+    word-break: break-word;
+  }
+
+  ::ng-deep .remove-image-btn {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: $white;
+    background: $gray-rosy;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+
+    &::before {
+      content: '×';
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &:hover {
+      background-color: rgba($red-hover, 0.9);
+      box-shadow: 0 4px 8px rgba($black, 0.3);
+    }
+  }
+
+  ::ng-deep .imageLogo {
+    display: block;
+    max-width: 130px;
+    max-height: 130px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border: 1.5px solid rgba($blue, 0.2);
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba($midnight, 0.08);
+    margin: 12px 0;
+  }
+
+  // ── Radio ──────────────────────────────────────────────────────────────────
+  ::ng-deep .radio-group {
+    display: flex;
+    gap: 16px;
+  }
+
+  ::ng-deep .radio-option {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  ::ng-deep .radio-input {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid $border;
+    border-radius: 50%;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:checked {
+      border-color: $blue;
+      background-color: $midnight;
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: $white;
+      }
+    }
+
+    &:hover {
+      border-color: $blue;
+    }
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px rgba($blue, 0.2);
+    }
+  }
+
+  ::ng-deep .radio-label {
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: $text-dark;
+    user-select: none;
+  }
+
+  // ── Required asterisk ──────────────────────────────────────────────────────
+  ::ng-deep .input-group:has(input[required]) .input-label::after,
+  ::ng-deep .input-group:has(textarea[required]) .input-label::after,
+  ::ng-deep .input-group:has(select[required]) .input-label::after,
+  ::ng-deep .radio-group:has(input[required]) .input-label::after,
+  ::ng-deep .agency-fields .input-group:has(input[required]) .input-label::after {
+    content: " *";
+    color: $danger-color;
+    font-weight: bold;
+  }
+
+  // ── Country emoji font ─────────────────────────────────────────────────────
+  ::ng-deep input#country {
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji",
+      "Twitter Color Emoji", "JoyPixels", "EmojiOne Color", "Twemoji Mozilla",
+      "Segoe UI Symbol", sans-serif;
+    font-variant-emoji: emoji;
+    text-rendering: optimizeLegibility;
+  }
+
+  // ── Actions ────────────────────────────────────────────────────────────────
+  .form-layout-actions {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 20px;
+
+    @media (max-width: 768px) {
+      flex-direction: row !important;
+      justify-content: flex-end;
+      gap: 0.4rem;
+      margin-top: 10px;
+
+      button,
+      .lm-btn {
+        width: auto !important;
+        min-width: unset !important;
+        flex: 1;
+        max-width: 50%;
+      }
+    }
+  }
+
+  // ── Spinner overlay ────────────────────────────────────────────────────────
+  .form-layout-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+// ── Bottoni lm-btn ─────────────────────────────────────────────────────────────
+.lm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.55rem 1.3rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 88px;
+  line-height: 1;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.lm-btn--primary {
+  background: var(--gradient-btn-primary);
+  color: $white;
+  box-shadow: 0 2px 8px rgba($midnight, 0.2);
+
+  &:hover:not(:disabled) {
+    background: var(--gradient-btn-primary);
+    filter: brightness(1.1);
+    box-shadow: 0 4px 14px rgba($midnight, 0.3);
+    transform: translateY(-1px);
+  }
+}
+
+.lm-btn--secondary {
+  background: transparent;
+  color: $midnight;
+  border: 1.5px solid rgba($midnight, 0.18);
+
+  &:hover:not(:disabled) {
+    background: rgba($midnight, 0.05);
+    border-color: rgba($midnight, 0.35);
+  }
+}
+
+.lm-btn--danger-outline {
+  background: transparent;
+  color: $danger-color;
+  border: 1.5px solid rgba($danger-color, 0.35);
+
+  &:hover:not(:disabled) {
+    background: rgba($danger-color, 0.08);
+    border-color: $danger-color;
+  }
+}
+
+.lm-spinner {
+  display: inline-flex;
+  width: 13px;
+  height: 13px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    animation: lm-spin 0.75s linear infinite;
+  }
+}
+
+@keyframes lm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 520px) {
+  .form-layout-actions {
+    flex-direction: row !important;
+
+    .lm-btn {
+      flex: 1;
+      max-width: 50%;
+      width: auto !important;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .lm-btn {
+    min-width: unset;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.72rem;
+  }
+}
+
+// ── Skeleton shared shimmer ────────────────────────────────────────────────────
+@keyframes fl-shimmer {
+  0% {
+    background-position: -600px 0;
+  }
+
+  100% {
+    background-position: 600px 0;
+  }
+}
+
+.fl-sk-bar {
+  background: linear-gradient(90deg, $grey-100 25%, $grey-200 50%, $grey-100 75%);
+  background-size: 600px 100%;
+  animation: fl-shimmer 1.4s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+// ── Standard skeleton (form normali) ──────────────────────────────────────────
+.fl-skeleton {
+  padding: 0.5rem 0;
+
+  .fl-sk-grid {
+    display: grid;
+    gap: 24px;
+    align-items: start;
+    margin-top: 15px;
+    margin-bottom: 1.5rem;
+
+    @media (max-width: 1400px) {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    @media (max-width: 768px) {
+      display: block;
+    }
+  }
+
+  .fl-sk-section {
+    padding: 16px;
+    border: 1px solid $grey-200;
+    border-radius: 4px;
+    background: $grey-100;
+    box-shadow:
+      9px 10px 6px rgba($blue-shadow, 0.04),
+      -9px 10px 6px rgba($blue-shadow, 0.04),
+      0px -10px 6px rgba($blue-shadow, 0.04);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    @media (max-width: 768px) {
+      margin-bottom: 16px;
+    }
+  }
+
+  .fl-sk-section-title {
+    height: 18px;
+    width: 55%;
+    margin-bottom: 2px;
+  }
+
+  .fl-sk-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .fl-sk-label {
+    height: 10px;
+    width: 35%;
+    border-radius: 4px;
+  }
+
+  .fl-sk-input {
+    height: 32px;
+    width: 100%;
+  }
+
+  .fl-sk-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+
+    @media (max-width: 520px) {
+      flex-direction: column;
+
+      .fl-sk-btn {
+        width: 100%;
+      }
+    }
+  }
+
+  .fl-sk-btn {
+    height: 36px;
+    width: 110px;
+    border-radius: 8px;
+  }
+
+  .fl-sk-btn-outline {
+    opacity: 0.45;
+  }
+
+  .fl-sk-btn-primary {
+    opacity: 0.75;
+  }
+}
+
+// ── Tree skeleton (form ricorsivi) ─────────────────────────────────────────────
+.fl-skeleton--tree {
+  padding: 0.5rem 0;
+
+  .fl-tsk-card {
+    background: $white;
+    border: 1.5px solid $border;
+    border-radius: 10px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+
+  .fl-tsk-root {
+    border: 2px solid rgba($blue-primary-dark, 0.3);
+    box-shadow:
+      9px 10px 6px rgba($blue-shadow, 0.05),
+      -9px 10px 6px rgba($blue-shadow, 0.05),
+      0px -10px 6px rgba($blue-shadow, 0.05);
+  }
+
+  .fl-tsk-child {
+    border-left: 4px solid $border;
+
+    &[data-level="1"] {
+      margin-left: 1.5rem;
+      border-left-color: rgba($indigo-light, 0.3);
+    }
+
+    &[data-level="2"] {
+      margin-left: 2rem;
+      border-left-color: rgba($blue, 0.3)
+    }
+
+    &[data-level="3"] {
+      margin-left: 2.5rem;
+      border-left-color: rgba($navy, 0.3)
+    }
+  }
+
+  .fl-tsk-breadcrumb {
+    background: $bg-light;
+    padding: 0.35rem 1rem;
+    border-bottom: 1px solid $border;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .fl-tsk-crumb {
+    height: 8px;
+    width: 50px;
+  }
+
+  .fl-tsk-crumb-current {
+    height: 8px;
+    width: 70px;
+    opacity: 0.7;
+  }
+
+  .fl-tsk-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.9rem 1.25rem;
+    background: $bg-light;
+  }
+
+  .fl-tsk-expand {
+    height: 20px;
+    width: 20px;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .fl-tsk-badge {
+    height: 20px;
+    width: 60px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+
+  .fl-tsk-badge-0 {
+    width: 50px;
+  }
+
+  .fl-tsk-badge-1 {
+    width: 60px;
+  }
+
+  .fl-tsk-badge-2 {
+    width: 55px;
+  }
+
+  .fl-tsk-badge-3 {
+    width: 65px;
+  }
+
+  .fl-tsk-title {
+    height: 14px;
+    width: 35%;
+    flex: 1;
+  }
+
+  .fl-tsk-remove-btn {
+    height: 26px;
+    width: 70px;
+    border-radius: 8px;
+    margin-left: auto;
+    flex-shrink: 0;
+    opacity: 0.5;
+  }
+
+  .fl-tsk-body {
+    padding: 1.25rem;
+    background: $white;
+    border-top: 1.5px solid $border;
+  }
+
+  .fl-tsk-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .fl-tsk-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .fl-tsk-label {
+    height: 10px;
+    width: 40%;
+    border-radius: 4px;
+  }
+
+  .fl-tsk-input {
+    height: 32px;
+    width: 100%;
+  }
+
+  .fl-tsk-actions {
+    padding-top: 0.75rem;
+    border-top: 1.5px dashed $border;
+    margin-top: 0.75rem;
+  }
+
+  .fl-tsk-add-btn {
+    height: 30px;
+    width: 130px;
+    border-radius: 8px;
+    opacity: 0.5;
+  }
+
+  .fl-tsk-submit {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: $white;
+    border: 1.5px solid $border;
+    border-radius: 12px;
+  }
+
+  .fl-tsk-btn-reset {
+    height: 36px;
+    width: 88px;
+    border-radius: 8px;
+    opacity: 0.4;
+  }
+
+  .fl-tsk-btn-save {
+    height: 36px;
+    width: 160px;
+    border-radius: 8px;
+    opacity: 0.7;
+  }
+
+  // mobile
+  @media (max-width: 768px) {
+    .fl-tsk-child[data-level="1"] {
+      margin-left: 0.4rem;
+    }
+
+    .fl-tsk-child[data-level="2"] {
+      margin-left: 0.6rem;
+    }
+
+    .fl-tsk-child[data-level="3"] {
+      margin-left: 0.8rem;
+    }
+
+    .fl-tsk-body {
+      padding: 0.5rem;
+    }
+
+    .fl-tsk-title {
+      width: 50%;
+    }
+  }
+}

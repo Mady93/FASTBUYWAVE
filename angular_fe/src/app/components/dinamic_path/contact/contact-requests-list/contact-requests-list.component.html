@@ -1,0 +1,174 @@
+<div class="contact-requests-table">
+
+  <!-- CASO 1: Nessun dato nel DB -->
+  <lib-empty-state [show]="isNoData()" [logoSrc]="getLogoSrc()">
+    <h3>No contact requests yet</h3>
+    <p>Your contact requests will appear here</p>
+  </lib-empty-state>
+
+  <!-- CASO 2: Dati nel DB -->
+  <ng-container *ngIf="hasDataInDb()">
+
+    <!-- Titolo con badge — rimane FUORI dal wrapper -->
+    <h2 class="requests-title">
+      <span class="font">Contact Requests</span>
+      <ng-container *ngFor="let status of [requestStatus.PENDING, requestStatus.ACCEPTED, requestStatus.REJECTED]">
+        <span class="badge" [ngClass]="getBadgeColorClass(status)" *ngIf="getBadgeCount(status) > 0">
+          <span class="badge-number">{{ getBadgeCount(status) }}</span>
+          <span class="badge-status">{{ getStatusLabel(status) }}</span>
+        </span>
+      </ng-container>
+    </h2>
+
+    <!-- Filtri chip — rimangono FUORI dal wrapper -->
+    <div class="filters-bar">
+      <div class="filter-group">
+        <span class="filter-label">Status</span>
+        <div class="filter-chips">
+          <button class="chip" [class.chip--active]="statusFilter() === 'ALL'"
+            (click)="statusFilter.set('ALL'); applyFilters()">All</button>
+          <button class="chip chip--pending" [class.chip--active]="statusFilter() === requestStatus.PENDING"
+            (click)="statusFilter.set(requestStatus.PENDING); applyFilters()">
+            Pending
+            <span class="chip-count" *ngIf="getBadgeCount(requestStatus.PENDING) > 0">{{ getBadgeCount(requestStatus.PENDING) }}</span>
+          </button>
+          <button class="chip chip--accepted" [class.chip--active]="statusFilter() === requestStatus.ACCEPTED"
+            (click)="statusFilter.set(requestStatus.ACCEPTED); applyFilters()">
+            Accepted
+            <span class="chip-count" *ngIf="getBadgeCount(requestStatus.ACCEPTED) > 0">{{ getBadgeCount(requestStatus.ACCEPTED) }}</span>
+          </button>
+          <button class="chip chip--rejected" [class.chip--active]="statusFilter() === requestStatus.REJECTED"
+            (click)="statusFilter.set(requestStatus.REJECTED); applyFilters()">
+            Rejected
+            <span class="chip-count" *ngIf="getBadgeCount(requestStatus.REJECTED) > 0">{{ getBadgeCount(requestStatus.REJECTED) }}</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="filter-group">
+  <span class="filter-label">Method</span>
+  <div class="filter-chips">
+    <button class="chip" [class.chip--active]="methodFilter() === 'ALL'"
+      (click)="methodFilter.set('ALL'); applyFilters()">All</button>
+    <button class="chip"
+      [class.chip--email]="method === contactMethod.EMAIL"
+      [class.chip--phone]="method === contactMethod.PHONE"
+      [class.chip--whatsapp]="method === contactMethod.WHATSAPP"
+      [class.chip--meeting]="method === contactMethod.MEETING"
+      [class.chip--active]="methodFilter() === method"
+      *ngFor="let method of [contactMethod.EMAIL, contactMethod.PHONE, contactMethod.WHATSAPP, contactMethod.MEETING]"
+      (click)="methodFilter.set(method); applyFilters()">{{ method }}</button>
+  </div>
+</div>
+
+      <span class="results-count">{{ filteredRequests().length }} results</span>
+    </div>
+
+    <!-- lib-table-layout wrapper -->
+    <lib-table-layout
+      [data]="filteredRequests()"
+      [columns]="columns"
+      [loading]="isLoadingValue"
+      [pageable]="true"
+      [totalItems]="filteredRequests().length"
+      [pageSize]="pageSize"
+      [currentPage]="currentPage"
+      [pageSizeOptions]="[5, 10, 20, 50]"
+      [isEmptyStateFn]="isEmptyState"
+      [getLogoSrcFn]="getLogoSrc"
+      [emptyStateMessage]="emptyStateMessage"
+      [emptyStateSubtitle]="emptyStateSubtitle"
+      (pageChanged)="onPageChanged($event)">
+
+      <!-- Custom cell template -->
+      <ng-template #customCell let-row let-col="column">
+
+        <!-- USER -->
+        <ng-container *ngIf="col.field === 'sender'">
+          <div class="user-cell">
+            <img *ngIf="getProfileImage(row.sender.userId) as img"
+              [src]="img" class="user-avatar" [alt]="row.sender.firstName">
+            <div class="user-info">
+              <span class="user-name">{{ row.sender.firstName }} {{ row.sender.lastName }}</span>
+              <div class="direction-wrapper">
+                <mat-icon *ngIf="isSender(row)" class="sent-icon">arrow_upward</mat-icon>
+                <mat-icon *ngIf="isReceiver(row)" class="received-icon">arrow_downward</mat-icon>
+                <span class="direction-text"
+                  [class.sent]="isSender(row)"
+                  [class.received]="isReceiver(row)">
+                  {{ isSender(row) ? 'Outbound · You sent' : 'Inbound · You received' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- SUBJECT -->
+        <ng-container *ngIf="col.field === 'subject'">
+          <ng-container *ngIf="parseSubject(row.subject) as p">
+            <span class="subject-label">{{ p.label }}</span>
+            <span class="subject-value">{{ p.product }}</span>
+          </ng-container>
+        </ng-container>
+
+        <!-- STATUS -->
+        <ng-container *ngIf="col.field === 'status'">
+          <span class="status-badge status-badge--{{ row.status?.toLowerCase() }}">
+            {{ getStatusLabel(row.status!) }}
+          </span>
+        </ng-container>
+
+        <!-- CREATED -->
+        <ng-container *ngIf="col.field === 'createdAt'">
+          {{ getTimeAgo(row.createdAt!) }}
+        </ng-container>
+
+        <!-- NOTES -->
+<ng-container *ngIf="col.field === 'additionalNotes'">
+  <div class="notes-scroll">{{ row.additionalNotes || '-' }}</div>
+</ng-container>
+
+      </ng-template>
+
+      <!-- Action buttons template -->
+      <ng-template #actionButtons let-row>
+        <div class="actions-wrapper">
+         
+          <button mat-mini-fab class="btn accept-btn"
+            *ngIf="canAcceptMeeting(row) || canCloseNonMeeting(row)"
+            [matTooltip]="'Accept'" (click)="acceptRequest(row)">
+            <mat-icon>check</mat-icon>
+          </button>
+          <button mat-mini-fab class="btn reject-btn"
+            *ngIf="canReject(row)"
+            [matTooltip]="'Reject'" (click)="rejectRequest(row)">
+            <mat-icon>close</mat-icon>
+          </button>
+          <button mat-mini-fab class="btn hide-btn"
+            *ngIf="canHide(row)"
+            [matTooltip]="'Hide from my view'" (click)="hideRequest(row)">
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+
+        <!-- Info dinamica solo su mobile -->
+    <ng-container *ngIf="isMobile">
+      <span class="info-icon" (click)="toggleInfo(row.requestId)">ℹ️</span>
+      <div class="actions-info" *ngIf="isInfoOpen(row.requestId)">
+        <div *ngFor="let action of getAvailableActions(row)">
+          {{ action }}
+        </div>
+      </div>
+    </ng-container>
+
+        </div>
+      </ng-template>
+
+    </lib-table-layout>
+
+  </ng-container>
+
+</div>
+
+<div class="spinner-container" *ngIf="isLoading$ | async">
+  <lib-spinner [spinner]="getspinner()" [isLoading]="isLoading()"></lib-spinner>
+</div>

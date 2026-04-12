@@ -1,0 +1,543 @@
+@use 'tokens' as *;
+
+// ── Wrapper ────────────────────────────────────────────────────────────────────
+.table-layout {
+  width: 100%;
+  background: $bg-light;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+// ── Header ─────────────────────────────────────────────────────────────────────
+.tl-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.tl-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.tl-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $midnight;
+  margin: 0;
+}
+
+.tl-subtitle {
+  font-size: 0.78rem;
+  color: $text-muted;
+  margin: 0;
+}
+
+.tl-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+// ── Tabella ────────────────────────────────────────────────────────────────────
+.tl-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 10px;
+  border: 1.5px solid $border;
+  box-shadow: 0 2px 8px rgba($midnight, 0.08);
+}
+
+.tl-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: $white;
+  font-size: 0.82rem;
+
+  thead tr {
+    background: linear-gradient(135deg, $midnight 0%, $blue 100%);
+  }
+
+  thead th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: $white;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    text-align: center;
+
+    &.tl-col-select {
+      width: 40px;
+      text-align: center;
+    }
+
+    &.tl-col-actions {
+      width: 120px;
+      text-align: center;
+    }
+  }
+
+  tbody tr {
+    border-bottom: 1px solid $border;
+    transition: background 0.15s ease;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background: rgba($blue, 0.03);
+    }
+
+    &.tl-row--clickable {
+      cursor: pointer;
+    }
+
+    &.tl-row--selected {
+      background: rgba($blue, 0.06);
+    }
+  }
+
+  tbody td {
+    padding: 0.75rem 1rem;
+    color: $text-dark;
+    vertical-align: middle;
+
+    &.tl-col-select {
+      text-align: center;
+    }
+
+    &.tl-col-actions {
+      text-align: center;
+    }
+  }
+
+  input[type="checkbox"] {
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    accent-color: $blue;
+  }
+}
+
+// ── Empty state ────────────────────────────────────────────────────────────────
+.tl-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  background: $white;
+  border-radius: 10px;
+  border: 1.5px solid $border;
+}
+
+.tl-empty-icon {
+  font-size: 3rem;
+  color: $text-muted;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.tl-empty-message {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: $text-dark;
+  margin: 0 0 0.3rem;
+}
+
+.tl-empty-subtitle {
+  font-size: 0.78rem;
+  color: $text-muted;
+  margin: 0;
+}
+
+// ── Paginazione ────────────────────────────────────────────────────────────────
+.tl-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+// Mobile
+@media (max-width: 768px) {
+  .tl-pagination {
+
+    ::ng-deep button,
+    ::ng-deep .mat-mdc-button-base {
+      font-size: 10px !important;
+      padding: 4px !important;
+      min-width: 24px !important;
+      width: 24px !important;
+      height: 24px !important;
+      line-height: 24px !important;
+    }
+
+    ::ng-deep .mat-mdc-paginator-page-size-label,
+    ::ng-deep .mat-mdc-paginator-range-label {
+      font-size: 8px !important;
+    }
+
+    ::ng-deep .mat-mdc-paginator-range-label {
+      margin: 0 -1px 0 0px;
+    }
+
+    ::ng-deep .mat-mdc-paginator-page-size-select {
+      width: 60px !important;
+    }
+  }
+}
+
+// Desktop small
+@media (min-width: 992px) and (max-width: 1199px) {
+  .tl-pagination {
+
+    ::ng-deep .mat-mdc-paginator-page-size,
+    ::ng-deep .mat-mdc-paginator-page-size-label,
+    ::ng-deep .mat-mdc-paginator-range-label,
+    ::ng-deep .page-size-selector,
+    ::ng-deep .page-info {
+      font-size: 13px !important;
+    }
+
+    ::ng-deep .mat-mdc-paginator-page-size-select {
+      width: 75px;
+    }
+
+    ::ng-deep .mat-mdc-icon-button {
+      width: 32px !important;
+      height: 30px !important;
+    }
+  }
+}
+
+// ── Skeleton ───────────────────────────────────────────────────────────────────
+@keyframes fl-shimmer {
+  0% {
+    background-position: -600px 0;
+  }
+
+  100% {
+    background-position: 600px 0;
+  }
+}
+
+.fl-sk-bar {
+  background: linear-gradient(90deg, $shimmer-start 25%, $shimmer-middle 50%, $shimmer-start 75%);
+  background-size: 600px 100%;
+  animation: fl-shimmer 1.4s ease-in-out infinite;
+  border-radius: 6px;
+}
+
+.tl-skeleton {
+  background: $white;
+  border-radius: 10px;
+  border: 1.5px solid $border;
+  overflow: hidden;
+}
+
+.tl-sk-row {
+  display: flex;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid $border;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.tl-sk-header-row {
+  background: rgba($midnight, 0.04);
+
+  .tl-sk-th {
+    height: 12px;
+    flex: 1;
+    opacity: 0.7;
+  }
+}
+
+.tl-sk-td {
+  height: 14px;
+  flex: 1;
+}
+
+// ── Bottoni lm-btn ────────────────────────────────────────────────────────────
+.lm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+  line-height: 1;
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.lm-btn--primary {
+  background: linear-gradient(135deg, $midnight 0%, $blue 100%);
+  color: $white;
+  box-shadow: 0 2px 8px rgba($midnight, 0.2);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, $gradient-dark-blue 0%, $gradient-light-blue 100%);
+    box-shadow: 0 4px 14px rgba($midnight, 0.3);
+    transform: translateY(-1px);
+  }
+}
+
+.lm-btn--secondary {
+  background: transparent;
+  color: $midnight;
+  border: 1.5px solid rgba($midnight, 0.18);
+
+  &:hover:not(:disabled) {
+    background: rgba($midnight, 0.05);
+    border-color: rgba($midnight, 0.35);
+  }
+}
+
+.lm-btn--danger {
+  background: $danger-color;
+  color: $white;
+  border: none;
+
+  &:hover:not(:disabled) {
+    background: $danger-darker;
+  }
+}
+
+.lm-btn--danger-outline {
+  background: transparent;
+  color: $danger-color;
+  border: 1.5px solid rgba($danger-color, 0.35);
+
+  &:hover:not(:disabled) {
+    background: rgba($danger-color, 0.08);
+    border-color: $danger-color;
+  }
+}
+
+.lm-btn--success {
+  background: $confirmed;
+  color: $white;
+  border: none;
+
+  &:hover:not(:disabled) {
+    background: $success-hover;
+  }
+}
+
+.lm-btn--warning {
+  background: $pending;
+  color: $white;
+  border: none;
+
+  &:hover:not(:disabled) {
+    background: $warning-hover;
+  }
+}
+
+.lm-spinner {
+  display: inline-flex;
+  width: 13px;
+  height: 13px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+    animation: lm-spin 0.75s linear infinite;
+  }
+}
+
+@keyframes lm-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ── Responsive ─────────────────────────────────────────────────────────────────
+@media (max-width: 768px) {
+  .table-layout {
+    padding: 0.0rem;
+  }
+
+  .tl-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .tl-header-actions {
+    flex-wrap: wrap;
+    gap: 0.4rem;
+
+    .lm-btn {
+      flex: 1;
+      min-width: unset;
+      font-size: 0.7rem;
+      padding: 0.4rem 0.6rem;
+    }
+  }
+
+  .tl-title {
+    font-size: 0.95rem;
+  }
+
+  .tl-subtitle {
+    font-size: 0.68rem;
+  }
+
+  // ── Card layout per righe ──────────────────────────────────────────────────
+  .tl-table-wrapper {
+    border: none;
+    box-shadow: none;
+    overflow: visible;
+  }
+
+  .tl-table {
+    thead {
+      display: none;
+    }
+
+    tbody tr {
+      display: block;
+      border: 1.5px solid $border;
+      border-radius: 10px;
+      margin-bottom: 0.75rem;
+      padding: 0.75rem;
+      box-shadow: 0 2px 8px rgba($midnight, 0.08);
+      background: $white;
+    }
+
+    tbody td {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.35rem 0;
+      border-bottom: 1px solid rgba($border, 0.5);
+      font-size: 0.75rem;
+
+      &:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+      }
+
+      &::before {
+        content: attr(data-label);
+        font-weight: 700;
+        font-size: 0.65rem;
+        color: $midnight;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        min-width: 90px;
+        flex-shrink: 0;
+        padding-top: 0.05rem;
+      }
+
+      &.tl-col-select,
+      &.tl-col-actions {
+        &::before {
+          display: none;
+        }
+
+        justify-content: flex-start;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .tl-header-actions .lm-btn {
+    font-size: 0.65rem;
+    padding: 0.35rem 0.5rem;
+  }
+
+  .tl-table tbody td {
+    font-size: 0.7rem;
+  }
+
+  .tl-table tbody td::before {
+    min-width: 80px;
+    font-size: 0.6rem;
+  }
+}
+
+lib-empty-state {
+  h3 {
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 2px solid $indigo-light;
+    max-width: fit-content;
+    width: 0;
+    font-family: 'Almendra', serif;
+    animation:
+      typewriter 2.5s steps(40) 0.3s forwards,
+      blink 0.8s step-end infinite;
+  }
+
+  p {
+    opacity: 0;
+    animation: fadeInUp 0.6s ease 3s forwards;
+    font-family: 'Almendra', serif;
+    font-weight: 400;
+    font-style: italic;
+    opacity: 0.75;
+  }
+
+  @media (max-width: 768px) {
+    h3 {
+      font-size: 1rem;
+    }
+  }
+}
+
+@keyframes typewriter {
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes blink {
+  50% {
+    border-color: transparent;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,160 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// _tokens.scss
+// @use 'tokens' as *;
+// ─────────────────────────────────────────────────────────────────────────────
+
+
+// ── Base ──────────────────────────────────────────────────────────────────────
+$white:               #ffffff;
+$black:               #000000;
+
+
+// ── Grays ─────────────────────────────────────────────────────────────────────
+$grey-50:             #f9fafb;
+$grey-100:            #f3f4f6;
+$grey-200:            #e5e7eb;
+$grey-300:            #d1d5db;
+$grey-500:            #6b7280;
+$grey-700:            #374151;
+$grey-900:            #111827;
+$grey:                #9e9e9e;
+$grey-medium:         #888888;
+$gray-medium:         #888888;
+$gray-dark:           #212529;
+$gray-azure:          #ced4da;
+$gray-light:          #e9ecef;
+$gray-light-medium:   #e0e0e0;
+$gray-light-soft:     #d1d1d1;
+$gray-faint:          #fafafa;
+$gray-blue:           #b0bec5;
+$gray-blue-light:     #eef0f8;
+$gray-rosy:           #948f8f;
+$gray-200-rgb:        rgb(200, 200, 200);
+$purple-gray:         #c4bcc9;
+
+
+// ── Blues ─────────────────────────────────────────────────────────────────────
+$blue:                #1e6ef5;
+$blue-bs:             #007bff;
+$blue-royal:          #1976d2;
+$blue-navy:           #0056b3;
+$blue-primary-dark:   #004FCC;
+$navy:                #0d47a1;
+$midnight:            #051552;
+$blue-dark:           #082188;
+$blue-deep-dark:      #092079;
+$dark-blue-black:     #010011;
+$dark-blue-bg:        #070f2d;
+$blue-light:          #86b7fe;
+$blue-very-light:     #eef2ff;
+$blue-focus:          #0d6efd;
+$blue-custom:         #517af0;
+$blue-soft:           #60a5fa;
+$blue-info:           #1565c0;
+$blue-shadow:         #0458f9;
+$blue-shadow-color:   #0e43c2;
+$blue-medium:         rgba(70, 130, 255, 1);
+$cyan-light:          rgba(0, 160, 255, 0.9);
+$gradient-dark-blue:  #0b2270;
+$gradient-light-blue: #1a5fd4;
+
+
+// ── Purples & Indigo ──────────────────────────────────────────────────────────
+$indigo:              #667eea;
+$indigo-light:        #6366f1;
+$violet:              #764ba2;
+$purple-bright:       #8b5cf6;
+$dark-slate-blue:     #483d8b;
+
+
+// ── Greens ───────────────────────────────────────────────────────────────────
+$success-color:       #28a745;
+$green-gradient-start:#029a56;
+$green-deep:          #166534;
+$green-bright:        #16a34a;
+$green-success:       #2e7d32;
+$confirmed:           #10b981;
+$success-hover:       #059669;
+$strength-strong:     #1e7b52;
+
+
+// ── Reds ──────────────────────────────────────────────────────────────────────
+$danger-color:        #dc3545;
+$red-dark:            #c31b45;
+$red-hover:           #c01927;
+$red-bordeaux:        #a71d2a;
+$red-badge:           #e53935;
+$red-error:           #c62828;
+$danger-dark:         #b91c1c;
+$danger-darker:       #991b1b;
+$danger-outline:      #f44336;
+$error-bg:            #fef2f2;
+$error-border:        #fca5a5;
+$error-text:          #dc2626;
+
+
+// ── Yellows & Oranges ─────────────────────────────────────────────────────────
+$warning-color:       #ffc107;
+$gold:                #f0a500;
+$pending:             #f59e0b;
+$orange-warn:         #e65100;
+$warning-hover:       #d97706;
+$strength-fair:       #b35400;
+$strength-good:       #b39700;
+
+
+// ── Neutrals & UI ─────────────────────────────────────────────────────────────
+$primary-color:       #4a6cf7;
+$secondary-color:     #6c757d;
+$info-color:          #17a2b8;
+$light-color:         #f8f9fa;
+$dark-color:          #343a40;
+$dark-bg:             #121212;
+$bg-light:            #f7f9fd;
+$text-dark:           #1a1f3a;
+$text-muted:          #a0aec0;
+$border:              #dde3f0;
+$border-light:        #dddddd;
+$border-medium:       #cccccc;
+$readonly-bg:         #f0f2f8;
+$readonly-border:     #e8ecf5;
+$gradient-start:      #f8faff;
+$gradient-end:        #eef3ff;
+$blue-gradient-end:   #1b2a4a;
+
+
+// ── Submit States ─────────────────────────────────────────────────────────────
+$submit-active-bg:    #091229;
+$submit-disabled-bg:  #2a3b5a;
+$submit-disabled-color:#a0a0a0;
+
+
+// ── Overlays & Glows ──────────────────────────────────────────────────────────
+$dark-overlay:        rgba(7, 15, 45, 0.95);
+$dark-track:          rgba(1, 23, 47, 0.2);
+$glow-dark:           rgba(0, 80, 150, 0.8);
+$glow-medium:         rgba(0, 120, 220, 0.6);
+$glow-light:          rgba(0, 60, 120, 0.4);
+
+
+// ── Shimmer ───────────────────────────────────────────────────────────────────
+$shimmer-start:       #edf0f7;
+$shimmer-middle:      #e0e5f0;
+
+
+// ── Gradients ─────────────────────────────────────────────────────────────────
+$gradient-blue-to-violet:    linear-gradient(135deg, #051552, #1e6ef5);
+$gradient-full-spectrum:     linear-gradient(to right, #051552, #1e6ef5, #6366f1);
+$gradient-primary-to-violet: linear-gradient(135deg, #1e6ef5, #6366f1);
+$gradient-violet-to-light:   linear-gradient(135deg, #6366f1, #8b5cf6);
+$gradient-navy-to-blue:      linear-gradient(135deg, #0d47a1, #051552);
+$gradient-pink-original:     linear-gradient(to right, rgb(255, 3, 230), rgb(255, 0, 0), rgb(255, 3, 230), #ff0000);
+$grad-bar:                   linear-gradient(90deg, $midnight 0%, $indigo 50%, $violet 100%);
+
+
+// ── Shadows ───────────────────────────────────────────────────────────────────
+$sh-xs: 0 1px 3px   rgba(0,0,0,.06);
+$sh-sm: 0 2px 8px   rgba(0,0,0,.09);
+$sh-md: 0 6px 20px  rgba(0,0,0,.11);
+$sh-lg: 0 16px 40px rgba(0,0,0,.15);
+$sh-xl: 0 24px 60px rgba(0,0,0,.18);

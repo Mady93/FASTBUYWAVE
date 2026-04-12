@@ -1,0 +1,294 @@
+<div class="meeting-dialog-container">
+
+  <lib-modal [isOpen]="true" [title]="'Contact ' + fullName" [subtitle]="'Send a message about their product'"
+    [icon]="'send'" [showClose]="true" [closeOnBackdrop]="false" [maxWidth]="'650px'" [maxHeight]="'85vh'"
+    [actions]="modalActions" (close)="onClose()" (actionClicked)="onModalAction($event)">
+
+    <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="contact-form" novalidate>
+
+      <!-- Product Info Card -->
+      <div class="request-card">
+        <div class="request-header">
+          <div class="avatar">
+            <img [src]="data.ad.imageUrl" [alt]="fullName" class="avatar-img">
+          </div>
+          <div class="request-details">
+            <h3>{{ fullName }}</h3>
+            <p class="product-title">{{ data.ad.title }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact Information -->
+      <div class="form-section">
+        <h4 class="section-title">
+          <mat-icon>person_outline</mat-icon>
+          Your Contact Details
+        </h4>
+
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field flex-1">
+            <mat-label>Email Address</mat-label>
+            <input matInput formControlName="senderContactEmail" type="email" placeholder="your.email@example.com">
+            <mat-icon matSuffix>email</mat-icon>
+            <mat-error
+              *ngIf="contactForm.get('senderContactEmail')?.invalid && contactForm.get('senderContactEmail')?.touched">
+              {{ getFieldError('senderContactEmail') }}
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field flex-1">
+            <mat-label>Phone Number {{ needsPhoneNumber() ? '' : '(Optional)' }}</mat-label>
+            <input matInput formControlName="senderPhone" type="tel" placeholder="+39 347 463 284">
+            <mat-icon matSuffix>phone</mat-icon>
+            <mat-error *ngIf="contactForm.get('senderPhone')?.invalid && contactForm.get('senderPhone')?.touched">
+              {{ getFieldError('senderPhone') }}
+            </mat-error>
+            <mat-hint *ngIf="needsPhoneNumber()">Required for phone/WhatsApp contact</mat-hint>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Contact Method -->
+      <div class="form-section">
+        <h4 class="section-title">
+          <mat-icon>contact_support</mat-icon>
+          Preferred Contact Method
+        </h4>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>How would you like to be contacted?</mat-label>
+          <mat-select formControlName="preferredContactMethod">
+            <mat-select-trigger>
+              {{ getSelectedLabel(contactForm.get('preferredContactMethod')?.value) }}
+            </mat-select-trigger>
+            <mat-option *ngFor="let method of contactMethods" [value]="method.value">
+              <div class="option-content">
+                <mat-icon>{{ method.icon }}</mat-icon>
+                <span>{{ method.label }}</span>
+              </div>
+            </mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="contactForm.get('preferredContactMethod')?.invalid && contactForm.get('preferredContactMethod')?.touched">
+            {{ getFieldError('preferredContactMethod') }}
+          </mat-error>
+        </mat-form-field>
+
+        <div class="method-info" *ngIf="contactForm.get('preferredContactMethod')?.value === ContactMethod.EMAIL">
+          <mat-icon>info</mat-icon>
+          <p>The seller will respond to the email address you provided.</p>
+        </div>
+
+        <div class="method-info" *ngIf="contactForm.get('preferredContactMethod')?.value === ContactMethod.PHONE">
+          <mat-icon>info</mat-icon>
+          <p>The seller will call you at the phone number you provided.</p>
+        </div>
+
+        <div class="method-info" *ngIf="contactForm.get('preferredContactMethod')?.value === ContactMethod.WHATSAPP">
+          <mat-icon>info</mat-icon>
+          <p>The seller will contact you via WhatsApp using the number you provided.</p>
+        </div>
+
+        <div class="method-info highlight"
+          *ngIf="contactForm.get('preferredContactMethod')?.value === ContactMethod.MEETING">
+          <mat-icon>event_available</mat-icon>
+          <p>The operation will generate an appointment request. The seller will schedule the meeting.</p>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Message Content -->
+      <div class="form-section">
+        <h4 class="section-title">
+          <mat-icon>chat_bubble_outline</mat-icon>
+          Your Message
+        </h4>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Subject</mat-label>
+          <input matInput formControlName="subject" maxlength="100" readonly>
+          <mat-icon matSuffix>lock</mat-icon>
+          <mat-hint>Auto-generated from the product title</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Message</mat-label>
+          <textarea matInput formControlName="message" maxlength="1000" rows="4"
+            placeholder="Hi! I'm interested in your product. Could you please provide more information about..."></textarea>
+          <mat-hint align="end">{{ contactForm.get('message')?.value?.length || 0 }}/1000</mat-hint>
+          <mat-error *ngIf="contactForm.get('message')?.invalid && contactForm.get('message')?.touched">
+            {{ getFieldError('message') }}
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <!-- Additional Notes-->
+      <div class="form-section">
+        <h4 class="section-title">
+          <mat-icon>note_add</mat-icon>
+          Additional Notes (Optional)
+        </h4>
+
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>
+            {{ isMeetingMode()
+            ? 'Any additional information for the meeting...'
+            : 'Any specific questions or requirements...'
+            }}
+          </mat-label>
+          <textarea matInput formControlName="additionalNotes" rows="3" maxlength="500"
+            placeholder="Add any additional details here...">
+    </textarea>
+          <mat-hint align="end">
+            {{ contactForm.get('additionalNotes')?.value?.length || 0 }}/500
+          </mat-hint>
+        </mat-form-field>
+      </div>
+
+      <!-- ===================== MEETING SECTIONS ===================== -->
+      <ng-container *ngIf="isMeetingMode()">
+
+        <mat-divider></mat-divider>
+
+        <!-- Date & Time -->
+        <div class="form-section">
+          <h4 class="section-title">
+            <mat-icon>schedule</mat-icon>
+            Date & Time
+          </h4>
+
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field flex-1">
+              <mat-label>Meeting Date</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="appointmentDate" [min]="minDate" [max]="maxDate"
+                readonly>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="contactForm.get('appointmentDate')?.touched">
+                {{ getFieldError('appointmentDate') }}
+              </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field flex-1">
+              <mat-label>Time (HH:MM)</mat-label>
+              <input matInput formControlName="appointmentTime" placeholder="14:30" maxlength="5">
+              <mat-icon matSuffix>access_time</mat-icon>
+              <mat-error *ngIf="contactForm.get('appointmentTime')?.touched">
+                {{ getFieldError('appointmentTime') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <!-- Time Suggestions -->
+          <div class="time-suggestions">
+            <div class="chips-container">
+              <span class="suggestion-label">Suggested times:</span>
+              <mat-chip *ngFor="let time of suggestedTimes" (click)="setTime(time)"
+                [class.selected]="contactForm.get('appointmentTime')?.value === time">
+                {{ time }}
+              </mat-chip>
+            </div>
+          </div>
+
+          <!-- Duration -->
+          <div class="duration-section">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Duration (minutes)</mat-label>
+              <input matInput type="number" formControlName="durationMinutes" min="15" max="480">
+              <mat-icon matSuffix>timer</mat-icon>
+              <mat-error *ngIf="contactForm.get('durationMinutes')?.touched">
+                {{ getFieldError('durationMinutes') }}
+              </mat-error>
+            </mat-form-field>
+
+            <div class="chips-container">
+              <span class="suggestion-label">Suggested duration:</span>
+              <mat-chip *ngFor="let duration of suggestedDurations" (click)="setDuration(duration.value)"
+                [class.selected]="contactForm.get('durationMinutes')?.value === duration.value">
+                {{ duration.label }}
+              </mat-chip>
+            </div>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <!-- Location -->
+        <div class="form-section">
+          <h4 class="section-title">
+            <mat-icon>location_on</mat-icon>
+            Meeting Location
+          </h4>
+
+          <mat-form-field appearance="outline" class="form-field address-field">
+            <mat-label>Address</mat-label>
+            <input matInput formControlName="locationAddress" placeholder="Start typing an address..."
+              (input)="onAddressInput($event)" [matAutocomplete]="auto" autocomplete="off">
+            <mat-icon matSuffix [class.valid]="isAddressValid()" [class.loading]="isLoadingAddresses()">
+              {{ isLoadingAddresses() ? 'hourglass_empty' : (isAddressValid() ? 'check_circle' : 'search') }}
+            </mat-icon>
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn"
+              (optionSelected)="selectAddress($event.option.value)">
+              <mat-option *ngFor="let result of addressSuggestions()" [value]="result">
+                <div class="address-option">
+                  <mat-icon>place</mat-icon>
+                  <div class="address-text">
+                    <div class="address-main">{{ result.display_name.split(',')[0] }}</div>
+                    <div class="address-details">{{ result.display_name }}</div>
+                  </div>
+                </div>
+              </mat-option>
+              <mat-option *ngIf="addressSuggestions().length === 0 && !isLoadingAddresses()" disabled>
+                <span class="no-results">No matches found</span>
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint *ngIf="!isAddressValid()">Type at least 3 characters to search</mat-hint>
+            <mat-error *ngIf="contactForm.get('locationAddress')?.touched">
+              {{ getFieldError('locationAddress') }}
+            </mat-error>
+          </mat-form-field>
+
+          <div class="map-wrapper">
+            <div #mapContainer class="map-container"></div>
+            <div class="map-overlay" *ngIf="!selectedPlace()">
+              <mat-icon>location_searching</mat-icon>
+              <p>Select an address to view the map</p>
+            </div>
+          </div>
+
+          <div class="map-attribution">
+            <small>
+              <mat-icon>info</mat-icon>
+              Map data ©
+              <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a>
+              &
+              <a href="https://openlayers.org/" target="_blank" rel="noopener">OpenLayers</a>
+            </small>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="form-section">
+            <h4 class="section-title">
+              <mat-icon>note_add</mat-icon>
+              Location Notes (Optional)
+            </h4>
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>e.g., Entrance B, 2nd floor, intercom 'Rossi'</mat-label>
+              <textarea matInput formControlName="locationNotes"
+                placeholder="e.g., Entrance B, 2nd floor, intercom 'Rossi'" rows="2" maxlength="500"></textarea>
+              <mat-hint align="end">{{ contactForm.get('locationNotes')?.value?.length || 0 }}/500</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
+
+      </ng-container>
+    </form>
+  </lib-modal>
+</div>

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "projects/my-lib-inside/src"
+  ],
+  "entryPointStrategy": "expand",
+  "out": "docs",
+  "readme": "projects/my-lib-inside/README.md",
+  "plugin": ["typedoc-rhineai-theme"],
+  "excludePrivate": true,
+  "excludeProtected": false,
+  "excludeExternals": true,
+  "exclude": [
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/my-lib-inside.component.ts",
+    "**/my-lib-inside.service.ts",
+    "**/public-api.ts"
+  ],
+  "includeVersion": true,
+  "customCss": "./projects/my-lib-inside/src/custom-typedoc.css",
+  "customJs": "./projects/my-lib-inside/src/custom-typedoc.js",
+  "skipErrorChecking": true,
+  "sort": ["kind", "alphabetical"],
+  "categorizeByGroup": true,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Components",
+    "Services",
+    "Interfaces",
+    "Pipes",
+    "Constants",
+    "Utils",
+    "*"
+  ],
+  "groupOrder": [
+    "Components",
+    "Services",
+    "Interfaces",
+    "Pipes",
+    "Constants",
+    "Utils",
+    "Functions",
+    "Variables",
+    "Other"
+  ],
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": false,
+    "includeFolders": false
+  },
+  "titleLink": "http://localhost:8888/",
+  "name": "UI Component Library",
+  "tsconfig": "projects/my-lib-inside/tsconfig.lib.json",
+   "blockTags": [
+    "@category",
+    "@description",
+    "@version",
+    "@author",
+    "@example",
+    "@param",
+    "@returns",
+    "@throws",
+    "@deprecated",
+    "@see",
+    "@since",
+    "@link",
+    "@remarks",
+    "@default",
+    "@type",
+    "@inheritdoc",
+    "@fileoverview",
+    "@extends",
+    "@implements",
+    "@constructor",
+    "@group",
+    "@internal"
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "entryPoints": ["src/app"],
+  "out": "docs",
+  "plugin": ["typedoc-rhineai-theme"],
+  "exclude": [
+    "src/main.ts",
+    "src/main.server.ts",
+    "**/*.spec.ts",
+    "**/*.mock.ts",
+    "**/*.module.ts",
+    "**/*.routing.ts",
+    "**/environments/**",
+    "**/icons/**",
+    "**/*.config.ts",
+    "**/*.config.server.ts",
+    "**/*.routes.ts"
+  ],
+  "excludeProtected": true,
+  "name": "FAST BUY WAVE · Frontend ",
+  "includeVersion": true,
+  "customCss": "./src/custom-typedoc.css",
+  "customJs": "./src/custom-typedoc.js",
+  "categorizeByGroup": true,
+  "defaultCategory": "Other",
+  "categoryOrder": [
+    "Components",
+    "Services",
+    "Interfaces",
+    "Models",
+    "Enumerations",
+    "Pipes",
+    "Directives",
+    "Utils",
+    "Constants",
+    "Dialogs",
+    "Icons",
+    "Environments",
+    "Configuration",
+    "Authentication",
+    "Geocoding",
+    "Routing",
+    "Types",
+    "*"
+  ],
+  "hideGenerator": true,
+  "entryPointStrategy": "expand",
+  "readme": "README.md",
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true,
+    "includeFolders": true,
+    "compactFolders": false 
+  },
+  "visibilityFilters": {
+  "protected": false,
+  "private": true,
+  "inherited": false,
+  "external": false
+},
+  "blockTags": [
+    "@category",
+    "@description",
+    "@version",
+    "@author",
+    "@property",
+    "@method",
+    "@source",
+    "@purpose",
+    "@usage",
+    "@remarks",
+    "@implements",
+    "@fileoverview",
+    "@constructor",
+    "@component",
+    "@whatitis",
+    "@howused",
+    "@getter",
+    "@notes",
+    "@deprecated",
+    "@template",
+    "@todo",
+    "@default",
+    "@type",
+    "@param",
+    "@returns",
+    "@throws",
+    "@example",
+    "@see",
+    "@since",
+    "@link",
+    "@inheritdoc"
+  ],
+  "externalSymbolLinkMappings": {
+    "angular-fe": {
+    "SendMessageDialogComponent.setupForm": "#"
+  },
+    "@angular/forms": {
+      "FormGroup": "#",
+      "AbstractControl": "#",
+      "ValidatorFn": "#"
+    },
+    "@angular/material": {
+      "MatDialog": "#"
+    },
+    "rxjs": {
+      "Observable": "#"
+    },
+    "typescript": {
+      "Date": "#",
+      "Blob": "#"
+    },
+    "my-lib-inside": {
+      "AdvertisementItem": "#"
+    },
+    "ol": {
+      "Map": "#"
+    }
+  }
+}

@@ -1,0 +1,311 @@
+@use 'tokens' as *;
+
+
+@mixin mobile {
+  @media (max-width: 768px) { @content; }
+}
+
+// ── Dati attuali ──────────────────────────────────────────────────────────────
+.current-data {
+  background   : $bg;
+  border       : 1px solid $border;
+  border-left  : 3px solid $blue;
+  border-radius: 8px;
+  padding      : 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+
+  &__label {
+    font-size     : 0.58rem;
+    font-weight   : 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color         : $muted;
+    margin        : 0 0 0.5rem;
+  }
+
+  &__row {
+    display    : flex;
+    align-items: baseline;
+    gap        : 0.5rem;
+    padding    : 0.25rem 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba($border, 0.6);
+    }
+  }
+
+  &__key {
+    font-size  : 0.7rem;
+    color      : $muted;
+    min-width  : 90px;
+    flex-shrink: 0;
+  }
+
+  &__val {
+    font-size  : 0.78rem;
+    font-weight: 600;
+    color      : $text;
+  }
+}
+
+// ── Form ──────────────────────────────────────────────────────────────────────
+.proposal-form {
+  display       : flex;
+  flex-direction: column;
+}
+
+// ── Sezioni — identiche a SendMessageDialogComponent ─────────────────────────
+.form-section {
+  display       : flex;
+  flex-direction: column;
+  gap           : 1rem;
+  margin-bottom : 1.5rem;
+
+  .section-title {
+    display    : flex;
+    align-items: center;
+    gap        : 8px;
+    margin     : 0 0 0.5rem;
+    font-size  : 15px;
+    font-weight: 600;
+    color      : $text;
+
+    mat-icon {
+      color    : $blue;
+      font-size: 18px;
+      width    : 18px;
+      height   : 18px;
+    }
+
+    @include mobile { font-size: 14px; }
+  }
+}
+
+.optional-label {
+  font-size  : 0.72rem;
+  font-weight: 400;
+  color      : $muted;
+  margin-left: 4px;
+}
+
+// ── Form row ──────────────────────────────────────────────────────────────────
+.form-row {
+  display: flex;
+  gap    : 12px;
+
+  @include mobile { flex-direction: column; gap: 12px; }
+}
+
+// ── Form field ────────────────────────────────────────────────────────────────
+.form-field {
+  width: 100%;
+
+  &.flex-1 { flex: 1; min-width: 0; }
+
+  &.address-field {
+    .mat-icon.valid   { color: $confirmed; }
+    .mat-icon.loading { animation: spin 1s linear infinite; }
+  }
+}
+
+// ── Time suggestions ──────────────────────────────────────────────────────────
+.time-suggestions {
+  margin-top: 0.25rem;
+}
+
+// ── Duration section ──────────────────────────────────────────────────────────
+.duration-section {
+  display       : flex;
+  flex-direction: column;
+  gap           : 0.5rem;
+}
+
+// ── Chips — identiche a SendMessageDialogComponent ────────────────────────────
+.chips-container {
+  display    : flex;
+  flex-wrap  : wrap;
+  gap        : 6px;
+  align-items: center;
+}
+
+.suggestion-label {
+  font-size  : 0.75rem;
+  color      : $muted;
+  flex-shrink: 0;
+}
+
+mat-chip {
+  cursor    : pointer !important;
+  transition: all 0.2s ease !important;
+  background: $bg !important;
+  color     : $text !important;
+  border    : 1px solid $border !important;
+  font-size : 12px !important;
+  padding   : 4px 10px !important;
+  height    : auto !important;
+  min-height: 28px !important;
+
+  &:hover {
+    background  : darken($bg, 5%) !important;
+    border-color: $blue !important;
+    transform   : translateY(-1px) !important;
+  }
+
+  &.selected {
+    background  : rgba($lavender-light, 0.8) !important;
+    color       : $midnight !important;
+    border-color: transparent !important;
+    box-shadow  : 0 2px 8px rgba($blue, 0.3) !important;
+  }
+}
+
+// ── Mappa — identica a SendMessageDialogComponent ─────────────────────────────
+.map-wrapper {
+  position     : relative;
+  width        : 100%;
+  height       : 250px;
+  border-radius: 10px;
+  overflow     : hidden;
+  margin       : 0.5rem 0 1rem;
+  border       : 2px solid $border;
+  box-shadow   : 0 4px 20px rgba(5, 21, 82, 0.10);
+
+  .map-container {
+    width     : 100%;
+    height    : 100%;
+    background: $bg;
+  }
+
+  .map-overlay {
+    position       : absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background     : linear-gradient(135deg, $bg 0%, darken($bg, 5%) 100%);
+    display        : flex;
+    flex-direction : column;
+    align-items    : center;
+    justify-content: center;
+    gap            : 10px;
+    pointer-events : none;
+
+    mat-icon {
+      font-size: 40px;
+      width    : 40px;
+      height   : 40px;
+      color    : $muted;
+    }
+
+    p {
+      margin    : 0;
+      color     : $muted;
+      font-size : 13px;
+      text-align: center;
+      padding   : 0 20px;
+    }
+  }
+
+  @include mobile { height: 200px; }
+}
+
+// ── Map attribution ───────────────────────────────────────────────────────────
+.map-attribution {
+  margin-top   : 6px;
+  padding      : 6px 10px;
+  background   : $bg;
+  border-radius: 6px;
+  border       : 1px solid $border;
+
+  small {
+    display    : flex;
+    align-items: center;
+    gap        : 6px;
+    font-size  : 11px;
+    color      : $muted;
+
+    mat-icon {
+      font-size: 14px;
+      width    : 14px;
+      height   : 14px;
+      color    : $muted;
+    }
+
+    a {
+      color          : $blue;
+      text-decoration: none;
+      font-weight    : 500;
+      &:hover { text-decoration: underline; }
+    }
+  }
+}
+
+// ── Address autocomplete option ───────────────────────────────────────────────
+.address-option {
+  display    : flex;
+  align-items: flex-start;
+  gap        : 10px;
+  padding    : 6px 0;
+
+  mat-icon {
+    color    : $blue;
+    font-size: 18px;
+    width    : 18px;
+    height   : 18px;
+    flex-shrink: 0;
+    margin-top : 2px;
+  }
+
+  .address-text {
+    flex     : 1;
+    min-width: 0;
+
+    .address-main {
+      font-size    : 13px;
+      font-weight  : 500;
+      color        : $text;
+      margin-bottom: 3px;
+      white-space  : nowrap;
+      overflow     : hidden;
+      text-overflow: ellipsis;
+    }
+
+    .address-details {
+      font-size  : 11px;
+      color      : $muted;
+      line-height: 1.4;
+    }
+  }
+}
+
+// ── Animations ────────────────────────────────────────────────────────────────
+@keyframes spin {
+  0%   { transform: rotate(0deg);   }
+  100% { transform: rotate(360deg); }
+}
+
+// ── OpenLayers overrides ──────────────────────────────────────────────────────
+::ng-deep {
+  .ol-zoom {
+    top    : 10px;
+    right  : 10px;
+    left   : auto;
+    background: none;
+
+    button {
+      background   : $white;
+      color        : $blue;
+      border       : none;
+      border-radius: 8px;
+      width        : 32px;
+      height       : 32px;
+      font-size    : 18px;
+      font-weight  : bold;
+      margin       : 2px;
+      box-shadow   : 0 2px 8px rgba(0,0,0,0.15);
+      cursor       : pointer;
+      transition   : all 0.2s;
+
+      &:hover { background: $bg; transform: scale(1.05); }
+    }
+  }
+
+  .ol-attribution { display: none; }
+}

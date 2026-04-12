@@ -1,0 +1,56 @@
+# Build output
+target/
+*.jar
+*.war
+*.ear
+
+# Maven wrapper (not needed in the container)
+.mvn/
+mvnw
+mvnw.cmd
+HELP.md
+
+# IDE
+.vscode/
+.idea/
+*.iws
+*.iml
+*.ipr
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+.apt_generated
+
+# Logs
+logs/
+*.log
+
+# Documentation (not needed in the image)
+graphs/
+*.md
+README.md
+LICENSE
+HELP.md
+generate_spring_graph.py
+
+# Git
+.git/
+.gitattributes
+.gitignore
+
+# Local files and secrets
+src/main/resources/keys/
+src/main/resources/application-secrets.properties
+src/main/java/com/mady/springboot_be/utils/Secret.java
+**/SensitiveUrls.java
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Backup
+*.bak
+*.backup

@@ -1,0 +1,12 @@
+@use 'tokens' as *;
+
+::ng-deep .p-checkbox-box .p-checkbox-icon {
+  display: none;
+}
+
+::ng-deep .p-checkbox-box {
+  border-radius: 50%;
+  border-color: $border-medium;
+  width: 20px;
+  height: 20px;
+}

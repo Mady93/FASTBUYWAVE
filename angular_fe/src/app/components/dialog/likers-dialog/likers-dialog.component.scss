@@ -1,0 +1,235 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.dialog-wrapper {
+  background: $white;
+  border-radius: 16px;
+  overflow: hidden;
+  width: 420px;
+  max-width: 100%;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+
+.dialog-header {
+  position: relative;
+  background: $midnight;
+  padding: 1.25rem 1.5rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  .header-accent {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $blue, $violet, #e53935);
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    flex: 1;
+  }
+
+  .heart-badge {
+    position: relative;
+    width: 42px;
+    height: 42px;
+    background: rgba(#e53935, 0.15);
+    border: 1.5px solid rgba(#e53935, 0.4);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    mat-icon {
+      color: $red-icon;
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+
+    .like-count {
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      background: $red-badge;
+      color: $white;
+      font-size: 0.6rem;
+      font-weight: 700;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1.5px solid $midnight;
+    }
+  }
+
+  .header-text {
+    h2 {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 700;
+      color: $white;
+      letter-spacing: 0.3px;
+    }
+
+    .ad-title {
+      margin: 2px 0 0;
+      font-size: 0.75rem;
+      color: rgba($white, 0.55);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 240px;
+    }
+  }
+
+  .close-btn {
+    background: rgba($white, 0.08);
+    border: none;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgba($white, 0.6);
+    transition: all 0.2s;
+    flex-shrink: 0;
+
+    mat-icon { font-size: 16px; width: 16px; height: 16px; }
+
+    &:hover {
+      background: rgba($white, 0.15);
+      color: $white;
+    }
+  }
+}
+
+// ── Body ─────────────────────────────────────────────────────────────────────
+
+.dialog-body {
+  padding: 0.75rem 0 !important;
+  max-height: 340px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: $bg; }
+  &::-webkit-scrollbar-thumb {
+    background: $border;
+    border-radius: 4px;
+  }
+}
+
+// ── Loading ───────────────────────────────────────────────────────────────────
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem;
+  color: $muted;
+  font-size: 0.82rem;
+}
+
+// ── Empty ─────────────────────────────────────────────────────────────────────
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  color: $muted;
+
+  mat-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    color: $border;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+  }
+}
+
+// ── List ──────────────────────────────────────────────────────────────────────
+
+.likers-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 1.25rem;
+}
+
+.liker-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  transition: background 0.15s ease;
+  margin-bottom: 2px;
+
+  &:hover { background: $bg; }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: $grad-primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    span {
+      color: $white;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+  }
+
+  .liker-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+
+    .email {
+      font-size: 0.83rem;
+      color: $text;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .date {
+      font-size: 0.7rem;
+      color: $muted;
+    }
+  }
+
+  .liked-icon {
+    color: $red-icon;
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+}

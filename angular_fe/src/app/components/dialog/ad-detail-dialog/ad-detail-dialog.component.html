@@ -1,0 +1,486 @@
+<lib-modal [isOpen]="true" [title]="data.ad.title || ''" [subtitle]="'Product details'" [icon]="'sell'"
+  [showClose]="true" [closeOnBackdrop]="false" [maxWidth]="'650px'" [maxHeight]="'85vh'" [actions]="modalActions"
+  (close)="onClose()" (actionClicked)="onActionWrapper($event)">
+
+  <!-- Carousel -->
+  <lib-carousel [images]="images" [mimeTypeFn]="detectMimeType">
+  </lib-carousel>
+
+  <div class="details">
+
+    <p class="description" [style.margin-top]="!data.isUserAd() ? '1.5rem' : '0'">
+      <span class="color">Description: </span>{{ data.ad.description }}
+    </p>
+    <p><span class="color">Price: </span>{{ data.ad.price }} €</p>
+    <p *ngIf="data.ad.agencyName"><Span class="color">Agency: </Span>{{ data.ad.agencyName }}</p>
+    <p *ngIf="data.ad.agencyFeePercent"><span class="color">Commission: </span>{{ data.ad.agencyFeePercent }} %</p>
+    <p *ngIf="data.ad.agencyUrl">
+      <span class="color">Agency URL: </span>
+      <a class="tgA" [href]="data.ad.agencyUrl" target="_blank" rel="noopener noreferrer">
+        {{ data.ad.agencyUrl }}
+      </a>
+    </p>
+
+
+
+
+
+
+
+
+    <!--Container Commenti e Tuple-->
+    <div class="comment-tree-container">
+      <!-- Header con statistiche -->
+      <div class="comment-header" *ngIf="commentStats.rootComments > 0">
+        <div class="comment-stats">
+          <span class="stat-item">
+            <mat-icon class="icon-small">chat_bubble</mat-icon>
+            <span class="counter">{{ commentStats.rootComments }}</span>
+            <span class="label">
+              {{ commentStats.rootComments === 1 ?
+              'Person commented' :
+              'People commented' }}
+            </span>
+          </span>
+        </div>
+      </div>
+
+      <!-- Loading spinner -->
+      <div *ngIf="loading$ | async" class="loading-container">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading comments...</p>
+      </div>
+
+      <!-- Form commento principale -->
+      <mat-card class="new-comment-card" *ngIf="!(loading$ | async) && !(data.isUserAd())">
+        <mat-card-content>
+          <div class="custom-comment-form" *ngIf="!(loading$ | async) && !(data.isUserAd())">
+            <form [formGroup]="newCommentForm" (ngSubmit)="submitNewComment()">
+              <div class="floating-comment-box" [class.active]="isTextareaFocused || contentCtrl?.value"
+                [class.error]="contentCtrl?.invalid && contentCtrl?.touched">
+
+                <!-- Header elegante -->
+                <div class="comment-box-header">
+                  <div class="header-left">
+                    <div class="user-avatar-mini">
+                      <img [src]="userImages[currentUserId] || currentUserProfileImage" alt="Your avatar" />
+                    </div>
+                    <div class="user-info">
+                      <span class="username">You</span>
+                      <span class="posting-as">Posting as yourself</span>
+                    </div>
+                  </div>
+                  <div class="char-display">
+                    <span class="char-count" [class.warning]="(commentTextarea.value.length || 0) > 200">
+                      {{ 244 - (commentTextarea.value.length || 0) }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Textarea stile moderno -->
+                <div class="textarea-wrapper">
+                  <textarea #commentTextarea class="modern-textarea" formControlName="content" rows="3"
+                    placeholder="What's on your mind? Share your thoughts..." (focus)="isTextareaFocused = true"
+                    (blur)="isTextareaFocused = false" autocomplete="off"></textarea>
+
+                  <!-- Decorazione angolo -->
+                  <div class="corner-decoration">
+                    <div class="corner-line"></div>
+                  </div>
+                </div>
+
+                <!-- MESSAGGI DI ERRORE PER IL FORM PRINCIPALE -->
+                <div class="error-messages" *ngIf="contentCtrl?.invalid && contentCtrl?.touched">
+                  <div class="error-message" *ngIf="contentCtrl?.hasError('required')">
+                    <mat-icon>info</mat-icon>
+                    <span>Please write something before posting</span>
+                  </div>
+                  <div class="error-message" *ngIf="contentCtrl?.hasError('maxlength')">
+                    <mat-icon>warning</mat-icon>
+                    <span>Comment is too long (max 244 characters)</span>
+                  </div>
+                </div>
+
+                <!-- Footer con azioni -->
+                <div class="comment-box-footer">
+                  <div class="footer-left">
+                    <!-- Bottone Emoji con Picker -->
+                    <div class="emoji-picker-container">
+                      <button type="button" class="action-btn emoji-btn" title="Add emoji"
+                        (click)="toggleEmojiPicker($event)" [class.active]="showEmojiPicker">
+                        <mat-icon>mood</mat-icon>
+                      </button>
+
+                      <div class="emoji-picker-wrapper" *ngIf="showEmojiPicker">
+                        <div class="simple-emoji-picker">
+                          <div class="emoji-categories">
+                            <span class="category-title">😀 Smileys & People</span>
+                          </div>
+                          <div class="emoji-grid">
+                            <span *ngFor="let emoji of smileys" class="emoji-item" (click)="addSimpleEmoji(emoji)"
+                              [title]="getEmojiName(emoji)">
+                              {{ emoji }}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="footer-right">
+                    <button type="button" class="cancel-btn" (click)="cancelComment()"
+                      [disabled]="isDiscardingcomment()">
+                      <span class="btn-content">
+                        @if (isDiscardingcomment()) {
+                        <mat-spinner diameter="16" class="btn-spinner"></mat-spinner>
+                        } @else {
+                        <mat-icon>close</mat-icon>
+                        }
+                      </span>
+                    </button>
+
+                    <button type="submit" class="submit-btn" [disabled]="newCommentForm.invalid || isSubmitting()"
+                      [class.pulsing]="contentCtrl?.valid">
+                      <span class="btn-content">
+                        @if (isSubmitting()) {
+                        <mat-spinner diameter="16" class="btn-spinner"></mat-spinner>
+                        } @else {
+                        <mat-icon>send</mat-icon>
+                        }
+
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Lista commenti -->
+      <div class="comments-list" *ngIf="comments.length > 0 && !(loading$ | async); else noComments">
+        <ng-container *ngFor="let comment of comments; trackBy: trackByCommentId">
+          <ng-container *ngTemplateOutlet="renderComment; context: { $implicit: comment, level: 0 }"></ng-container>
+        </ng-container>
+      </div>
+
+      <!-- Nel template ricorsivo #renderComment -->
+      <ng-template #renderComment let-comment let-level="level">
+        <div class="comment-item" [id]="'comment-' + comment.id" [class]="'level-' + level"
+          [class.comment-deleted]="comment.active === false">
+
+          <div class="comment-main">
+            <div class="comment-content-wrapper" [style.margin-top]="!data.isUserAd() ? '1.2rem' : null">
+              <mat-card [style.margin-left]="comment.depthLevel > 2 ? '2em' : (comment.depthLevel)+'em'"
+                class="comment-card" [class.deleted-comment]="comment.active === false">
+
+                <!-- MODALITÀ VISUALIZZAZIONE -->
+                <ng-container *ngIf="isEditing !== comment.id">
+                  <mat-card-header class="comment-header-with-menu">
+                    <div class="header-left">
+                      <div class="author-with-avatar">
+                        <div class="inline-avatar">
+                          <img *ngIf="userImages[comment.user.userId]; else defaultAvatar"
+                            [src]="userImages[comment.user.userId]" [alt]="comment.user.displayName" />
+                          <ng-template #defaultAvatar>
+                            <mat-icon class="default-avatar">account_circle</mat-icon>
+                          </ng-template>
+                        </div>
+
+                        <mat-card-title class="comment-author" [matTooltip]="'Nesting level ' + (level + 1)">
+                          <span class="colorr">{{ comment.user.displayName }}</span>
+
+                          <span class="comment-date">
+                            {{ formatDate(comment.createdAt.toString()) }}
+
+                            <span class="reply-count" *ngIf="countActiveReplies(comment) > 0 && level === 0"
+                              (click)="toggleReplies(comment.id!)">
+                              <mat-icon>{{ hasRepliesExpanded(comment.id!) ? 'expand_less' : 'expand_more'
+                                }}</mat-icon>
+                              {{ countActiveReplies(comment) }} {{ countActiveReplies(comment) === 1 ? 'reply' :
+                              'replies' }}
+                            </span>
+                          </span>
+                        </mat-card-title>
+                      </div>
+                    </div>
+
+                    <!-- Bottone menu -->
+                    <button *ngIf="shouldShowMenu(comment, level)" mat-icon-button [matMenuTriggerFor]="commentMenu"
+                      (click)="$event.stopPropagation(); selectedCommentForMenu = comment"
+                      aria-label="Apri menu commento" class="menu-trigger-btn">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                  </mat-card-header>
+
+                  <mat-card-content>
+                    <!-- Reply indicator integrato -->
+                    <div class="reply-context" *ngIf="comment.depthLevel > 0 && getParentOf(comment) as parent">
+                      <mat-icon class="reply-prefix-icon">subdirectory_arrow_right</mat-icon>
+                      <span class="reply-to" (click)="scrollToComment(parent.id!)">
+                        &#64;{{ parent.user.displayName }}
+                      </span>
+                    </div>
+                    <p class="comment-content" [class.deleted-content]="comment.active === false">
+                      {{ comment.content }}
+                    </p>
+                  </mat-card-content>
+
+                </ng-container>
+
+                <!-- MODALITÀ MODIFICA - SOSTITUISCE IL CONTENUTO -->
+                <ng-container *ngIf="isEditing === comment.id">
+                  <div class="custom-comment-form">
+                    <div class="floating-comment-box active" [class.error]="!editContent.trim()">
+
+                      <!-- Header elegante -->
+                      <div class="comment-box-header">
+                        <div class="header-left">
+                          <div class="user-avatar-mini">
+                            <img [src]="userImages[currentUserId] || imgDefault" alt="Your avatar" />
+                          </div>
+                          <div class="user-info">
+                            <span class="username">You</span>
+                            <span class="posting-as">Editing your comment</span>
+                          </div>
+                        </div>
+                        <div class="char-display">
+                          <span class="char-count" [class.warning]="editContent.length > 200">
+                            {{ 244 - editContent.length }}
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- Textarea -->
+                      <div class="textarea-wrapper">
+                        <textarea class="modern-textarea" [(ngModel)]="editContent" rows="3"
+                          placeholder="Edit your comment..." (focus)="isEditTextareaFocused = true"
+                          (blur)="isEditTextareaFocused = false" autocomplete="off" #editTextarea>
+                          </textarea>
+
+                        <div class="corner-decoration">
+                          <div class="corner-line"></div>
+                        </div>
+                      </div>
+
+                      <!-- Messaggi errore -->
+                      <div class="error-messages" *ngIf="!editContent.trim()">
+                        <div class="error-message">
+                          <mat-icon>info</mat-icon>
+                          <span>Comment cannot be empty</span>
+                        </div>
+                      </div>
+
+                      <!-- Footer con azioni -->
+                      <div class="comment-box-footer">
+                        <div class="footer-left">
+                          <div class="emoji-picker-container">
+                            <button type="button" class="action-btn emoji-btn" title="Add emoji"
+                              (click)="toggleEditEmojiPicker()" [class.active]="showEditEmojiPicker">
+                              <mat-icon>mood</mat-icon>
+                            </button>
+
+                            <div class="emoji-picker-wrapper" *ngIf="showEditEmojiPicker"
+                              (click)="$event.stopPropagation()">
+                              <div class="simple-emoji-picker">
+                                <div class="emoji-categories">
+                                  <span class="category-title">😀 Smileys & People</span>
+                                </div>
+                                <div class="emoji-grid">
+                                  <span *ngFor="let emoji of smileys" class="emoji-item" (click)="addEditEmoji(emoji)"
+                                    [title]="getEmojiName(emoji)">
+                                    {{ emoji }}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="footer-right">
+                          <button type="button" class="cancel-btn" (click)="cancelEdit()"
+                            [disabled]="isSubmittingEdit()">
+                            <span class="btn-content">
+                              @if (isSubmittingEdit()) {
+                              <mat-spinner diameter="16" class="btn-spinner"></mat-spinner>
+                              } @else {
+                              <mat-icon>close</mat-icon>
+                              }
+                            </span>
+                          </button>
+
+                          <button type="button" class="submit-btn" (click)="saveEdit(comment.id!)"
+                            [disabled]="!editContent.trim() || isSubmittingEdit()" [class.pulsing]="editContent.trim()">
+                            <span class="btn-content">
+                              @if (isSubmittingEdit()) {
+                              <mat-spinner diameter="16" class="btn-spinner"></mat-spinner>
+                              } @else {
+                              <mat-icon>save</mat-icon>
+                              }
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+
+
+                    </div>
+                  </div>
+                </ng-container>
+
+                <!-- Menu per i tre puntini -->
+                <!-- Menu per i tre puntini -->
+                <mat-menu #commentMenu="matMenu">
+                  <ng-container *ngIf="selectedCommentForMenu">
+                    <!-- REPLY disponibile SEMPRE -->
+                    <button mat-menu-item *ngIf="level < 10 && 
+             selectedCommentForMenu.user.userId !== currentUserId"
+                      (click)="selectedCommentForMenu.id !== undefined && toggleReply(selectedCommentForMenu.id)"
+                      [disabled]="isSubmittingReply()">
+                      <mat-icon>reply</mat-icon>
+                      <span class="rplto">Reply to {{selectedCommentForMenu.user.displayName}}</span>
+                    </button>
+
+                    <!-- EDIT e DELETE per il proprietario -->
+                    <button mat-menu-item *ngIf="canEditComment(selectedCommentForMenu)"
+                      (click)="selectedCommentForMenu.id !== undefined && startEdit(selectedCommentForMenu.id)"
+                      [disabled]="isEditing === selectedCommentForMenu.id">
+                      <mat-icon>edit</mat-icon>
+                      <span>Edit</span>
+                    </button>
+
+                    <button mat-menu-item *ngIf="canDeleteComment(selectedCommentForMenu)"
+                      (click)="selectedCommentForMenu.id !== undefined && confirmDeleteComment(selectedCommentForMenu)"
+                      [disabled]="isDeletingComment()">
+                      <mat-icon color="warn">delete</mat-icon>
+                      <span>Delete</span>
+                    </button>
+                  </ng-container>
+                </mat-menu>
+
+              </mat-card>
+
+              <!-- Form risposta (SEPARATO - appare sotto) -->
+              <div *ngIf="isReplyingTo === comment.id && level < 10" class="custom-comment-form reply-form">
+                <div class="floating-comment-box"
+                  [class.active]="isReplyTextareaFocused || ((replyContents[comment.id!] ?? '').length > 0)"
+                  [class.error]="replyTouched[comment.id!] && !((replyContents[comment.id!] ?? '').trim())">
+
+                  <!-- Header -->
+                  <div class="comment-box-header">
+                    <div class="header-left">
+                      <div class="user-avatar-mini">
+                        <img [src]="userImages[currentUserId] || currentUserProfileImage" alt="Your avatar" />
+                      </div>
+                      <div class="user-info">
+                        <span class="username">You</span>
+                        <span class="posting-as">Replying to {{ comment.user.displayName }}</span>
+                      </div>
+                    </div>
+                    <div class="char-display">
+                      <span class="char-count" [class.warning]="(replyContents[comment.id!]?.length || 0) > 200">
+                        {{ 244 - (replyContents[comment.id!]?.length || 0) }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Textarea -->
+                  <div class="textarea-wrapper">
+                    <textarea class="modern-textarea" [(ngModel)]="replyContents[comment.id!]" rows="2"
+                      placeholder="Write your reply..." (focus)="onReplyFocus(comment.id!)" (blur)="onReplyBlur()"
+                      autocomplete="off">
+                      </textarea>
+
+                    <div class="corner-decoration">
+                      <div class="corner-line"></div>
+                    </div>
+                  </div>
+
+                  <!-- ⚠️ SPOSTA GLI ERRORI QUI - PRIMA DEL FOOTER ⚠️ -->
+                  <div class="error-messages"
+                    *ngIf="replyTouched[comment.id!] && !((replyContents[comment.id!] ?? '').trim())">
+                    <div class="error-message">
+                      <mat-icon>info</mat-icon>
+                      <span>Reply cannot be empty</span>
+                    </div>
+                  </div>
+
+                  <!-- Footer -->
+                  <div class="comment-box-footer">
+                    <div class="footer-left">
+                      <div class="emoji-picker-container">
+                        <button type="button" class="action-btn emoji-btn" title="Add emoji"
+                          (click)="toggleReplyEmojiPicker()" [class.active]="showReplyEmojiPicker">
+                          <mat-icon>mood</mat-icon>
+                        </button>
+
+                        <div class="emoji-picker-wrapper" *ngIf="showReplyEmojiPicker">
+                          <div class="simple-emoji-picker">
+                            <div class="emoji-categories">
+                              <span class="category-title">😀 Smileys & People</span>
+                            </div>
+                            <div class="emoji-grid">
+                              <span *ngFor="let emoji of smileys" class="emoji-item"
+                                (click)="addReplyEmoji(emoji, comment.id!)" [title]="getEmojiName(emoji)">
+                                {{ emoji }}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="footer-right">
+                      <button type="button" class="cancel-btn" (click)="cancelReply(comment.id!)"
+                        [disabled]="isSubmittingReply()">
+                        <span class="btn-content">
+                          @if (isSubmittingReply()) {
+                          <mat-spinner diameter="16" class="btn-spinner"></mat-spinner>
+                          } @else {
+                          <mat-icon>close</mat-icon>
+                          }
+                        </span>
+                      </button>
+
+                      <button type="button" class="submit-btn" (click)="submitReply(comment.id!)"
+                        [disabled]="!((replyContents[comment.id!] ?? '').trim()) || isSubmittingReply()"
+                        [class.pulsing]="(replyContents[comment.id!] ?? '').trim()">
+                        <span class="btn-content">
+                          @if (isSubmittingReply()) {
+                          <mat-spinner diameter="16" class="btn-spinner"></mat-spinner>
+                          } @else {
+                          <mat-icon>send</mat-icon>
+                          }
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Figli (commenti annidati) -->
+          <div class="children-container"
+            *ngIf="comment.children?.length && (level > 0 || hasRepliesExpanded(comment.id!)) && level < 10">
+            <ng-container *ngFor="let child of comment.children">
+              <ng-container
+                *ngTemplateOutlet="renderComment; context: { $implicit: child, level: level + 1 }"></ng-container>
+            </ng-container>
+          </div>
+        </div>
+      </ng-template>
+
+      <!-- Template quando non ci sono commenti -->
+      <ng-template #noComments>
+        <div class="no-comments" *ngIf="!(loading$ | async)">
+          <mat-icon class="no-comments-icon">chat_bubble_outline</mat-icon>
+          <span class="ncmt">No comments yet</span>
+          <p *ngIf="!data.isUserAd()">Be the first to comment on this post!</p>
+        </div>
+      </ng-template>
+    </div>
+
+  </div>
+
+</lib-modal>

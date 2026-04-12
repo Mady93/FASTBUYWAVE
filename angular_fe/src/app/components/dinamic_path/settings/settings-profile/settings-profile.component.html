@@ -1,0 +1,339 @@
+<!-- settings-profile.component.html — usa lib-form-layout -->
+
+<lib-form-layout
+  [title]="formTitle"
+  [subtitle]="formSubtitle"
+  [columns]="4"
+  [loading]="!!(isLoading$ | async)"
+  [actions]="formActions"
+  (actionClicked)="onFormAction($event)">
+
+  <!-- ── Personal Information ──────────────────────────────────────── -->
+  <div class="section-container">
+    <h3>Personal Information</h3>
+    <form [formGroup]="profileForm">
+
+      <div class="input-group">
+        <label class="input-label" for="firstName">First Name</label>
+        <input type="text" id="firstName" formControlName="firstName" class="modern-input"
+          [class.error]="profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched">
+        @if (profileForm.get('firstName')?.invalid && profileForm.get('firstName')?.touched) {
+          <div class="error-message">
+            @if (profileForm.get('firstName')?.errors?.['required']) { Required field }
+            @else if (profileForm.get('firstName')?.errors?.['pattern']) {
+              The first name can only contain letters, spaces, and periods
+            }
+          </div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="lastName">Last Name</label>
+        <input type="text" id="lastName" formControlName="lastName" class="modern-input"
+          [class.error]="profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched">
+        @if (profileForm.get('lastName')?.invalid && profileForm.get('lastName')?.touched) {
+          <div class="error-message">
+            @if (profileForm.get('lastName')?.errors?.['required']) { Required field }
+            @else if (profileForm.get('lastName')?.errors?.['pattern']) {
+              The last name can only contain letters, spaces, and periods
+            }
+          </div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="dateOfBirth">Date of Birth</label>
+        <input type="date" id="dateOfBirth" formControlName="dateOfBirth" class="modern-input"
+          [class.error]="profileForm.get('dateOfBirth')?.invalid && profileForm.get('dateOfBirth')?.touched">
+        @if (profileForm.get('dateOfBirth')?.invalid && profileForm.get('dateOfBirth')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="gender">Gender</label>
+        <select id="gender" formControlName="gender" class="modern-input"
+          [class.error]="profileForm.get('gender')?.invalid && profileForm.get('gender')?.touched">
+          <option value="">Select gender</option>
+          @for (gender of genders; track gender) {
+            <option [value]="gender">{{ gender }}</option>
+          }
+        </select>
+        @if (profileForm.get('gender')?.invalid && profileForm.get('gender')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="phoneNumber">Phone Number</label>
+        <input type="tel" id="phoneNumber" formControlName="phoneNumber" class="modern-input"
+          [class.error]="profileForm.get('phoneNumber')?.invalid && profileForm.get('phoneNumber')?.touched">
+        @if (profileForm.get('phoneNumber')?.touched) {
+          @if (profileForm.get('phoneNumber')?.errors?.['required']) {
+            <div class="error-message">Required field</div>
+          }
+          @if (profileForm.get('phoneNumber')?.errors?.['pattern']) {
+            <div class="error-message">Invalid phone number format (e.g. +393497463284)</div>
+          }
+        }
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="profilePicture">Profile Picture</label>
+        <div class="file-upload-container">
+          <input type="file" id="profilePicture" accept="image/*" (change)="handleFileInput($event)" class="file-input">
+          <label class="input-label" for="profilePicture" class="file-upload-label">
+            {{ isEditMode ? 'Change image' : 'Select an image' }}
+          </label>
+        </div>
+        @if ((profileForm.get('profilePicture')?.value || selectedFile) && !imageRemovedManually) {
+          <div class="image-preview-container profile-image-preview">
+            <img [src]="profileForm.get('profilePicture')?.value | safeUrl" alt="Preview" class="image-preview">
+            <button type="button" class="remove-image-btn" (click)="removeProfileImage()">
+            </button>
+          </div>
+        }
+        @if (imageRemovedManually) {
+          <div class="no-image-message"><small class="text-muted">No image currently set</small></div>
+        }
+        @if (isEditMode && !profileForm.get('profilePicture')?.value && !selectedFile && !imageRemovedManually) {
+          <div class="no-image-message"><small class="text-muted">No image currently set</small></div>
+        }
+      </div>
+    </form>
+  </div>
+
+  <!-- ── Address ───────────────────────────────────────────────────── -->
+  <div class="section-container">
+    <h3>Address</h3>
+    <form [formGroup]="addressForm">
+
+      <div class="input-group">
+        <label class="input-label" for="street">Street</label>
+        <input type="text" id="street" formControlName="street" class="modern-input"
+          [class.error]="addressForm.get('street')?.invalid && addressForm.get('street')?.touched">
+        @if (addressForm.get('street')?.invalid && addressForm.get('street')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="streetNumber">Street Number</label>
+        <input type="text" id="streetNumber" formControlName="streetNumber" class="modern-input"
+          [class.error]="addressForm.get('streetNumber')?.invalid && addressForm.get('streetNumber')?.touched">
+        @if (addressForm.get('streetNumber')?.invalid && addressForm.get('streetNumber')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="country">Country</label>
+        <input type="text" id="country" placeholder="Pick one" matInput formControlName="country"
+          [matAutocomplete]="auto" class="modern-input"
+          [class.error]="addressForm.get('country')?.invalid && addressForm.get('country')?.touched" />
+        @if (addressForm.get('country')?.invalid && addressForm.get('country')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayCountry.bind(this)"
+          (optionSelected)="onCountrySelected($event)">
+          <mat-option *ngFor="let country of filteredCountries | async" [value]="country">{{ country }}</mat-option>
+        </mat-autocomplete>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="region">Region</label>
+        <input type="text" id="region" formControlName="region" class="modern-input"
+          [matAutocomplete]="regionAuto" matInput
+          [class.error]="addressForm.get('region')?.invalid && addressForm.get('region')?.touched">
+        @if (addressForm.get('region')?.invalid && addressForm.get('region')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+        <mat-autocomplete #regionAuto="matAutocomplete" [displayWith]="displayRegion.bind(this)">
+          <mat-option *ngFor="let region of regions | async" [value]="region">{{ region }}</mat-option>
+        </mat-autocomplete>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="province">Province</label>
+        <input type="text" id="province" formControlName="province" class="modern-input"
+          [matAutocomplete]="provinceAuto" matInput
+          [class.error]="addressForm.get('province')?.invalid && addressForm.get('province')?.touched">
+        @if (addressForm.get('province')?.invalid && addressForm.get('province')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+        <mat-autocomplete #provinceAuto="matAutocomplete" [displayWith]="displayProvince.bind(this)">
+          <mat-option *ngFor="let province of filteredProvinces | async" [value]="province">{{ province }}</mat-option>
+        </mat-autocomplete>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="city">City</label>
+        <input type="text" id="city" formControlName="city" class="modern-input"
+          [matAutocomplete]="cityAuto" matInput
+          [class.error]="addressForm.get('city')?.invalid && addressForm.get('city')?.touched">
+        @if (addressForm.get('city')?.invalid && addressForm.get('city')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+        <mat-autocomplete #cityAuto="matAutocomplete" [displayWith]="displayCity.bind(this)">
+          <mat-option *ngFor="let city of filteredCities | async" [value]="city">{{ city }}</mat-option>
+        </mat-autocomplete>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="zipCode">ZIP Code</label>
+        <input type="text" id="zipCode" formControlName="zipCode" class="modern-input"
+          [class.error]="addressForm.get('zipCode')?.invalid && addressForm.get('zipCode')?.touched">
+        @if (addressForm.get('zipCode')?.invalid && addressForm.get('zipCode')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="latitude">Latitude</label>
+        <input type="text" id="latitude" formControlName="latitude" class="modern-input readonly" readonly>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="longitude">Longitude</label>
+        <input type="text" id="longitude" formControlName="longitude" class="modern-input readonly" readonly>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ── User Preferences ──────────────────────────────────────────── -->
+  <div class="section-container">
+    <h3>User Preferences</h3>
+    <form [formGroup]="profileForm">
+
+      <div class="input-group">
+        <label class="input-label" for="userType">User Type</label>
+        <select id="userType" formControlName="userType" class="modern-input">
+          @for (type of userTypes; track type) { <option [value]="type">{{ type }}</option> }
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="preferredLanguage">Language</label>
+        <select id="preferredLanguage" formControlName="preferredLanguage" class="modern-input"
+          [class.error]="profileForm.get('preferredLanguage')?.invalid && profileForm.get('preferredLanguage')?.touched">
+          @for (lang of languages; track lang) { <option [value]="lang">{{ lang.toUpperCase() }}</option> }
+        </select>
+        @if (profileForm.get('preferredLanguage')?.invalid && profileForm.get('preferredLanguage')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="currency">Currency <span class="c">{{ selectedCurrencySymbol }}</span><span class="red">*</span></label>
+        <select id="currency" formControlName="currency" class="modern-input"
+          [class.error]="profileForm.get('currency')?.invalid && profileForm.get('currency')?.touched">
+          @for (currency of currencies; track currency) { <option [value]="currency">{{ currency }}</option> }
+        </select>
+        @if (profileForm.get('currency')?.invalid && profileForm.get('currency')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+      </div>
+
+      <div class="input-group checkbox-group">
+        <label class="checkbox-container">
+          <input type="checkbox" formControlName="newsletterSubscription">
+          <span class="checkbox-label">Newsletter Subscription</span>
+        </label>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ── Security ──────────────────────────────────────────────────── -->
+  <div class="section-container">
+    <h3>Security</h3>
+    <form [formGroup]="profileForm">
+
+      <div class="input-group">
+        <label class="input-label" for="securityQuestion">Security Question</label>
+        <input type="text" id="securityQuestion" formControlName="securityQuestion" class="modern-input"
+          [class.error]="profileForm.get('securityQuestion')?.invalid && profileForm.get('securityQuestion')?.touched">
+        @if (profileForm.get('securityQuestion')?.invalid && profileForm.get('securityQuestion')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+      </div>
+
+      <div class="input-group">
+        <label class="input-label" for="securityAnswer">Answer</label>
+        <input type="text" id="securityAnswer" formControlName="securityAnswer" class="modern-input"
+          [class.error]="profileForm.get('securityAnswer')?.invalid && profileForm.get('securityAnswer')?.touched">
+        @if (profileForm.get('securityAnswer')?.invalid && profileForm.get('securityAnswer')?.touched) {
+          <div class="error-message">Required field</div>
+        }
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ── Notifications ─────────────────────────────────────────────── -->
+  <div class="section-container">
+    <h3>Notifications</h3>
+    <form [formGroup]="profileForm">
+
+      <div class="input-group checkbox-group">
+        @for (option of notificationOptions; track option) {
+          <label class="checkbox-container">
+            <input type="checkbox"
+              [checked]="profileForm.get('notificationPreferences')?.value?.includes(option)"
+              (change)="toggleNotification(option)">
+            <span class="checkbox-label">{{ option }}</span>
+          </label>
+        }
+        @if (profileForm.get('notificationPreferences')?.invalid && profileForm.get('notificationPreferences')?.touched) {
+          <div class="error-message">At least one notification method must be selected</div>
+        }
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ── Privacy Settings ──────────────────────────────────────────── -->
+  <div class="section-container">
+    <h3>Privacy Settings</h3>
+    <form [formGroup]="profileForm">
+
+      <div class="input-group radio-group">
+        @for (option of privacyOptions; track option) {
+          <label class="radio-container">
+            <input type="radio" name="privacySettings" [value]="option"
+              [checked]="profileForm.get('privacySettings')?.value?.includes(option)"
+              (change)="togglePrivacySetting(option)">
+            <span class="radio-label">{{ option }}</span>
+          </label>
+        }
+        @if (profileForm.get('privacySettings')?.invalid && profileForm.get('privacySettings')?.touched) {
+          <div class="error-message">Please select a privacy setting</div>
+        }
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ── Profile Statistics (edit mode only) ───────────────────────── -->
+  @if (isEditMode && existingProfile) {
+    <div class="section-container">
+      <h3>Profile Statistics</h3>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <label>Rating:</label>
+          <span>{{ existingProfile.rating || 'Not rated' }}</span>
+        </div>
+        <div class="stat-item">
+          <label>Total Sales:</label>
+          <span>{{ existingProfile.totalSales || 0 }}</span>
+        </div>
+        <div class="stat-item">
+          <label>Total Purchases:</label>
+          <span>{{ existingProfile.totalPurchases || 0 }}</span>
+        </div>
+      </div>
+    </div>
+  }
+
+</lib-form-layout>

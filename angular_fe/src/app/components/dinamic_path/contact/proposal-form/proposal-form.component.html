@@ -1,0 +1,204 @@
+<lib-modal
+  [isOpen]="true"
+  [title]="'Propose a change'"
+  [subtitle]="'Suggest new date, location or duration'"
+  [icon]="'swap_horiz'"
+  [showClose]="true"
+  [closeOnBackdrop]="false"
+  [maxWidth]="'520px'"
+  [maxHeight]="'85vh'"
+  [actions]="modalActions"
+  (close)="closeDialog()"
+  (actionClicked)="onModalAction($event)">
+
+  <!-- Dati attuali -->
+  <div class="current-data">
+    <p class="current-data__label">Current details</p>
+    <div class="current-data__row">
+      <span class="current-data__key">📅 Date</span>
+      <span class="current-data__val">
+        {{ data.appointment.appointmentDatetime | date:'dd/MM/yyyy HH:mm' }}
+      </span>
+    </div>
+    <div class="current-data__row">
+      <span class="current-data__key">📍 Location</span>
+      <span class="current-data__val">{{ data.appointment.locationAddress || '—' }}</span>
+    </div>
+    <div class="current-data__row">
+      <span class="current-data__key">⏱ Duration</span>
+      <span class="current-data__val">{{ data.appointment.durationMinutes || 60 }} min</span>
+    </div>
+  </div>
+
+  <form [formGroup]="form" class="proposal-form" novalidate>
+
+    <!-- ── Data & ora ──────────────────────────────────────────────────────── -->
+    <div class="form-section">
+      <h4 class="section-title">
+        <mat-icon>schedule</mat-icon>
+        New Date & Time
+        <span class="optional-label">(optional)</span>
+      </h4>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="form-field flex-1">
+          <mat-label>Meeting Date</mat-label>
+          <input matInput
+            [matDatepicker]="picker"
+            formControlName="proposedDate"
+            [min]="minDate"
+            [max]="maxDate"
+            readonly>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="form-field flex-1">
+          <mat-label>Time (HH:MM)</mat-label>
+          <input matInput
+            formControlName="proposedTime"
+            placeholder="14:30"
+            maxlength="5">
+          <mat-icon matSuffix>access_time</mat-icon>
+          <mat-error *ngIf="form.get('proposedTime')?.touched && form.get('proposedTime')?.invalid">
+            Use format HH:MM
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <!-- Orari suggeriti -->
+      <div class="time-suggestions">
+        <div class="chips-container">
+          <span class="suggestion-label">Suggested times:</span>
+          <mat-chip *ngFor="let t of suggestedTimes"
+            (click)="setTime(t)"
+            [class.selected]="form.get('proposedTime')?.value === t">
+            {{ t }}
+          </mat-chip>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- ── Durata ──────────────────────────────────────────────────────────── -->
+    <div class="form-section">
+      <h4 class="section-title">
+        <mat-icon>timer</mat-icon>
+        Duration
+        <span class="optional-label">(optional)</span>
+      </h4>
+
+      <div class="duration-section">
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>Duration (minutes)</mat-label>
+          <input matInput type="number" formControlName="proposedDuration" min="15" max="480">
+          <mat-icon matSuffix>timer</mat-icon>
+          <mat-error *ngIf="form.get('proposedDuration')?.touched && form.get('proposedDuration')?.invalid">
+            Minimum 15 minutes
+          </mat-error>
+        </mat-form-field>
+
+        <div class="chips-container">
+          <span class="suggestion-label">Suggested:</span>
+          <mat-chip *ngFor="let d of suggestedDurations"
+            (click)="setDuration(d.value)"
+            [class.selected]="form.get('proposedDuration')?.value === d.value">
+            {{ d.label }}
+          </mat-chip>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- ── Location — identica a SendMessageDialogComponent ───────────────── -->
+    <div class="form-section">
+      <h4 class="section-title">
+        <mat-icon>location_on</mat-icon>
+        New Location
+        <span class="optional-label">(optional)</span>
+      </h4>
+
+      <mat-form-field appearance="outline" class="form-field address-field">
+        <mat-label>Address</mat-label>
+        <input matInput
+          formControlName="proposedLocationAddress"
+          placeholder="Start typing an address..."
+          (input)="onAddressInput($event)"
+          [matAutocomplete]="auto"
+          autocomplete="off">
+        <mat-icon matSuffix
+          [class.valid]="isAddressValid()"
+          [class.loading]="isLoadingAddresses()">
+          {{ isLoadingAddresses() ? 'hourglass_empty' : (isAddressValid() ? 'check_circle' : 'search') }}
+        </mat-icon>
+
+        <mat-autocomplete #auto="matAutocomplete"
+          [displayWith]="displayFn"
+          (optionSelected)="selectAddress($event.option.value)">
+
+          <mat-option *ngFor="let result of addressSuggestions()" [value]="result">
+            <div class="address-option">
+              <mat-icon>place</mat-icon>
+              <div class="address-text">
+                <div class="address-main">{{ result.display_name.split(',')[0] }}</div>
+                <div class="address-details">{{ result.display_name }}</div>
+              </div>
+            </div>
+          </mat-option>
+
+          <mat-option *ngIf="addressSuggestions().length === 0 && !isLoadingAddresses()" disabled>
+            <span style="font-size:0.8rem;color:#a0aec0">No matches found</span>
+          </mat-option>
+        </mat-autocomplete>
+
+        <mat-hint *ngIf="!isAddressValid()">Type at least 3 characters to search</mat-hint>
+      </mat-form-field>
+
+      <!-- Mappa OpenLayers -->
+      <div class="map-wrapper">
+        <div #mapContainer class="map-container"></div>
+        <div class="map-overlay" *ngIf="!selectedPlace()">
+          <mat-icon>location_searching</mat-icon>
+          <p>Select an address to view the map</p>
+        </div>
+      </div>
+
+      <!-- Attribution -->
+      <div class="map-attribution">
+        <small>
+          <mat-icon>info</mat-icon>
+          Map data ©
+          <a href="https://www.openstreetmap.org/" target="_blank" rel="noopener">OpenStreetMap</a>
+          &
+          <a href="https://openlayers.org/" target="_blank" rel="noopener">OpenLayers</a>
+        </small>
+      </div>
+
+      <mat-divider style="margin-top:1rem"></mat-divider>
+
+      <!-- Note luogo -->
+      <div class="form-section" style="margin-top:1rem;margin-bottom:0">
+        <h4 class="section-title">
+          <mat-icon>note_add</mat-icon>
+          Location Notes
+          <span class="optional-label">(optional)</span>
+        </h4>
+        <mat-form-field appearance="outline" class="form-field">
+          <mat-label>e.g., Entrance B, 2nd floor, intercom 'Rossi'</mat-label>
+          <textarea matInput
+            formControlName="proposedLocationNotes"
+            rows="2"
+            maxlength="500"
+            placeholder="e.g., Entrance B, 2nd floor…"></textarea>
+          <mat-hint align="end">
+            {{ form.get('proposedLocationNotes')?.value?.length || 0 }}/500
+          </mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </form>
+
+</lib-modal>

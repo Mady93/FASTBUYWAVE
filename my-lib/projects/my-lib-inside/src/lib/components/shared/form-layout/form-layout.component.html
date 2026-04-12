@@ -1,0 +1,110 @@
+<div class="form-layout" [class.gradient-recursive]="recursive">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title class="form-layout-title">{{ title }}</mat-card-title>
+      @if (subtitle) {
+        <mat-card-subtitle>{{ subtitle }}</mat-card-subtitle>
+      }
+    </mat-card-header>
+    <mat-card-content>
+
+      @if (isLoading) {
+        @if (recursive) {
+          <!-- ── Tree skeleton ─────────────────────────────────────────────── -->
+          <div class="fl-skeleton fl-skeleton--tree">
+            <div class="fl-tsk-card fl-tsk-root">
+              <div class="fl-tsk-header">
+                <div class="fl-sk-bar fl-tsk-expand"></div>
+                <div class="fl-sk-bar fl-tsk-badge fl-tsk-badge-0"></div>
+                <div class="fl-sk-bar fl-tsk-title"></div>
+              </div>
+            </div>
+            @for (level of [1,2,3]; track level) {
+              <div class="fl-tsk-card fl-tsk-child" [attr.data-level]="level">
+                <div class="fl-tsk-breadcrumb">
+                  <div class="fl-sk-bar fl-tsk-crumb"></div>
+                  <div class="fl-sk-bar fl-tsk-crumb-current"></div>
+                </div>
+                <div class="fl-tsk-header">
+                  <div class="fl-sk-bar fl-tsk-expand"></div>
+                  <div class="fl-sk-bar fl-tsk-badge" [class]="'fl-tsk-badge-' + level"></div>
+                  <div class="fl-sk-bar fl-tsk-title"></div>
+                  <div class="fl-sk-bar fl-tsk-remove-btn"></div>
+                </div>
+                @if (level < 3) {
+                  <div class="fl-tsk-body">
+                    <div class="fl-tsk-grid">
+                      @for (f of [1,2,3,4]; track f) {
+                        <div class="fl-tsk-field">
+                          <div class="fl-sk-bar fl-tsk-label"></div>
+                          <div class="fl-sk-bar fl-tsk-input"></div>
+                        </div>
+                      }
+                    </div>
+                    <div class="fl-tsk-actions">
+                      <div class="fl-sk-bar fl-tsk-add-btn"></div>
+                    </div>
+                  </div>
+                }
+              </div>
+            }
+            <div class="fl-tsk-submit">
+              <div class="fl-sk-bar fl-tsk-btn-reset"></div>
+              <div class="fl-sk-bar fl-tsk-btn-save"></div>
+            </div>
+          </div>
+
+        } @else {
+          <!-- ── Standard skeleton ──────────────────────────────────────────── -->
+          <div class="fl-skeleton">
+            <div class="fl-sk-grid" [style.grid-template-columns]="'repeat(' + columns + ', 1fr)'">
+              @for (section of [1,2,3,4]; track section) {
+                <div class="fl-sk-section">
+                  <div class="fl-sk-bar fl-sk-section-title"></div>
+                  @for (field of [1,2,3,4]; track field) {
+                    <div class="fl-sk-field">
+                      <div class="fl-sk-bar fl-sk-label"></div>
+                      <div class="fl-sk-bar fl-sk-input"></div>
+                    </div>
+                  }
+                </div>
+              }
+            </div>
+            <div class="fl-sk-actions">
+              <div class="fl-sk-bar fl-sk-btn fl-sk-btn-outline"></div>
+              <div class="fl-sk-bar fl-sk-btn fl-sk-btn-primary"></div>
+            </div>
+          </div>
+        }
+
+      } @else {
+        <!-- ── Contenuto reale ────────────────────────────────────────────── -->
+        <div [class.form-layout-content]="!recursive"
+             [style.grid-template-columns]="!recursive ? 'repeat(' + columns + ', 1fr)' : null">
+          <ng-content></ng-content>
+        </div>
+        @if (actions && actions.length > 0) {
+          <div class="form-layout-actions">
+            @for (act of actions; track act.id) {
+              <button
+                class="lm-btn lm-btn--{{ act.type || 'secondary' }}"
+                [disabled]="act.disabled || act.loading"
+                (click)="actionClicked.emit(act.id)">
+                @if (act.loading) {
+                  <span class="lm-spinner">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5"
+                              stroke-dasharray="28" stroke-dashoffset="9" />
+                    </svg>
+                  </span>
+                }
+                {{ act.loading ? act.label + '…' : act.label }}
+              </button>
+            }
+          </div>
+        }
+      }
+
+    </mat-card-content>
+  </mat-card>
+</div>

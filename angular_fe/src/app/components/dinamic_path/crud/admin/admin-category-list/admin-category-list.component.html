@@ -1,0 +1,96 @@
+<lib-tree-list-layout title="" [actions]="treeActions" [loading]="(isLoading$ | async) ?? false" [pageable]="true"
+  [totalItems]="(pagination$ | async)?.totalItems || 0" [pageSize]="pageable.size"
+  [currentPage]="(pagination$ | async)?.currentPage || 0" [pageSizeOptions]="[5, 10, 15, 20]"
+  [emptyStateMessage]="(showActive$ | async) ? 'No active categories found' : 'No inactive categories found'"
+  [emptyStateSubtitle]="(showActive$ | async) ? 'No active categories at the moment.' : 'No inactive categories at the moment.'"
+  [isEmptyStateFn]="isEmptyState" [getLogoSrcFn]="getLogoSrc" (actionClicked)="onTreeActionClicked($event)"
+  (pageChanged)="onPageChanged($event)">
+
+  <div above-actions class="builder-header">
+    <h2>
+      <img src="tree.png" alt="Tree" class="header-icon">
+      Category Structure List
+    </h2>
+  </div>
+
+  <ng-template #treeContent>
+
+    <ng-container *ngIf="categories$ | async as categories">
+
+      <div class="tree-root">
+        <ng-container *ngFor="let cat of categories; trackBy: trackById">
+          <ng-container *ngTemplateOutlet="nodeTemplate; context: { node: cat, depth: 0 }"></ng-container>
+        </ng-container>
+      </div>
+
+      <ng-template #nodeTemplate let-node="node" let-depth="depth">
+        <div class="tree-item" [attr.data-depth]="depth" [class.is-expanded]="expandedNodes.has(node.categoryId)"
+          [style.--depth]="depth">
+
+          <!-- Card a 3 zone -->
+          <div class="tree-row" (click)="toggleNode(node.categoryId)">
+
+            <!-- ZONA 1 — sinistra: chevron + icona + nome + id -->
+            <div class="node-left">
+              <div class="expand-icon" [class.has-children]="node.children?.length">
+                <svg *ngIf="node.children?.length" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                </svg>
+              </div>
+
+              <div class="node-icon">
+                <fa-icon [icon]="ICONS_FE_SIDEBAR[node.icon] || ICONS_FE_SIDEBAR['faThLarge']"></fa-icon>
+              </div>
+
+              <div class="node-label">
+                <span class="node-name" [title]="node.name">{{ node.name }}</span>
+                <div class="node-meta">
+                  <span class="node-id">{{ node.categoryId }}</span>
+                  <span class="node-depth-hint">Lv {{ depth }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- ZONA 2 — centro: stato come etichetta (non cliccabile) -->
+            <div class="node-status-zone" [class.is-active]="node.active" (click)="$event.stopPropagation()">
+              <div class="node-status-label">
+                <span class="status-key">Status</span>
+                <span class="status-value">{{ node.active ? 'Active' : 'Inactive' }}</span>
+              </div>
+            </div>
+
+            <!-- ZONA 3 — destra: bottone con testo esplicito -->
+            <div class="node-actions-zone" (click)="$event.stopPropagation()">
+              <button class="toggle-action" *ngIf="node.parent" [class.deactivate]="node.active"
+                [class.activate]="!node.active" [disabled]="!canToggleActive(node)" (click)="toggleActive(node)">
+                <svg viewBox="0 0 16 16" fill="none">
+                  <ng-container *ngIf="node.active">
+                    <path d="M4.5 4.5l7 7M11.5 4.5l-7 7" stroke="currentColor" stroke-width="1.8"
+                      stroke-linecap="round" />
+                  </ng-container>
+                  <ng-container *ngIf="!node.active">
+                    <path d="M3 8.5l3.5 3.5 6.5-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                  </ng-container>
+                </svg>
+                <span>{{ node.active ? 'Deactivate' : 'Activate' }}</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Children ricorsivi -->
+          <div class="tree-children" *ngIf="expandedNodes.has(node.categoryId) && node.children?.length">
+            <ng-container *ngFor="let child of node.children; trackBy: trackById">
+              <ng-container *ngTemplateOutlet="nodeTemplate; context: { node: child, depth: depth + 1 }"></ng-container>
+            </ng-container>
+          </div>
+
+        </div>
+      </ng-template>
+
+    </ng-container>
+  </ng-template>
+
+</lib-tree-list-layout>

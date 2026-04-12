@@ -1,0 +1,131 @@
+@use 'tokens' as *;
+
+/* ==================== INPUT NELLE CELLE ==================== */
+input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  border: 1px solid $border;
+  border-radius: 4px;
+  font-size: 0.78rem;
+  padding: 4px 8px;
+  background: $bg;
+  color: $text;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    outline: none;
+    border-color: $blue;
+    background: $white;
+  }
+}
+
+/* ==================== ACTIONS PER RIGA ==================== */
+.status-badge-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.badge-with-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+button[mat-icon-button].loading {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+button[mat-icon-button]:hover:not(.loading) {
+  transform: scale(1.1);
+}
+
+button[mat-icon-button]:active {
+  transform: scale(1);
+}
+
+/* ==================== MOBILE HINT ==================== */
+.mobile-info-icon {
+  display: none;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 18px;
+  transition: all 0.3s ease;
+}
+
+.mobile-hint-wrapper {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.mobile-hint {
+  display: block;
+  font-size: 12px;
+  color: $grey-700;
+  padding: 12px 16px;
+  background: $grey-bs;
+  border-radius: 8px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.3s ease-in;
+  border: 1px solid $grey-300;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+  .mobile-info-icon {
+    display: inline-flex;
+  }
+
+  .badge-with-info {
+    gap: 6px;
+  }
+
+  .mobile-hint {
+    font-size: 10px;
+    padding: 5px;
+  }
+
+  input {
+    font-size: 0.7rem;
+    padding: 4px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .badge-with-info {
+    gap: 4px;
+  }
+
+  .mobile-info-icon {
+    width: 16px;
+    height: 16px;
+    font-size: 11px;
+  }
+
+  .mobile-hint {
+    font-size: 10px;
+  }
+}

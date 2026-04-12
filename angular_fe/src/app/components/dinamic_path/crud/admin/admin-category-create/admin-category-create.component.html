@@ -1,0 +1,222 @@
+<lib-form-layout [recursive]="true" [loading]="isInitializing" [actions]="formActions"
+  (actionClicked)="onActionClicked($event)">
+
+  <div class="category-builder">
+    <div class="builder-header">
+      <h2>
+        <img src="tree.png" alt="Tree" class="header-icon">
+        Category Structure Builder
+        <span class="info-icon" (click)="toggleInfo()">ℹ️</span>
+      </h2>
+      <p>Recommended structure: <strong>ROOT + 2 levels</strong> (maximum ROOT + 3 levels)</p>
+      <div class="category-info" [class.open]="infoOpen">
+        <p class="info-line">
+          <span class="command">Click any header with children</span> to expand/collapse
+          <span class="detail">(max depth: 3 levels)</span> —
+          <span class="command">Remove</span> deletes node and children
+          <span class="detail">(not available for Root)</span> —
+          <span class="command">Add</span> creates child nodes
+          <span class="detail">(disabled at max depth)</span> —
+          <span class="command">Fill all fields</span> to enable Save —
+          <span class="command">Reset</span> activates after changes —
+          <span class="command">Breadcrumb</span> shows current position —
+          <span class="command">Warning</span> shown at max depth
+        </p>
+      </div>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="tree-container">
+
+        <!-- ROOT CATEGORY -->
+        <div class="category-card root-card">
+          <div class="card-header" (click)="toggleNode('root')">
+            <div class="header-left">
+              <div class="header-left-top">
+                <button type="button" class="expand-btn" [class.expanded]="expandedNodes.has('root')">
+                  <span class="arrow">▶</span>
+                </button>
+                <span class="level-indicator level-0">ROOT</span>
+              </div>
+              <span class="category-title">{{ form.get('name')?.value || 'Unnamed Category' }}</span>
+            </div>
+            <div class="header-right">
+              <span class="children-count" *ngIf="getChildrenFormArray(form).length > 0">
+                {{ getChildrenFormArray(form).length }} sub-categories
+              </span>
+            </div>
+          </div>
+
+          <div class="card-body" *ngIf="expandedNodes.has('root')">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Category Name <span class="clr">*</span></label>
+                <input type="text" class="form-input" formControlName="name" placeholder="e.g., electronics"
+                  (blur)="markFieldAsTouched(form.get('name'))" (input)="onFieldChange()">
+                <span class="error-message" *ngIf="form.get('name')?.touched && form.get('name')?.hasError('required')">
+                  Name is required
+                </span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Display Label <span class="clr">*</span></label>
+                <input type="text" class="form-input" formControlName="label" placeholder="e.g., Electronics & Tech"
+                  (blur)="markFieldAsTouched(form.get('label'))" (input)="onFieldChange()">
+                <span class="error-message"
+                  *ngIf="form.get('label')?.touched && form.get('label')?.hasError('required')">
+                  Label is required
+                </span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Icon <span class="clr">*</span></label>
+                <input type="text" class="form-input" formControlName="icon" placeholder="e.g., smartphone"
+                  (blur)="markFieldAsTouched(form.get('icon'))" (input)="onFieldChange()">
+                <span class="error-message" *ngIf="form.get('icon')?.touched && form.get('icon')?.hasError('required')">
+                  Icon is required
+                </span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Link/Route <span class="clr">*</span></label>
+                <input type="text" class="form-input" formControlName="link" placeholder="e.g., /electronics"
+                  (blur)="markFieldAsTouched(form.get('link'))" (input)="onFieldChange()">
+                <span class="error-message" *ngIf="form.get('link')?.touched && form.get('link')?.hasError('required')">
+                  Link is required
+                </span>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              <button type="button" class="btn-add" (click)="addChild(form)">
+                <span class="btn-icon">➕</span>
+                Add Sub-Category
+              </button>
+            </div>
+
+            <!-- CHILDREN -->
+            <div class="children-wrapper" formArrayName="children" *ngIf="getChildrenFormArray(form).length > 0">
+              <ng-container *ngFor="let child of getChildrenFormArray(form).controls; let i = index">
+                <ng-container *ngTemplateOutlet="categoryNode; context: { 
+                  formGroup: child, 
+                  index: i,
+                  level: 1,
+                  parentId: 'root',
+                  parentArray: getChildrenFormArray(form),
+                  breadcrumb: [form.get('name')?.value || 'Unknown']
+                }"></ng-container>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+    </form>
+  </div>
+
+</lib-form-layout>
+
+<!-- RECURSIVE TEMPLATE -->
+<ng-template #categoryNode let-formGroup="formGroup" let-index="index" let-level="level" let-parentId="parentId"
+  let-parentArray="parentArray" let-breadcrumb="breadcrumb">
+
+  <div class="category-card child-card" [formGroup]="formGroup" [attr.data-level]="level"
+    [class.max-depth]="level >= 3">
+
+    <div class="breadcrumb-path" *ngIf="level >= 1">
+      <span class="breadcrumb-item" *ngFor="let crumb of breadcrumb">{{ crumb }}</span>
+      <span class="breadcrumb-arrow">→</span>
+      <span class="breadcrumb-current">{{ formGroup.get('name')?.value || 'Current' }}</span>
+    </div>
+
+    <div class="card-header" (click)="toggleNode(parentId + '_child_' + index)">
+      <div class="header-left">
+        <div class="header-left-top">
+          <button type="button" class="expand-btn" [class.expanded]="expandedNodes.has(parentId + '_child_' + index)"
+            *ngIf="getChildrenFormArray(formGroup).length > 0 && level < 3">
+            <span class="arrow">▶</span>
+          </button>
+          <span class="expand-spacer" *ngIf="getChildrenFormArray(formGroup).length === 0 || level >= 3"></span>
+          <span class="level-indicator" [ngClass]="'level-' + level">Level {{ level }}</span>
+        </div>
+        <span class="category-title">{{ formGroup.get('name')?.value || 'Unnamed Category' }}</span>
+      </div>
+      <div class="header-right">
+        <span class="max-depth-badge" *ngIf="level >= 3">Max Depth</span>
+        <span class="children-count" *ngIf="getChildrenFormArray(formGroup).length > 0 && level < 3">
+          {{ getChildrenFormArray(formGroup).length }} children
+        </span>
+        <button type="button" class="lm-btn lm-btn--danger-outline" [matTooltip]="'Click to delete the subcategory'"
+          (click)="removeChild(parentArray, index); $event.stopPropagation()">
+          ✕ Remove
+        </button>
+      </div>
+    </div>
+
+    <div class="card-body" *ngIf="expandedNodes.has(parentId + '_child_' + index)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Category Name <span class="clr">*</span></label>
+          <input type="text" class="form-input" formControlName="name" placeholder="e.g., smartphones"
+            (blur)="markFieldAsTouched(formGroup.get('name'))" (input)="onFieldChange()">
+          <span class="error-message"
+            *ngIf="formGroup.get('name')?.touched && formGroup.get('name')?.hasError('required')">
+            Name is required
+          </span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Display Label <span class="clr">*</span></label>
+          <input type="text" class="form-input" formControlName="label" placeholder="e.g., Smartphones & Tablets"
+            (blur)="markFieldAsTouched(formGroup.get('label'))" (input)="onFieldChange()">
+          <span class="error-message"
+            *ngIf="formGroup.get('label')?.touched && formGroup.get('label')?.hasError('required')">
+            Label is required
+          </span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Icon <span class="clr">*</span></label>
+          <input type="text" class="form-input" formControlName="icon" placeholder="e.g., phone_iphone"
+            (blur)="markFieldAsTouched(formGroup.get('icon'))" (input)="onFieldChange()">
+          <span class="error-message"
+            *ngIf="formGroup.get('icon')?.touched && formGroup.get('icon')?.hasError('required')">
+            Icon is required
+          </span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Link/Route <span class="clr">*</span></label>
+          <input type="text" class="form-input" formControlName="link" placeholder="e.g., /electronics/smartphones"
+            (blur)="markFieldAsTouched(formGroup.get('link'))" (input)="onFieldChange()">
+          <span class="error-message"
+            *ngIf="formGroup.get('link')?.touched && formGroup.get('link')?.hasError('required')">
+            Link is required
+          </span>
+        </div>
+      </div>
+
+      <div class="card-actions" *ngIf="level < 3">
+        <button type="button" class="btn-add btn-add-small btn-add-level-{{ level }}" (click)="addChild(formGroup)">
+          <span class="btn-icon">➕</span>
+          Add Child Category
+        </button>
+      </div>
+
+      <div class="max-depth-warning" *ngIf="level >= 3">
+        <span class="warning-icon">⚠️</span>
+        Maximum nesting level reached (Level 3). Cannot add more children.
+      </div>
+
+      <div class="children-wrapper" formArrayName="children"
+        *ngIf="getChildrenFormArray(formGroup).length > 0 && level < 3">
+        <ng-container *ngFor="let grandchild of getChildrenFormArray(formGroup).controls; let j = index">
+          <ng-container *ngTemplateOutlet="categoryNode; context: { 
+            formGroup: grandchild, 
+            index: j,
+            level: level + 1,
+            parentId: parentId + '_child_' + j,
+            parentArray: getChildrenFormArray(formGroup),
+            breadcrumb: getUpdatedBreadcrumb(breadcrumb, formGroup)
+          }"></ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</ng-template>

@@ -1,0 +1,489 @@
+@use 'tokens' as *;
+
+@mixin mobile {
+  @media (max-width: 768px) {
+    @content;
+  }
+}
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.carousel-wrapper {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba($midnight, 0.10);
+  padding: 1rem;
+  height: auto;
+  min-height: 400px;
+  max-height: 60vh;
+  background: $white;
+  display: flex;
+  flex-direction: column;
+
+  @include mobile {
+    padding: 0.75rem;
+    min-height: 350px;
+    max-height: 50vh;
+  }
+}
+
+.main-swiper {
+  width: 100%;
+  height: 300px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  margin-bottom: 1rem;
+
+  @include mobile {
+    height: 200px;
+    margin-bottom: 0.75rem;
+  }
+}
+
+.slide-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $bg-light;
+  overflow: hidden;
+
+  &:hover .main-carousel-image {
+    transform: scale(1.05);
+  }
+
+}
+
+.main-carousel-image {
+  width: 80%;
+  height: 80%;
+  object-fit: cover;
+  object-position: center;
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  position: relative;
+  z-index: 1;
+}
+
+.zoom-icon {
+  display: none;
+
+  svg {
+    width: 20px;
+    height: 20px;
+    stroke: $white;
+    color: $white;
+  }
+
+  @include mobile {
+    opacity: 0.9;
+    width: 30px;
+    height: 30px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+::ng-deep {
+
+  // ── CSS vars Swiper ────────────────────────────────────────────────────────
+  swiper-container {
+    --swiper-navigation-size: 18px;
+    --swiper-navigation-color: #{$text-dark};
+    --swiper-pagination-color: #{$blue};
+    --swiper-pagination-bullet-inactive-color: #{$border};
+    --swiper-pagination-bullet-inactive-opacity: 1;
+    --swiper-pagination-bullet-size: 7px;
+    --swiper-pagination-bullet-horizontal-gap: 3px;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    width: 40px !important;
+    height: 40px !important;
+    top: 50% !important;
+    margin-top: -20px !important;
+    background: rgba($white, 0.88) !important;
+    backdrop-filter: blur(6px);
+    border: none !important;
+    border-radius: 50% !important;
+    box-shadow: 0 4px 12px rgba($black, 0.2) !important;
+    transition: all 0.3s ease !important;
+    z-index: 10 !important;
+
+    &::after {
+      font-size: 14px !important;
+      font-weight: 700;
+      color: #{$text-dark} !important;
+    }
+
+    &:hover {
+      background: #{$white} !important;
+      transform: translateY(-50%) scale(1.15) !important;
+      box-shadow: 0 6px 20px rgba($black, 0.3) !important;
+    }
+
+    &:active {
+      transform: translateY(-50%) scale(0.95) !important;
+    }
+
+    @media (max-width: 768px) {
+      width: 25px !important;
+      height: 25px !important;
+      margin-top: -12px !important;
+      background: $purple-gray !important;
+
+      &::after {
+        font-size: 10px !important;
+      }
+    }
+  }
+
+  .swiper-button-prev {
+    left: 10px !important;
+
+    @media (max-width: 768px) {
+      left: 2px !important;
+    }
+  }
+
+  .swiper-button-next {
+    right: 10px !important;
+
+    @media (max-width: 768px) {
+      right: 2px !important;
+    }
+  }
+
+  .swiper-pagination {
+    bottom: 6px !important;
+  }
+
+  .swiper-pagination-bullet {
+    transition: transform 0.2s ease, background 0.2s ease;
+  }
+
+  .swiper-pagination-bullet-active {
+    transform: scale(1.35);
+  }
+}
+
+.thumbnails-container {
+  display: flex;
+  gap: 8px;
+  padding: 0.5rem;
+  overflow-x: auto;
+  justify-content: center;
+  max-height: 80px;
+  flex-shrink: 0;
+  scrollbar-width: thin;
+  scrollbar-color: $border $bg-light;
+
+  &::-webkit-scrollbar {
+    height: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $bg-light;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $border;
+    border-radius: 4px;
+
+    &:hover {
+      background: $blue;
+    }
+  }
+
+  @include mobile {
+    gap: 6px;
+    padding: 0.25rem;
+    flex-wrap: wrap;
+    overflow: hidden;
+  }
+}
+
+.thumbnail-item {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+
+  flex: 0 0 auto;
+  width: 60px;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  background: $bg-light;
+  outline: none;
+
+  &.active {
+    border-color: $blue;
+    box-shadow: 0 0 0 2px rgba($blue, 0.2);
+    transform: scale(1.06) translateY(-1px);
+  }
+
+  &:hover:not(.active) {
+    border-color: $blue;
+    transform: scale(1.015);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $blue;
+    outline-offset: 2px;
+  }
+
+  @include mobile {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+.thumbnail-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+
+  .thumbnail-item:hover & {
+    transform: scale(1.1);
+  }
+}
+
+.no-images {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 200px;
+  flex: 1;
+  color: $text-muted;
+  background: $bg-light;
+  border-radius: 12px;
+
+  svg {
+    width: 48px;
+    height: 48px;
+    stroke: $border;
+  }
+
+  p {
+    font-size: 0.875rem;
+    font-style: italic;
+    margin: 0;
+  }
+}
+
+.zoom-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba($black, 0.9);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: zoom-out;
+  animation: zoomFadeIn 0.2s ease;
+}
+
+.zoom-modal-content {
+  position: relative;
+  width: 90%;
+  height: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.zoom-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 48px;
+  height: 48px;
+  background: rgba($white, 0.1);
+  border: none;
+  border-radius: 50%;
+  color: $white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+
+  svg {
+    width: 24px;
+    height: 24px;
+    stroke: $white;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: rgba($white, 0.2);
+    transform: scale(1.1);
+  }
+
+  @include mobile {
+    width: 40px;
+    height: 40px;
+    top: 12px;
+    right: 12px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}
+
+.zoom-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  background: rgba($white, 0.10);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  z-index: 10;
+
+  svg {
+    width: 22px;
+    height: 22px;
+    stroke: $white;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: rgba($white, 0.2);
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  &:active {
+    transform: translateY(-50%) scale(0.94);
+  }
+
+  &.zoom-prev-btn {
+    left: 10px;
+  }
+
+  &.zoom-next-btn {
+    right: 10px;
+  }
+
+  @include mobile {
+    width: 36px;
+    height: 36px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    &.zoom-prev-btn {
+      left: 4px;
+    }
+
+    &.zoom-next-btn {
+      right: 4px;
+    }
+  }
+}
+
+.zoom-image {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100% - 40px);
+  object-fit: contain;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.zoom-counter {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba($black, 0.50);
+  color: rgba($white, 0.90);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  padding: 0.22rem 0.7rem;
+  border-radius: 20px;
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+}
+
+.zoom-dots {
+  position: absolute;
+  bottom: 44px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.zoom-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: rgba($white, 0.35);
+  cursor: pointer;
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.active {
+    background: $white;
+    transform: scale(1.4);
+  }
+
+  &:hover:not(.active) {
+    background: rgba($white, 0.65);
+    transform: scale(1.15);
+  }
+}
+
+@keyframes zoomFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}

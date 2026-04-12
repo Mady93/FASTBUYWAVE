@@ -1,0 +1,35 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "ng serve",
+			"type": "shell",
+			"command": "ng serve",
+			"problemMatcher": [],
+			"isBackground": true,
+			"options": {
+				"cwd": "${workspaceFolder}/angular_fe"
+			},
+		},
+		{
+			"label": "compile lib",
+			"type": "shell",
+			"command": "ng build my-lib-inside --watch",
+			"problemMatcher": [],
+			"isBackground": true,
+			"options": {
+				"cwd": "${workspaceFolder}/my-lib"
+			},
+		},
+		{
+			"label": "typedoc watch",
+			"type": "shell",
+			"command": "npx typedoc src --out docs --watch",
+			"problemMatcher": [],
+			"isBackground": true,
+			"options": {
+				"cwd": "${workspaceFolder}/angular_fe"
+			}
+		}
+	]
+}

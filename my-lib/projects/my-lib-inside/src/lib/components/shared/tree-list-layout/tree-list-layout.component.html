@@ -1,0 +1,87 @@
+<!-- tree-list-layout.component.html -->
+<div class="tree-layout" [class.tree-layout--loading]="loading">
+
+  <ng-content select="[above-actions]"></ng-content>
+
+  <!-- ── Header ─────────────────────────────────────────────────────────────── -->
+  @if (title || (actions && actions.length > 0)) {
+    <div class="tl-header">
+      <div class="tl-header-left">
+        @if (title) {
+          <h3 class="tl-title">{{ title }}</h3>
+        }
+        @if (subtitle) {
+          <p class="tl-subtitle">{{ subtitle }}</p>
+        }
+      </div>
+      @if (actions && actions.length > 0) {
+        <div class="tl-header-actions">
+          @for (act of actions; track act.id) {
+            @if (!act.hidden) {
+              <button
+                class="lm-btn lm-btn--{{ act.type || 'secondary' }}"
+                [disabled]="act.disabled || act.loading"
+                [matTooltip]="act.tooltip || ''"
+                (click)="actionClicked.emit(act.id)">
+                @if (act.loading) {
+                  <span class="lm-spinner">
+                    <svg viewBox="0 0 24 24" fill="none">
+                      <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5"
+                              stroke-dasharray="28" stroke-dashoffset="9" />
+                    </svg>
+                  </span>
+                }
+                @if (act.icon && !act.loading) {
+                  <span>{{ act.icon }}</span>
+                }
+                {{ act.loading ? act.label + '…' : act.label }}
+              </button>
+            }
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── Skeleton loading ───────────────────────────────────────────────────── -->
+  @if (loading) {
+    <div class="tl-skeleton">
+      @for (row of skeletonRows; track row) {
+        <div class="tl-sk-node">
+          <div class="tl-sk-line"></div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ── Empty state ────────────────────────────────────────────────────────── -->
+  @if (!loading && isEmpty) {
+    <lib-empty-state [show]="true" [logoSrc]="getLogoSrc()">
+      <h3>{{ emptyStateMessage || 'No data available' }}</h3>
+      @if (emptyStateSubtitle) {
+        <p>{{ emptyStateSubtitle }}</p>
+      }
+    </lib-empty-state>
+  }
+
+  <!-- ── Contenuto albero ───────────────────────────────────────────────────── -->
+  @if (!loading && !isEmpty && treeContentTemplate) {
+    <div class="tl-content">
+      <ng-container *ngTemplateOutlet="treeContentTemplate"></ng-container>
+    </div>
+  }
+
+  <!-- ── Paginazione ────────────────────────────────────────────────────────── -->
+  @if (pageable && totalItems > 0) {
+    <div class="tl-pagination">
+      <lib-pagination
+        [totalItems]="totalItems"
+        [pageSize]="pageSize"
+        [currentPage]="currentPage"
+        [pageSizeOptions]="pageSizeOptions"
+        (pageChanged)="pageChanged.emit($event)">
+      </lib-pagination>
+    </div>
+  }
+
+</div>

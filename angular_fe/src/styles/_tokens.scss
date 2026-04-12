@@ -1,0 +1,132 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// _tokens.scss
+// @use 'tokens' as *;
+// ─────────────────────────────────────────────────────────────────────────────
+
+
+// ── Brand ─────────────────────────────────────────────────────────────────────
+$midnight:            #051552;
+$navy:                #0d47a1;
+$navy-mid:            #0a1f6e;
+$blue:                #1e6ef5;
+$blue-bs:             #007bff;
+$blue-royal:          #1976d2;
+$blue-shadow:         #0458f9;
+$dark-blue-overlay:   rgba(0, 0, 50, 0.5);
+$indigo:              #667eea;
+$indigo-dark:         #3b4fc8;
+$violet:              #6366f1;
+$violet-alt:          #764ba2;
+$violet-light:        #8b5cf6;
+
+
+// ── Neutri ────────────────────────────────────────────────────────────────────
+$white:               #ffffff;
+$bg:                  #f7f9fd;
+$grey-bs:             #f8f9fa;
+$grey-50:             #f9fafb;
+$grey-100:            #f3f4f6;
+$grey-150:            #eeeeee;
+$grey-200:            #e5e7eb;
+$grey-300:            #d1d5db;
+$grey-500:            #6b7280;
+$grey-550:            #666666;
+$grey-700:            #374151;
+$grey-900:            #111827;
+
+
+// ── Text ─────────────────────────────────────────────────────────────────────
+$text:                #1a1f3a;
+$muted:               #a0aec0;
+
+
+// ── Accenti ───────────────────────────────────────────────────────────────────
+$gold:                #f0a500;
+$gold-light:          #fbbf24;
+
+
+// ── Red / Like ────────────────────────────────────────────────────────────────
+$red-badge:           #e53935;
+$red-icon:            #ef5350;
+
+
+// ── Status ────────────────────────────────────────────────────────────────────
+$pending:             #f59e0b;
+$confirmed:           #10b981;
+$green-dark:          #15803d;
+$cancelled:           #ef4444;
+$rescheduled:         #3b82f6;
+$no-show:             #9ca3af;
+
+
+// ── Chip ──────────────────────────────────────────────────────
+$chip-cyan:           #06b6d4; 
+$chip-pink:           #ec489a;
+
+
+// ── Error ─────────────────────────────────────────────────────────────────────
+$error-bg:            #fef2f2;
+$error-border:        #fca5a5;
+
+
+// ── Warning ───────────────────────────────────────────────────────────────────
+$warning-bg:          #fef3c7;
+
+
+// ── Button disabled ───────────────────────────────────────────────────────────
+$btn-disabled-bg:     #c8d0e7;
+$btn-disabled-text:   #8896b3;
+
+
+// ── Highlight / Tint ──────────────────────────────────────────────────────────
+$highlight-bg:        #e8f0fe;
+$blue-tint:           #f0f5ff;
+$violet-tint:         #eeecfd;
+$lavender-light:      #c3c3fd;
+
+
+// ── Depth tints ───────────────────────────────────────────────────────────────
+$d0-tint:             #eef3fe;
+$d1-tint:             #eef0ff;
+$d2-tint:             #e8effe;
+$d3-tint:             #e3effd;
+$d4-tint:             #e2e6f5;
+
+
+// ── Table ─────────────────────────────────────────────────────────────────────
+$table-stripe:        #f4f7fd;
+
+
+// ── Border ────────────────────────────────────────────────────────────────────
+$border:              #dde3f0;
+$border-accent:       rgba(69, 78, 223, 0.64);
+
+
+// ── Scrollbar ─────────────────────────────────────────────────────────────────
+$scrollbar-track:     rgba(1, 23, 47, 0.2);
+
+
+// ── Gradient ──────────────────────────────────────────────────────────────────
+$grad-bar:            linear-gradient(90deg, $midnight 0%, $indigo 50%, $violet-alt 100%);
+$grad-primary:        linear-gradient(135deg, $midnight 0%, $blue 100%);  // commenti: $primary-gradient
+
+
+// ── Shadow ────────────────────────────────────────────────────────────────────
+$shadow-c:            rgba(4, 88, 249, 0.08);
+$sh-xs:               0 1px 3px   rgba(0, 0, 0, .06);
+$sh-sm:               0 2px 8px   rgba(0, 0, 0, .09);
+$sh-md:               0 6px 20px  rgba(0, 0, 0, .11);
+$sh-lg:               0 16px 40px rgba(0, 0, 0, .15);
+$sh-xl:               0 24px 60px rgba(0, 0, 0, .18);
+$sh-footer:           0 -2px 10px rgba(0, 0, 0, .1);
+$sh-card:             0 4px 20px  rgba(5, 21, 82, .10);
+$sh-card-hover:       0 8px 16px  rgba(0, 0, 0, 0.2);
+$sh-card-default:     0 4px 6px   rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+$accent-glow:         0 4px 12px  rgba(240, 165, 0, .35);
+
+
+// ── Paginator ─────────────────────────────────────────────────────────────────
+$paginator-start:     #e0e0e0;
+$paginator-end:       #a4b6c9;
+$sh-paginator:        0 2px 5px  rgba(0, 0, 0, 0.2), 0 1px 10px rgba(0, 0, 0, 0.1);
+$sh-paginator-hover:  0 5px 15px rgba(0, 0, 0, 0.3), 0 2px 20px rgba(0, 0, 0, 0.2);

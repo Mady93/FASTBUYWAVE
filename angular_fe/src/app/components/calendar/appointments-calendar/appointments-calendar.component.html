@@ -1,0 +1,179 @@
+<div class="calendar" (click)="onDocumentClick()">
+
+  <!-- Toolbar (sempre visibile) -->
+  <div class="cal-toolbar" [class.cal-toolbar--no-border]="filteredEvents().length === 0">
+    <div class="cal-toolbar__top">
+      <div class="cal-nav">
+        <button class="cal-nav__btn" (click)="prevMonth(); $event.stopPropagation()">&#8249;</button>
+        <button class="cal-nav__title" (click)="toggleYearPicker($event)">
+          {{ currentDate() | date:'MMMM yyyy' }}
+          <span class="cal-nav__caret" [class.open]="showYearPicker">▾</span>
+        </button>
+        <button class="cal-nav__btn" (click)="nextMonth(); $event.stopPropagation()">&#8250;</button>
+      </div>
+      <button class="cal-today-btn" (click)="goToToday(); $event.stopPropagation()">Today</button>
+    </div>
+    <div class="cal-filters">
+      <button class="cal-filter" [class.active]="activeFilter()==='ALL'"
+        (click)="setFilter('ALL'); $event.stopPropagation()">All</button>
+      <button class="cal-filter cal-filter--confirmed" [class.active]="activeFilter()==='CONFIRMED'"
+        (click)="setFilter('CONFIRMED'); $event.stopPropagation()">Confirmed</button>
+      <button class="cal-filter cal-filter--pending" [class.active]="activeFilter()==='PENDING'"
+        (click)="setFilter('PENDING'); $event.stopPropagation()">Pending</button>
+      <button class="cal-filter cal-filter--rescheduled" [class.active]="activeFilter()==='RESCHEDULED'"
+        (click)="setFilter('RESCHEDULED'); $event.stopPropagation()">Rescheduled</button>
+      <button class="cal-filter cal-filter--cancelled" [class.active]="activeFilter()==='CANCELLED'"
+        (click)="setFilter('CANCELLED'); $event.stopPropagation()">Cancelled</button>
+    </div>
+  </div>
+
+  <!-- Year picker (sempre visibile se aperto) -->
+  <div class="year-picker" *ngIf="showYearPicker" (click)="$event.stopPropagation()">
+    <div class="year-picker__grid">
+      <button *ngFor="let y of yearRange" class="year-picker__btn" [class.current]="y === currentDate().getFullYear()"
+        (click)="selectYear(y)">{{ y }}</button>
+    </div>
+  </div>
+
+  <!-- MOSTRA LA GRIGLIA SOLO SE CI SONO EVENTI FILTRATI -->
+  <ng-container *ngIf="filteredEvents().length > 0">
+    <!-- Header giorni -->
+    <div class="cal-grid cal-grid--header">
+      <div>Mon</div>
+      <div>Tue</div>
+      <div>Wed</div>
+      <div>Thu</div>
+      <div>Fri</div>
+      <div>Sat</div>
+      <div>Sun</div>
+    </div>
+
+    <!-- Griglia -->
+    <div class="cal-grid cal-grid--body">
+      <div *ngFor="let day of days()" class="cal-cell" [class.cal-cell--empty]="!day"
+        [class.cal-cell--today]="day && isToday(day)">
+        <div class="cal-cell__num" *ngIf="day">{{ day.getDate() }}</div>
+        <div class="cal-events" *ngIf="day">
+          <div *ngFor="let ev of getEventsForDay(day)" class="cal-event"
+            [ngClass]="'cal-event--' + (ev.status?.toLowerCase() ?? '')"
+            [class.cal-event--active]="activePopover?.id === ev.id"
+            (click)="openPopover(ev, $event); $event.stopPropagation()" [title]="ev.title">
+            {{ ev.title }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+  <!-- EMPTY STATE DEL FILTRO (quando non ci sono eventi) -->
+  <lib-empty-state *ngIf="filteredEvents().length === 0" [show]="true" [logoSrc]="'logo_blue-removebg.png'">
+    <h3>No {{ getFilterDisplayName() }} appointments</h3>
+    <p>Try selecting a different filter</p>
+  </lib-empty-state>
+
+  <!-- Popover (sempre visibile se attivo) -->
+  <div class="cal-popover" *ngIf="activePopover" [style.left.px]="popoverX" [style.top.px]="popoverY"
+    (click)="$event.stopPropagation()">
+
+    <!-- Header -->
+    <div class="cal-popover__header" [attr.data-status]="activePopover.status">
+      <div class="cal-popover__info">
+        <span class="cal-popover__title">{{ activePopover.title }}</span>
+        <span class="cal-popover__date">{{ activePopover.date | date:'EEE, d MMM yyyy · HH:mm' }}</span>
+      </div>
+      <button class="cal-popover__close" (click)="closePopover()">&#10005;</button>
+    </div>
+
+    <!-- Status badge -->
+    <div class="cal-popover__status">
+      <span class="status-badge status-badge--{{ activePopover.status?.toLowerCase() }}">
+        <span class="status-dot"></span>
+        {{ activePopover.status }}
+      </span>
+    </div>
+
+    <!-- Azioni -->
+    <div class="cal-popover__actions">
+
+      <!-- Dettagli — sempre visibile -->
+      <button class="pop-btn pop-btn--details" (click)="emit('details')">
+        <span class="pop-btn__icon material-icons">description</span>
+        <span>View details</span>
+      </button>
+
+      <!-- ── PENDING / RESCHEDULED — gestione proposte ──────────────── -->
+      <ng-container *ngIf="activePopover.status === 'PENDING' || activePopover.status === 'RESCHEDULED'">
+
+        <!-- C'è una proposta pendente dell'altro utente -->
+        <ng-container *ngIf="activePopover.pendingProposal; else noProposal">
+          <div class="pop-proposal">
+            <div class="pop-proposal__label">
+              Proposal from
+              <strong>
+                {{ activePopover.pendingProposal.proposedBy.firstName }}
+                {{ activePopover.pendingProposal.proposedBy.lastName }}
+              </strong>
+            </div>
+            <div class="pop-proposal__row" *ngIf="activePopover.pendingProposal.proposedDatetime">
+              <span class="pop-proposal__icon material-icons">calendar_today</span>
+              {{ activePopover.pendingProposal.proposedDatetime | date:'dd/MM/yyyy HH:mm' }}
+            </div>
+            <div class="pop-proposal__row" *ngIf="activePopover.pendingProposal.proposedLocationAddress">
+              <span class="pop-proposal__icon material-icons">location_on</span>
+              {{ activePopover.pendingProposal.proposedLocationAddress }}
+            </div>
+            <div class="pop-proposal__row" *ngIf="activePopover.pendingProposal.proposedDuration">
+              <span class="pop-proposal__icon material-icons">timer</span>
+              {{ activePopover.pendingProposal.proposedDuration }} min
+            </div>
+            <div class="pop-proposal__actions">
+              <button class="pop-btn pop-btn--confirm" (click)="emit('confirm')">
+                <span class="pop-btn__icon material-icons">check</span>
+                <span>Accept</span>
+              </button>
+              <button class="pop-btn pop-btn--propose" (click)="emit('propose')">
+                <span class="pop-btn__icon material-icons">swap_horiz</span>
+                <span>Counter</span>
+              </button>
+              <button class="pop-btn pop-btn--reject" (click)="emit('reject')">
+                <span class="pop-btn__icon material-icons">close</span>
+                <span>Reject</span>
+              </button>
+            </div>
+          </div>
+        </ng-container>
+
+        <!-- Nessuna proposta pendente — può proporre -->
+        <ng-template #noProposal>
+
+          <button class="pop-btn pop-btn--confirm" *ngIf="canConfirmNow(activePopover)" (click)="emit('confirm')">
+            <span class="pop-btn__icon material-icons">check</span>
+            <span>Confirm now</span>
+          </button>
+
+          <button class="pop-btn pop-btn--propose" (click)="emit('propose')">
+            <span class="pop-btn__icon material-icons">swap_horiz</span>
+            <span>Propose change</span>
+          </button>
+
+        </ng-template>
+
+      </ng-container>
+
+      <!-- Contatta -->
+      <button class="pop-btn pop-btn--contact"
+        *ngIf="activePopover.status !== 'CANCELLED' && activePopover.status !== 'COMPLETED'" (click)="emit('contact')">
+        <span class="pop-btn__icon material-icons">mail</span>
+        <span>Contact</span>
+      </button>
+
+      <!-- Cancella -->
+      <button class="pop-btn pop-btn--cancel" *ngIf="canCancel(activePopover)" (click)="emit('cancel')">
+        <span class="pop-btn__icon material-icons">cancel</span>
+        <span>Cancel appointment</span>
+      </button>
+
+    </div>
+  </div>
+
+</div>

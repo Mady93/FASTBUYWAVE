@@ -1,0 +1,51 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+        <img class="navbar-logo" [src]="logoUrl" alt="Logo" width="60px" height="60px">
+
+        <button class="navbar-toggler" type="button" (click)="toggleNavbar()" [attr.aria-expanded]="!isNavbarCollapsed"
+            aria-label="Toggle navigation">
+            <div class="toggler-wrap">
+                <span class="toggler-bar"></span>
+                <span class="toggler-bar"></span>
+                <span class="toggler-bar"></span>
+            </div>
+        </button>
+
+        <div class="collapse navbar-collapse" [ngClass]="{'show': !isNavbarCollapsed}" id="main_nav">
+            <ul class="navbar-nav">
+
+                <ng-container *ngFor="let item of menuItems" [ngTemplateOutlet]="treeNode"
+                    [ngTemplateOutletContext]="{ $implicit: item, lvl: 1, path: item.name }"></ng-container>
+            </ul>
+        </div>
+
+        <ng-template #treeNode let-data let-lvl="lvl" let-path="path">
+            <li class="nav-item dropdown" [ngClass]="{'show': data.show}">
+                <a class="nav-link" [ngClass]="{'dropdown-toggle': data.subItems?.length>0}" href="javascript:void(0)"
+                    (click)="toggleMenu(path, data, lvl, true); navigateTo(data);">
+                    <ng-container *ngIf="data.name === 'Dashboard'; else normalIcon">
+                        <button class="btn-sidebar-toggle"
+                            [title]="(sidebarVisible$ | async) ? 'Collapse sidebar' : 'Expand sidebar'">
+                            <i class="fas" [ngClass]="(sidebarVisible$ | async) ? 'fa-indent' : 'fa-outdent'"></i>
+                            <span class="ms-2">{{ (sidebarVisible$ | async) ? 'Collapse' : 'Expand' }}</span>
+                        </button>
+                    </ng-container>
+
+                    <ng-template #normalIcon>
+                        <fa-icon *ngIf="data.icon" [icon]="data.icon"></fa-icon>
+                        {{ data.label }}
+                    </ng-template>
+                </a>
+
+                <ul class="dropdown-menu" [ngClass]="{'show': data.show}">
+                    <ng-container *ngFor="let subItem of data.subItems">
+                        <ng-container
+                            *ngTemplateOutlet="treeNode; context: { $implicit: subItem, lvl: lvl + 1, path: path + '/' + subItem.name }"></ng-container>
+                    </ng-container>
+                </ul>
+
+            </li>
+        </ng-template>
+
+    </div>
+</nav>

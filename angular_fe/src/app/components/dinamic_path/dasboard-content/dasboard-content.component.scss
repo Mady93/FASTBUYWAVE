@@ -1,0 +1,697 @@
+@use 'tokens' as *;
+
+.dashboard-container {
+  padding: 1.5rem 2rem;
+  background: $bg;
+  min-height: 100vh;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: $midnight;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .header-icon {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  .dashboard-subtitle {
+    font-size: 0.78rem;
+    color: $muted;
+    margin: 0;
+  }
+}
+
+.period-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+
+  .lbl {
+    font-size: 0.72rem;
+    color: $muted;
+    font-weight: 600;
+    padding: 0 0.5rem;
+  }
+
+  button {
+    height: 1.75rem;
+    padding: 0 0.75rem;
+    border-radius: 0.375rem;
+    border: none;
+    background: transparent;
+    color: $muted;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &.active {
+      background: linear-gradient(90deg, $navy-mid, $violet-light);
+      color: $white;
+    }
+
+    &:hover:not(.active) {
+      background: $bg;
+      color: $violet-light;
+    }
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stat-card {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  position: relative;
+  transition: box-shadow 0.15s;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $navy-mid, $violet-light);
+  }
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba($violet-light, 0.15);
+  }
+
+  .stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.72rem;
+    color: $muted;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+
+    .icon {
+      font-size: 1rem;
+    }
+  }
+
+  .stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: $midnight;
+    line-height: 1;
+    margin-bottom: 0.35rem;
+  }
+
+  .text-green {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: $confirmed;
+  }
+
+  .text-red {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: $cancelled;
+  }
+}
+
+.calendar-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  background: linear-gradient(90deg, $navy-mid, $violet-light);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  .calendar-header {
+    font-size: 6px;
+    font-weight: 700;
+    color: rgba($white, 0.85);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    line-height: 1;
+    padding-top: 3px;
+  }
+
+  .calendar-day {
+    font-size: 11px;
+    font-weight: 700;
+    color: $white;
+    line-height: 1;
+  }
+}
+
+.card {
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 10px;
+  padding: 1.25rem;
+  margin-bottom: 1.25rem;
+
+  h2 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: $midnight;
+    margin: 0 0 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    h2 {
+      margin: 0;
+    }
+
+    .badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      background: rgba($violet-light, 0.1);
+      color: $violet-light;
+      padding: 0.2rem 0.6rem;
+      border-radius: 1rem;
+    }
+  }
+}
+
+.revenue-summary {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+
+  .total {
+    font-size: 1.4rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, $navy-mid, $violet-light);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-green {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $confirmed;
+  }
+
+  .text-red {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: $cancelled;
+  }
+}
+
+.chart-container {
+  height: 13.75rem;
+  width: 100%;
+}
+
+.products-grid {
+  display: flex;
+  flex-direction: column;
+  max-height: 7.375rem;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 3px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, $navy-mid, $violet-light);
+    border-radius: 1rem;
+  }
+}
+
+.product-card {
+  display: grid;
+  grid-template-columns: 36px 1fr auto auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.55rem 0.5rem;
+  border-radius: 6px;
+  transition: background 0.12s;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $border;
+  }
+
+  &:hover {
+    background: $bg;
+  }
+
+  .product-image-container {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .product-placeholder {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.375rem;
+    background: $bg;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: $muted;
+    flex-shrink: 0;
+  }
+
+  .product-content {
+    min-width: 0;
+
+    .product-info h3 {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: $text;
+      margin: 0 0 1px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .category {
+      font-size: 0.68rem;
+      color: $muted;
+    }
+  }
+
+  .product-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1px;
+    flex-shrink: 0;
+
+    span:first-child {
+      font-size: 0.68rem;
+      color: $muted;
+    }
+
+    .revenue {
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, $navy-mid, $violet-light);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+
+  .trend-icon {
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    width: 16px;
+    text-align: center;
+  }
+}
+
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-height: 10.3125rem;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 0.1875rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, $navy-mid, $violet-light);
+    border-radius: 1rem;
+  }
+}
+
+.category-item {
+  display: grid;
+  grid-template-columns: 6.875rem 1fr 5rem;
+  align-items: center;
+  gap: 0.75rem;
+
+  .cat-name {
+    font-size: 0.78rem;
+    color: $text;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cat-bar {
+    height: 6px;
+    background: $bg;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid $border;
+
+    .cat-fill {
+      height: 100%;
+      background: linear-gradient(90deg, $navy-mid, $violet-light);
+      border-radius: 1rem;
+      transition: width 0.5s ease;
+    }
+  }
+
+  .cat-revenue {
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, $navy-mid, $violet-light);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-align: right;
+  }
+}
+
+.appointments-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 10.3125rem;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &::-webkit-scrollbar {
+    width: 0.1875rem;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, $navy-mid, $violet-light);
+    border-radius: 1rem;
+  }
+}
+
+.appointment-item {
+  display: grid;
+  grid-template-columns: 3.25rem 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.5rem;
+  border-radius: 0.375rem;
+  transition: background 0.12s;
+  flex-shrink: 0;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid $border;
+  }
+
+  &:hover {
+    background: $bg;
+  }
+}
+
+.apt-datetime {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 2.75rem;
+  background: linear-gradient(135deg, rgba($navy-mid, 0.08), rgba($violet-light, 0.08));
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+
+  .apt-day {
+    font-size: 1.1rem;
+    font-weight: 700;
+    background: linear-gradient(90deg, $navy-mid, $violet-light);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1;
+  }
+
+  .apt-month-time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .apt-month {
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: $muted;
+      letter-spacing: 0.05em;
+      line-height: 1;
+    }
+
+    .apt-time {
+      font-size: 0.62rem;
+      color: $muted;
+      line-height: 1.2;
+    }
+  }
+}
+
+.apt-info {
+  min-width: 0;
+
+  .apt-product {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: $text;
+    margin: 0 0 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .apt-participants {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .apt-person {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.68rem;
+
+    .role {
+      font-weight: 700;
+      color: $muted;
+    }
+
+    .name {
+      color: $text;
+      font-weight: 500;
+    }
+  }
+}
+
+.apt-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.apt-status {
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 1rem;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  text-transform: uppercase;
+
+  &.status--confirmed {
+    background: rgba($confirmed, 0.12);
+    color: darken($confirmed, 15%);
+  }
+
+  &.status--pending {
+    background: rgba($pending, 0.12);
+    color: darken($pending, 20%);
+  }
+
+  &.status--cancelled {
+    background: rgba($cancelled, 0.12);
+    color: darken($cancelled, 15%);
+  }
+
+  &.status--completed {
+    background: rgba($violet, 0.12);
+    color: darken($violet, 15%);
+  }
+
+  &.status--rescheduled {
+    background: rgba($violet-light, 0.12);
+    color: $navy-mid;
+  }
+}
+
+.apt-type {
+  font-size: 0.6rem;
+  color: $muted;
+  font-weight: 500;
+}
+
+.no-data-message {
+  text-align: center;
+  color: $muted;
+  padding: 1.5rem;
+  background: $bg;
+  border-radius: 8px;
+  border: 1.5px dashed $border;
+  font-size: 0.82rem;
+
+  p {
+    margin: 0;
+  }
+
+  .empty-state-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.35rem;
+    opacity: 0.5;
+  }
+
+  .empty-state-hint {
+    font-size: 0.68rem;
+    color: $muted;
+    display: block;
+    margin-top: 0.2rem;
+  }
+}
+
+.card-footer {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid $border;
+  text-align: center;
+
+  .view-all-link {
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    background: linear-gradient(90deg, $navy-mid, $violet-light);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+}
+
+.spinner-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .appointment-item {
+    grid-template-columns: 3.25rem 1fr;
+
+    .apt-meta {
+      display: none;
+    }
+  }
+
+  .product-card {
+    grid-template-columns: 2.25rem 1fr auto;
+
+    .trend-icon {
+      display: none;
+    }
+  }
+}

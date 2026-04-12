@@ -1,0 +1,33 @@
+<div class="sidebar" [ngStyle]="{ width: sidebarWidth + 'px' }">
+
+    <ul class="show">
+      <ng-container
+        *ngFor="let item of menuItemsSidebar"
+        [ngTemplateOutlet]="treeNode"
+        [ngTemplateOutletContext]="{ $implicit: item, lvl: 1, path: item.name}">
+      </ng-container>
+    </ul>
+    
+    <ng-template #treeNode let-data let-lvl="lvl" let-parent="parent" let-path="path">
+      
+      <li (click)="sectionAction(data, path); $event.preventDefault(); $event.stopPropagation();"
+      [ngStyle]="{'background-color': selItemPath === path ? '#051552' : 'transparent', 'color': selItemPath === path ? '#ffffff' : 'inherit'}">
+        <fa-icon *ngIf="data.icon" [icon]="data.icon"></fa-icon>
+        {{data.label}}
+        
+        <ng-container *ngIf="data.subItems">
+          <ul [ngClass]="{'show': data.show}">
+            <ng-container
+              *ngFor="let item of data.subItems"
+              [ngTemplateOutlet]="treeNode"
+              [ngTemplateOutletContext]="{ $implicit: item, lvl: lvl+1, parent: data, path: path+'/'+item.name }">
+            </ng-container>
+          </ul>
+        </ng-container>
+      </li>
+
+    </ng-template>
+  
+  </div>
+  <div class="resize-handle" (mousedown)="startResize($event)" (touchstart)="startTouchResize($event)"></div>
+  

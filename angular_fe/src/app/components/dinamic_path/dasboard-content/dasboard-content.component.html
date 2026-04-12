@@ -1,0 +1,193 @@
+<div class="spinner-container" *ngIf="isLoading$ | async">
+  <lib-spinner [spinner]="getspinner()" [isLoading]="isLoading()"></lib-spinner>
+</div>
+
+<div class="dashboard-container" *ngIf="!(isLoading$ | async)">
+
+  <!-- HEADER -->
+  <div class="dashboard-header">
+    <div class="header-left">
+      <img src="graf.png" alt="" class="header-icon">
+      <div>
+        <h2>General Overview</h2>
+        <p class="dashboard-subtitle">Sales trends, orders and product performance</p>
+      </div>
+    </div>
+    <div class="period-selector">
+      <span class="lbl">Period:</span>
+      <button *ngFor="let period of periods"
+        [class.active]="selectedPeriod === period"
+        (click)="changePeriod(period)">
+        {{ getPeriodLabel(period) }}
+      </button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-grid" *ngIf="stats">
+    <div class="stat-card">
+      <div class="stat-header">
+        <span>Total Revenue</span>
+        <span class="icon">💰</span>
+      </div>
+      <div class="stat-value">{{ formatCurrency(stats.revenue.today) }}</div>
+      <div [class]="getTrendClass(stats.revenue.percentageChange)">
+        {{ stats.revenue.percentageChange >= 0 ? '↑' : '↓' }}
+        {{ Math.abs(stats.revenue.percentageChange).toFixed(1) }}%
+        vs prev. {{ getPeriodLabel(selectedPeriod) }}
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <span>Completed Orders</span>
+        <span class="icon">🛒</span>
+      </div>
+      <div class="stat-value">{{ stats.orders.today }}</div>
+      <div [class]="getTrendClass(stats.orders.percentageChange)">
+        {{ stats.orders.percentageChange >= 0 ? '↑' : '↓' }}
+        {{ Math.abs(stats.orders.percentageChange).toFixed(1) }}%
+        vs prev. {{ getPeriodLabel(selectedPeriod) }}
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <span>Active Products</span>
+        <span class="icon">📦</span>
+      </div>
+      <div class="stat-value">{{ stats.activeProducts }}</div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-header">
+        <span>Appointments</span>
+        <span class="calendar-icon">
+          <span class="calendar-header">{{ today | date:'MMM' }}</span>
+          <span class="calendar-day">{{ today | date:'d' }}</span>
+        </span>
+      </div>
+      <div class="stat-value">{{ stats.appointmentsTotal }}</div>
+    </div>
+  </div>
+
+  <!-- REVENUE CHART -->
+  <div class="card" *ngIf="revenue && revenueChartData && revenueChartData.labels?.length > 0">
+    <h2>Revenue Trend</h2>
+    <div class="revenue-summary">
+      <span class="total">{{ formatCurrency(revenue.totals.currentPeriod) }}</span>
+      <span [class]="getTrendClass(revenue.totals.percentageChange || 0)">
+        {{ (revenue.totals.percentageChange || 0) >= 0 ? '+' : '' }}{{ (revenue.totals.percentageChange || 0).toFixed(1) }}%
+        vs prev. {{ getPeriodLabel(selectedPeriod) }}
+      </span>
+    </div>
+    <div class="chart-container">
+      <p-chart type="line" [data]="revenueChartData" [options]="revenueChartOptions" [style]="{'height': '220px'}"></p-chart>
+    </div>
+  </div>
+
+  <!-- TOP PRODUCTS + CATEGORIES affiancati -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem">
+
+    <!-- Top Products -->
+    <div class="card" style="margin-bottom:0" *ngIf="topProducts && topProducts.length > 0">
+      <h2>Top Products</h2>
+      <div class="products-grid">
+        <div *ngFor="let product of topProducts" class="product-card">
+          <div class="product-image-container" *ngIf="product.imageUrl">
+            <img [src]="product.imageUrl" [alt]="product.name">
+          </div>
+          <div class="product-placeholder" *ngIf="!product.imageUrl">📦</div>
+          <div class="product-content">
+            <div class="product-info">
+              <h3>{{ product.name }}</h3>
+              <span class="category">{{ product.categoryName }}</span>
+            </div>
+          </div>
+          <div class="product-stats">
+            <span>{{ product.unitsSold }} sold</span>
+            <span class="revenue">{{ formatCurrency(product.revenue) }}</span>
+          </div>
+          <span class="trend-icon">{{ getTrendIcon(product.trend) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:0" *ngIf="!topProducts || topProducts.length === 0">
+      <h2>Top Products</h2>
+      <div class="no-data-message"><p>📦 No products sold in this period</p></div>
+    </div>
+
+    <!-- Categories -->
+    <div class="card" style="margin-bottom:0" *ngIf="categories && categories.length > 0">
+      <h2>Category Performance</h2>
+      <div class="categories-list">
+        <div *ngFor="let cat of categories" class="category-item">
+          <span class="cat-name">{{ cat.name }}</span>
+          <div class="cat-bar">
+            <div class="cat-fill" [style.width.%]="cat.percentageOfTotal"></div>
+          </div>
+          <span class="cat-revenue">{{ formatCurrency(cat.revenue) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:0" *ngIf="!categories || categories.length === 0">
+      <h2>Category Performance</h2>
+      <div class="no-data-message"><p>📂 No categories with sales</p></div>
+    </div>
+
+  </div>
+
+  <!-- APPOINTMENTS -->
+  <div class="card" *ngIf="appointments && appointments.length > 0">
+    <div class="card-header">
+      <h2>{{ appointmentsSectionTitle }}</h2>
+      <span class="badge">{{ appointments.length }}</span>
+    </div>
+    <div class="appointments-list">
+      <div *ngFor="let apt of appointments" class="appointment-item">
+
+        <div class="apt-datetime">
+          <span class="apt-day">{{ apt.dateTime | date:'dd' }}</span>
+          <div class="apt-month-time">
+            <span class="apt-month">{{ apt.dateTime | date:'MMM' }}</span>
+            <span class="apt-time">{{ apt.dateTime | date:'HH:mm' }}</span>
+          </div>
+        </div>
+
+        <div class="apt-info">
+          <p class="apt-product">{{ getAptTitle(apt.productName) }}</p>
+          <div class="apt-participants">
+            <span class="apt-person">
+              <span class="role">Req:</span>
+              <span class="name">{{ apt.requesterName || (apt.requesterEmail ? apt.requesterEmail.split('@')[0] : 'N/A') }}</span>
+            </span>
+            <span class="apt-person">
+              <span class="role">Org:</span>
+              <span class="name">{{ apt.organizerName || (apt.organizerEmail ? apt.organizerEmail.split('@')[0] : 'N/A') }}</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="apt-meta">
+          <span class="apt-status status--{{ apt.status | lowercase }}">{{ apt.status }}</span>
+          <span class="apt-type">{{ apt.type }}</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="!appointments || appointments.length === 0">
+    <div class="card-header">
+      <h2>Upcoming Appointments</h2>
+    </div>
+    <div class="no-data-message">
+      <div class="empty-state-icon">📅</div>
+      <p>No scheduled appointments</p>
+      <span class="empty-state-hint">Confirmed appointments will appear here</span>
+    </div>
+  </div>
+
+</div>

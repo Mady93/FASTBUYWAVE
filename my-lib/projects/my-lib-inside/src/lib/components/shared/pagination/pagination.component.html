@@ -1,0 +1,11 @@
+ <div class="paginator-container">
+    <mat-paginator 
+      [length]="totalItems"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="pageSizeOptions"
+      [showFirstLastButtons]="true"
+      [showFirstLastButtons]="true"
+      (page)="onPageChange($event)">
+    </mat-paginator>
+  </div>
+  

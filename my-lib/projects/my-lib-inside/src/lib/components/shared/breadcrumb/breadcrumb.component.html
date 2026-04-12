@@ -1,0 +1,30 @@
+<div class="col" *ngIf="breadcrumbListSidebar.length">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" *ngFor="let item of breadcrumbListSidebar; let i = index">
+      <!-- Se il label è 'Dashboard', mostriamo il path come testo semplice, altrimenti come link -->
+      <a *ngIf="item.label !== 'Dashboard' && !item.hasChild; else other"
+        [style.color]="!item.hasChild ? '#0067FF' : '#ffffff'" class="breadcrumb-link">
+        {{ item.path }}
+      </a>
+      <ng-template #other>
+        <span>{{ item.path }}</span> <!-- Non un link, ma testo semplice -->
+      </ng-template>
+    </li>
+  </ol>
+</div>
+
+
+<div class="col" *ngIf="breadcrumbListNavbar.length">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" *ngFor="let item of breadcrumbListNavbar; let i = index">
+      <!-- Se il label è 'Dashboard', mostriamo il path come testo semplice, altrimenti come link -->
+      <a *ngIf="item.label !== 'Dashboard' && !item.hasChild; else other"
+        [style.color]="!item.hasChild ? '#0067FF' : '#ffffff'" class="breadcrumb-link">
+        {{ item.path }}
+      </a>
+      <ng-template #other>
+        <span>{{ item.path }}</span> <!-- Non un link, ma testo semplice -->
+      </ng-template>
+    </li>
+  </ol>
+</div>
