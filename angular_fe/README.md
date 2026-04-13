@@ -17,6 +17,7 @@ Full-stack marketplace frontend built with Angular 18, featuring server-side ren
 - [Bootstrap Files](#bootstrap-files)
 - [Documentation with TypeDoc](#documentation-with-typedoc)
 - [JSDoc Best Practices](#jsdoc-best-practices)
+- [UI Component Documentation (generate-docs.js)](#ui-component-documentation-generate-docsjs)
 - [Architecture Overview: Module Dependency Graph](#architecture-overview-module-dependency-graph)
 - [Testing Setup](#testing-setup)
 - [Angular Build Instructions](#angular-build-instructions)
@@ -547,6 +548,41 @@ Then open **http://localhost:8090** in your browser.
  * const result = service.method('value');
  */
 ```
+---
+
+## UI Component Documentation (generate-docs.js)
+
+Custom documentation generator that scans Angular components and generates a self-contained HTML document showing real code (HTML templates, SCSS styles, TypeScript metadata) without mockups.
+
+### Features
+
+- Scans `src/app` components and `my-lib-inside` library
+- Extracts `@Input()` / `@Output()` properties (aliases, readonly, setters)
+- Parses global SCSS tokens from `_tokens.scss`
+- Extracts hex colors as interactive swatches
+- Shows real HTML templates and SCSS code
+- Supports Angular 18 standalone components
+
+### Commands
+
+| Command | Description |
+|---------|-------------|
+| `node generate-docs.js` | Generate UI documentation HTML file |
+| `start FASTBUYWAVE_UI_DOCS.html` | Open documentation in browser (Windows) |
+| `open FASTBUYWAVE_UI_DOCS.html` | Open documentation in browser (macOS/Linux) |
+
+### Output
+
+Generates `FASTBUYWAVE_UI_DOCS.html` in the project root directory.
+
+### Quick start
+
+```bash
+node generate-docs.js
+start FASTBUYWAVE_UI_DOCS.html
+```
+
+---
 
 ## Architecture Overview: Module Dependency Graph
 
