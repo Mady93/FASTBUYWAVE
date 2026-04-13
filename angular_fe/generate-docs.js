@@ -220,7 +220,7 @@ function buildRealContent(comp, globalTokens) {
         <div class="vars-header">🌍 Global Tokens (_tokens.scss) — ${globalTokens.vars.length} variables</div>
         <div class="var-list var-list-global">
           ${globalTokens.vars.slice(0, 30).map(v => `<code class="var-item global-var">$${v.name}: ${v.value}</code>`).join('')}
-          ${globalTokens.vars.length > 30 ? `<code class="var-item more">... e altri ${globalTokens.vars.length - 30}</code>` : ''}
+          ${globalTokens.vars.length > 30 ? `<code class="var-item more">... and more ${globalTokens.vars.length - 30}</code>` : ''}
         </div>
       </div>
     `;
