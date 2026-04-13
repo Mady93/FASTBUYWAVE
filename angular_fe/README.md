@@ -550,7 +550,7 @@ Then open **http://localhost:8090** in your browser.
 ```
 ---
 
-## UI Component Documentation (generate-docs.js)
+## UI Component Documentation Code (generate-docs.js)
 
 Custom documentation generator that scans Angular components and generates a self-contained HTML document showing real code (HTML templates, SCSS styles, TypeScript metadata) without mockups.
 
@@ -568,18 +568,18 @@ Custom documentation generator that scans Angular components and generates a sel
 | Command | Description |
 |---------|-------------|
 | `node generate-docs.js` | Generate UI documentation HTML file |
-| `start FASTBUYWAVE_UI_DOCS.html` | Open documentation in browser (Windows) |
-| `open FASTBUYWAVE_UI_DOCS.html` | Open documentation in browser (macOS/Linux) |
+| `start FASTBUYWAVE_CODE_DOCS.html` | Open documentation in browser (Windows) |
+| `open FASTBUYWAVE_CODE_DOCS.html` | Open documentation in browser (macOS/Linux) |
 
 ### Output
 
-Generates `FASTBUYWAVE_UI_DOCS.html` in the project root directory.
+Generates `FASTBUYWAVE_CODE_DOCS.html` in the project root directory.
 
 ### Quick start
 
 ```bash
 node generate-docs.js
-start FASTBUYWAVE_UI_DOCS.html
+start FASTBUYWAVE_CODE_DOCS.html
 ```
 
 ---

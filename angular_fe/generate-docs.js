@@ -532,6 +532,68 @@ tbody tr:hover td{background:#fafbff}
 .arch-wrap{background:#f8fafc;border:1px solid var(--border);border-radius:var(--r);padding:20px;margin-bottom:20px}
 .callout{background:#fffbeb;border:1px solid #fcd34d;border-radius:8px;padding:12px 16px;font-size:13px;color:#78350f;margin:14px 0;display:flex;gap:10px}
 
+/* Screenshots */
+.screenshot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 20px;
+}
+.screenshot-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+.screenshot-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+}
+.screenshot-card h3 {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 12px 16px;
+  margin: 0;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+}
+.screenshot-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Lightbox per immagini cliccabili */
+.screenshot-img {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.screenshot-img:hover {
+  transform: scale(1.02);
+}
+.lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+  z-index: 1000;
+  cursor: zoom-out;
+  justify-content: center;
+  align-items: center;
+}
+.lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+}
+.lightbox.active {
+  display: flex;
+}
+
 /* Code blocks */
 .real-code-block{margin-bottom:12px}
 .code-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;padding:4px 0;border-bottom:1px solid #334155}
@@ -575,6 +637,7 @@ tbody tr:hover td{background:#fafbff}
   <a href="#overview"      class="nav-a">Overview</a>
   <a href="#architecture"  class="nav-a">Architecture</a>
   <div class="snav-sec">Catalogue</div>
+  <a href="#screenshots"   class="nav-a">Screenshots</a>
   <a href="#components"    class="nav-a">Components (${stats.total})</a>
   <a href="#routes"        class="nav-a">Routes (${stats.routes})</a>
   <a href="#route-mapping" class="nav-a">Route → Component</a>
@@ -654,6 +717,18 @@ tbody tr:hover td{background:#fafbff}
   </div>
 </section>
 
+<section class="section" id="screenshots">
+  <h2 class="sec-title">Screenshots</h2>
+  <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;">
+    <img src="public/fast_buy_wave/register.png" class="screenshot-img" style="width:100%; border-radius:8px; border:1px solid #ddd;">
+    <img src="public/fast_buy_wave/login.png" class="screenshot-img" style="width:100%; border-radius:8px; border:1px solid #ddd;">
+    <img src="public/fast_buy_wave/dashboard.png" class="screenshot-img" style="width:100%; border-radius:8px; border:1px solid #ddd;">
+    <img src="public/fast_buy_wave/sidebar_navbar.png" class="screenshot-img" style="width:100%; border-radius:8px; border:1px solid #ddd;">
+    <img src="public/fast_buy_wave/click_collapse_navbar.png" class="screenshot-img" style="width:100%; border-radius:8px; border:1px solid #ddd;">
+    <img src="public/fast_buy_wave/cart.png" class="screenshot-img" style="width:100%; border-radius:8px; border:1px solid #ddd;">
+  </div>
+</section>
+
 <section class="section" id="components">
   <h2 class="sec-title">Components</h2>
   <p class="sec-sub">All ${stats.total} components — showing REAL HTML templates, REAL SCSS code, and extracted tokens.</p>
@@ -683,6 +758,22 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     const f = btn.dataset.filter;
     document.querySelectorAll('.comp-card').forEach(card => {
       card.style.display = (f === 'all' || card.dataset.tag === f) ? '' : 'none';
+    });
+  });
+});
+
+// Lightbox per screenshot
+document.querySelectorAll('.screenshot-img').forEach(img => {
+  img.addEventListener('click', () => {
+    const lightbox = document.createElement('div');
+    lightbox.className = 'lightbox';
+    const clonedImg = img.cloneNode();
+    lightbox.appendChild(clonedImg);
+    document.body.appendChild(lightbox);
+    setTimeout(() => lightbox.classList.add('active'), 10);
+    lightbox.addEventListener('click', () => {
+      lightbox.classList.remove('active');
+      setTimeout(() => lightbox.remove(), 300);
     });
   });
 });

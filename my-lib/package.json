@@ -37,7 +37,7 @@
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
     "bootstrap": "^5.3.3",
-    "my-lib-inside": "file:projects/my-lib-inside",
+    "my-lib-inside": "file:../my-lib/dist/my-lib-inside",
     "popper.js": "^1.16.1",
     "primeng": "^17.18.11",
     "rxjs": "~7.8.0",
