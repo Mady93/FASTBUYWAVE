@@ -30,7 +30,6 @@ graph TD
   empty_state_component["empty-state.component"]:::component
   footer_component["footer.component"]:::component
   form_layout_component["form-layout.component"]:::component
-  message_component["message.component"]:::component
   modal_component["modal.component"]:::component
   navbar_component["navbar.component"]:::component
   pagination_component["pagination.component"]:::component
@@ -58,13 +57,11 @@ graph TD
   footer_payment_method_interface["footer_payment_method.interface"]:::interface
   input_component_interface["input_component.interface"]:::interface
   menu_item_interface["menu-item.interface"]:::interface
-  message_item_interface["message_item.interface"]:::interface
   modal_action_interface["modal_action.interface"]:::interface
   table_action_interface["table_action.interface"]:::interface
   table_column_interface["table_column.interface"]:::interface
 
   %% -- Services --
-  message_service["message.service"]:::service
   navbar_service["navbar.service"]:::service
   sidebar_service["sidebar.service"]:::service
 
@@ -91,8 +88,6 @@ graph TD
   footer_component --> footer_link_interface
   footer_component --> footer_payment_method_interface
   form_layout_component --> modal_action_interface
-  message_component --> message_item_interface
-  message_component --> message_service
   modal_component --> modal_action_interface
   navbar_component --> menu_item_interface
   navbar_component --> sidebar_service
@@ -112,7 +107,6 @@ graph TD
   form_config_interface --> form_button_interface
   form_config_interface --> form_field_config_interface
   form_field_config_interface --> form_button_interface
-  message_service --> message_item_interface
   base_input_component_component --> input_component_interface
   input_component_map --> checkbox_component
   input_component_map --> date_component
