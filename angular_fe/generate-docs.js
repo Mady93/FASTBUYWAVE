@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 /**
- * FastBuyWave — UI Documentation Generator (REAL components, NO mockups)
+ * FastBuyWave — Component Source Code Documentation Generator
  * ─────────────────────────────────────────────────────────────────
  * Reads your REAL Angular component files (HTML, SCSS, TypeScript)
- * and generates documentation showing the actual code.
+ * and generates documentation showing the actual source code.
+ * 
+ * ⚠️ NOTE: This shows SOURCE CODE, not rendered UI.
  */
 
 'use strict';
@@ -13,7 +15,7 @@ const path = require('path');
 // ─── CONFIG — adjust these two paths ────────────────────────────────────────
 const APP_ROOT = path.join(__dirname);
 const LIB_ROOT = path.join(__dirname, '..', 'my-lib', 'projects', 'my-lib-inside', 'src', 'lib');
-const OUT_FILE  = path.join(__dirname, 'FASTBUYWAVE_UI_DOCS.html');
+const OUT_FILE  = path.join(__dirname, 'FASTBUYWAVE_CODE_DOCS.html');
 // ─────────────────────────────────────────────────────────────────────────────
 
 function readSafe(p) {
@@ -438,7 +440,7 @@ function buildHTML(appComps, libComps, routes, routeMaps, globalTokens) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FastBuyWave — UI Documentation (REAL components)</title>
+<title>FastBuyWave — Component Source Code Documentation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
@@ -567,7 +569,7 @@ tbody tr:hover td{background:#fafbff}
 <nav class="sidenav">
   <div class="snav-logo">
     <h1>⚡ FastBuyWave</h1>
-    <p>UI Docs — REAL components</p>
+    <p>Code Docs — REAL source code</p>
   </div>
   <div class="snav-sec">General</div>
   <a href="#overview"      class="nav-a">Overview</a>
@@ -579,8 +581,8 @@ tbody tr:hover td{background:#fafbff}
 </nav>
 
 <div class="topbar">
-  <span class="topbar-t">FastBuyWave — User Interface Guide (REAL code, NO mockups)</span>
-  <span class="topbar-badge">Angular 17 · SCSS · auto-generated</span>
+  <span class="topbar-t">FastBuyWave — Component Code Reference (source code, NO rendered UI)</span>
+  <span class="topbar-badge">FastBuyWave — Component Code Reference (source code, NO rendered UI)</span>
 </div>
 
 <main class="main">

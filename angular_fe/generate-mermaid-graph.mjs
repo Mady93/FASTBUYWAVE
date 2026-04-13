@@ -3,8 +3,8 @@
  * Scans the src/app directory, extracts TypeScript import statements, and creates a visual graph
  * showing relationships between all modules.
  * 
- * @author FastBuyWave Team
- * @version 2.0.0
+ * @author Popa Madalina Mariana
+ * @version 0.0.0
  * 
  * @example
  * // From project root:
