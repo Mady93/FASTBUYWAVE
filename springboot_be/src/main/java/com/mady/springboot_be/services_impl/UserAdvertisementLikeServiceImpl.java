@@ -67,7 +67,7 @@ public class UserAdvertisementLikeServiceImpl implements UserAdvertisementLikeSe
         }
 
         @Override
-        public ResponseEntity<ApiResponseData> updateLikes(Long advertisementId, LikeRequestDTO likeRequest,
+        public ResponseEntity<ApiResponseData<Integer>> updateLikes(Long advertisementId, LikeRequestDTO likeRequest,
                         Long userId) {
 
                 logger.info("Updating like for advertisement {} by user {}", advertisementId, userId);
@@ -107,7 +107,7 @@ public class UserAdvertisementLikeServiceImpl implements UserAdvertisementLikeSe
         }
 
         @Override
-        public ResponseEntity<ApiResponseData> getAllLikesByUser(Long userId) {
+        public ResponseEntity<ApiResponseData<List<LikeStatusDto>>> getAllLikesByUser(Long userId) {
 
                 logger.info("Fetching liked advertisements for user: {}", userId);
 
@@ -126,7 +126,7 @@ public class UserAdvertisementLikeServiceImpl implements UserAdvertisementLikeSe
         }
 
         @Override
-        public ResponseEntity<ApiResponseData> getLikesByAdvertisement(Long advertisementId) {
+        public ResponseEntity<ApiResponseData<List<LikeUserDTO>>> getLikesByAdvertisement(Long advertisementId) {
 
                 logger.info("Fetching users who liked advertisement: {}", advertisementId);
 

@@ -1,5 +1,7 @@
 package com.mady.springboot_be.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mady.springboot_be.dettails.ApiResponseData;
+import com.mady.springboot_be.dtos.LikeStatusDto;
+import com.mady.springboot_be.dtos.LikeUserDTO;
 import com.mady.springboot_be.dtos.sample_dtos.LikeRequestDTO;
 import com.mady.springboot_be.services_impl.UserAdvertisementLikeServiceImpl;
 
@@ -47,7 +51,7 @@ public class UserAdvertisementLikeController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "User or Advertisement not found")
     })
     @PutMapping("/create/update/{userId:\\d+}/{advertisementId:\\d+}")
-    public ResponseEntity<ApiResponseData> updateLikes(
+    public ResponseEntity<ApiResponseData<Integer>> updateLikes(
             @PathVariable Long userId,
             @PathVariable Long advertisementId,
             @RequestBody LikeRequestDTO likeRequest) {
@@ -60,7 +64,7 @@ public class UserAdvertisementLikeController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping("/likes/user")
-    public ResponseEntity<ApiResponseData> getAllLikesByUser(
+    public ResponseEntity<ApiResponseData<List<LikeStatusDto>>> getAllLikesByUser(
             @RequestParam Long userId) {
         return likeService.getAllLikesByUser(userId);
     }
@@ -71,7 +75,7 @@ public class UserAdvertisementLikeController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "404", description = "Advertisement not found")
     })
     @GetMapping("/advertisement/{advertisementId}")
-    public ResponseEntity<ApiResponseData> getLikesByAdvertisement(
+    public ResponseEntity<ApiResponseData<List<LikeUserDTO>>> getLikesByAdvertisement(
             @PathVariable Long advertisementId) {
         return likeService.getLikesByAdvertisement(advertisementId);
     }
